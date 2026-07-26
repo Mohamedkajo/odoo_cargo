@@ -182,16 +182,17 @@ class CargoAuthController(CargoBaseController):
         # Create the user (cargo customer)
         try:
             user = request.env['res.users'].sudo().create({
-                'name':          name,
-                'login':         email,
-                'email':         email,
-                'password':      password,   # Odoo auto-hashes with bcrypt
-                'cargo_role':    'customer',
-                'partner_vals':  {'phone': phone} if phone else {},
-                'groups_id':     [(4, request.env.ref('cargo_base.cargo_group_customer').id)],
+                'name':      name,
+                'login':     email,
+                'email':     email,
+                'password':  password,   # Odoo auto-hashes with bcrypt
+                'groups_id': [(4, request.env.ref('cargo_base.cargo_group_customer').id)],
             })
-            if phone and user.partner_id:
-                user.partner_id.sudo().write({'phone': phone})
+            # cargo_role is on res.partner via related field; write separately
+            user.partner_id.sudo().write({
+                'cargo_role': 'customer',
+                **(({'phone': phone}) if phone else {}),
+            })
         except Exception as exc:
             _logger.error('cargo_register create error: %s', exc)
             return request.make_response(

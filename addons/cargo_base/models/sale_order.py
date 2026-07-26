@@ -12,12 +12,15 @@ cargo_driver modules).  Those modules upgrade these fields to proper
 Many2one relational fields via further _inherit of sale.order.
 """
 
+import logging
 import random
 import string
 from datetime import timedelta
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
+
+_logger = logging.getLogger(__name__)
 
 from ..constants import (
     ORDER_STATUSES,
@@ -137,6 +140,96 @@ class CargoSaleOrder(models.Model):
             else:
                 order.cargo_commission_amount = 0.0
                 order.cargo_vendor_earnings   = order.amount_total
+
+    # ── Status-change notification hook ──────────────────────────────────────
+
+    # Maps cargo_status values to (title, body) push messages sent to the customer.
+    _CARGO_STATUS_MESSAGES = {
+        'preparing':  (
+            'Order Being Prepared 🍳',
+            'Your order is being prepared by the vendor.',
+        ),
+        'ready': (
+            'Order Ready 📦',
+            'Your order is ready and waiting for driver pickup.',
+        ),
+        'collecting': (
+            'Driver on the Way 🚗',
+            'A driver has been assigned and is heading to the store.',
+        ),
+        'delivering': (
+            'Order En Route 🚀',
+            'Your order is on the way! Track your driver on the map.',
+        ),
+        'otp_check': (
+            'Driver Arrived 📍',
+            'Your driver has arrived. Provide your OTP to confirm delivery.',
+        ),
+        'delivered': (
+            'Order Delivered ✅',
+            'Your order has been delivered. Enjoy!',
+        ),
+        'cancelled': (
+            'Order Cancelled ❌',
+            'Your order has been cancelled.',
+        ),
+    }
+
+    def write(self, vals):
+        # Snapshot pre-write statuses so we can detect changes after super().
+        old_statuses = {}
+        if 'cargo_status' in vals:
+            old_statuses = {order.id: order.cargo_status for order in self}
+
+        result = super().write(vals)
+
+        if old_statuses:
+            new_status = vals['cargo_status']
+            for order in self:
+                old = old_statuses.get(order.id)
+                if old != new_status:
+                    order._cargo_notify_customer_status_change(old, new_status)
+
+        return result
+
+    def _cargo_notify_customer_status_change(self, old_status: str, new_status: str):
+        """
+        Fire a push notification to the customer when cargo_status changes.
+
+        Fails silently — a notification error must never break the status write.
+        """
+        msg = self._CARGO_STATUS_MESSAGES.get(new_status)
+        if not msg:
+            return  # no message defined for this transition
+
+        Notif = self.env.get('cargo.notification')
+        if Notif is None:
+            return  # cargo_notification module not installed
+
+        title, body = msg
+        # Find the active customer user(s) linked to the order's partner.
+        customer_users = self.partner_id.user_ids.filtered(lambda u: u.active)
+        for user in customer_users:
+            try:
+                Notif.send_to_user(
+                    user=user,
+                    title=title,
+                    body=body,
+                    notif_type='order_update',
+                    payload={
+                        'orderId':    self.id,
+                        'orderRef':   self.name or '',
+                        'status':     new_status,
+                        'prevStatus': old_status or '',
+                    },
+                    order=self,
+                )
+            except Exception:
+                _logger.exception(
+                    'cargo.notification: failed to notify user %s for order %s '
+                    'status change %s → %s',
+                    user.id, self.id, old_status, new_status,
+                )
 
     # ── Status transition ─────────────────────────────────────────────────────
 

@@ -14,11 +14,14 @@ OTP flow:
 Driver FK: res.users with cargo_role = 'driver'
 Order FK:  sale.order with cargo_status set (extended by cargo_base)
 """
+import logging
 import random
 import string
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
+
+_logger = logging.getLogger(__name__)
 
 DELIVERY_STATES = [
     ('assigned',   'Driver Assigned'),
@@ -87,7 +90,43 @@ class CargoDelivery(models.Model):
         for vals in vals_list:
             vals.setdefault('pickup_otp',   _otp())
             vals.setdefault('delivery_otp', _otp())
-        return super().create(vals_list)
+        records = super().create(vals_list)
+        for delivery in records:
+            delivery._cargo_notify_driver_assignment()
+        return records
+
+    def _cargo_notify_driver_assignment(self):
+        """
+        Notify the assigned driver via push when a new delivery record is created.
+
+        Fails silently — a notification error must never block delivery creation.
+        """
+        Notif = self.env.get('cargo.notification')
+        if Notif is None or not self.driver_id:
+            return
+        order = self.order_id
+        try:
+            Notif.send_to_user(
+                user=self.driver_id,
+                title='New Delivery Assignment 🚗',
+                body=(
+                    f'You have been assigned to order {order.name}. '
+                    'Head to the store for pickup.'
+                ),
+                notif_type='driver_update',
+                payload={
+                    'deliveryId': self.id,
+                    'orderId':    order.id,
+                    'orderRef':   order.name or '',
+                    'pickupOtp':  self.pickup_otp or '',
+                },
+                order=order,
+            )
+        except Exception:
+            _logger.exception(
+                'cargo.notification: failed to notify driver %s for delivery %s',
+                self.driver_id.id, self.id,
+            )
 
     def transition(self, new_status: str):
         """Advance delivery status, updating the parent sale.order.cargo_status."""

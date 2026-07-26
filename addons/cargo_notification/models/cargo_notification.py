@@ -10,15 +10,23 @@ using cargo_notification/utils/fcm.py.
 Target resolution:
   * user_id set → notification for a specific user
   * broadcast = True → for all users or a role group
+
+FCM server key: stored in ir.config_parameter as 'cargo.fcm.server_key'.
+Configure from Cargo Settings → Push Notifications.
 """
 import json
 import logging
+import urllib.error
+import urllib.request
 
 from odoo import api, fields, models
 
 from ..utils import fcm as fcm_util
 
 _logger = logging.getLogger(__name__)
+
+FCM_ENDPOINT = 'https://fcm.googleapis.com/fcm/send'
+FCM_TIMEOUT  = 10  # seconds
 
 NOTIFICATION_TYPES = [
     ('order_update',  'Order Update'),
@@ -134,6 +142,33 @@ class CargoNotification(models.Model):
             },
         )
 
+    # ── FCM helpers (thin wrappers for testability) ───────────────────────────
+
+    def _get_fcm_server_key(self) -> str:
+        """Return the FCM server key from ir.config_parameter, or empty string."""
+        return (
+            self.env['ir.config_parameter']
+            .sudo()
+            .get_param('cargo.fcm.server_key', '')
+            or ''
+        )
+
+    def _dispatch_fcm(self, device_token: str, title: str, body: str,
+                      data: dict = None) -> bool:
+        """
+        Dispatch an FCM push to ``device_token`` via fcm_util.
+
+        Kept as a named method so unit tests can mock it without patching the
+        lower-level urllib machinery.  Fail-safe — never raises.
+        """
+        return fcm_util.send_push(
+            self.env,
+            device_token=device_token,
+            title=title,
+            body=body,
+            data=data,
+        )
+
     # ── Delivery helpers ─────────────────────────────────────────────────────
 
     @api.model
@@ -142,15 +177,17 @@ class CargoNotification(models.Model):
         """
         Create a notification record for ``user`` and dispatch it via FCM.
 
-        This is the primary entry-point for programmatic notifications (order
-        status changes, driver assignment, etc.).
+        The record is always created (for in-app notification inbox) regardless
+        of whether the FCM push succeeds.  Push failures are logged but do not
+        raise (fail-safe).
         """
+        payload_dict = payload or {}
         record = self.sudo().create({
             'title':    title,
             'body':     body,
             'type':     notif_type,
             'user_id':  user.id,
-            'payload':  json.dumps(payload or {}),
+            'payload':  json.dumps(payload_dict),
             'order_id': order.id if order else False,
             'is_sent':  False,   # send_push() will set True
         })
@@ -166,6 +203,7 @@ class CargoNotification(models.Model):
             domain.append(('cargo_role', '=', role))
         users = self.env['res.users'].sudo().search(domain)
 
+        payload_dict = payload or {}
         notif_vals = []
         for user in users:
             notif_vals.append({
@@ -173,7 +211,7 @@ class CargoNotification(models.Model):
                 'body':        body,
                 'type':        notif_type,
                 'user_id':     user.id,
-                'payload':     json.dumps(payload or {}),
+                'payload':     json.dumps(payload_dict),
                 'broadcast':   True,
                 'target_role': role or False,
                 'is_sent':     False,
@@ -184,7 +222,7 @@ class CargoNotification(models.Model):
 
         records = self.sudo().create(notif_vals)
 
-        # Dispatch FCM for each user with a registered device token
+        # Dispatch FCM multicast to all users with registered device tokens
         device_tokens = [
             u.cargo_device_token for u in users if u.cargo_device_token
         ]
@@ -194,7 +232,7 @@ class CargoNotification(models.Model):
                 device_tokens=device_tokens,
                 title=title,
                 body=body,
-                data={'type': notif_type, **(payload or {})},
+                data={'type': notif_type, **payload_dict},
             )
 
         # Mark all as sent

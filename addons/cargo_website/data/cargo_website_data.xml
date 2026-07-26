@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Default platform configuration (singleton) -->
+    <record id="cargo_website_config_default" model="cargo.website.config">
+        <field name="platform_name">Cargo</field>
+        <field name="tagline">Egypt's fastest grocery &amp; essentials delivery</field>
+        <field name="support_email">support@cargolive.app</field>
+        <field name="support_phone">+20 100 000 0000</field>
+        <field name="meta_title">Cargo — Fast Delivery in Egypt</field>
+        <field name="meta_description">Order groceries, food, and essentials from local stores. Delivered in minutes.</field>
+    </record>
+
+    <!-- Default FAQ categories -->
+    <record id="faq_category_general" model="cargo.website.faq.category">
+        <field name="name">General</field>
+        <field name="sequence">10</field>
+        <field name="icon">help-circle</field>
+    </record>
+    <record id="faq_category_orders" model="cargo.website.faq.category">
+        <field name="name">Orders &amp; Delivery</field>
+        <field name="sequence">20</field>
+        <field name="icon">package</field>
+    </record>
+    <record id="faq_category_payment" model="cargo.website.faq.category">
+        <field name="name">Payment &amp; Wallet</field>
+        <field name="sequence">30</field>
+        <field name="icon">credit-card</field>
+    </record>
+    <record id="faq_category_account" model="cargo.website.faq.category">
+        <field name="name">Account</field>
+        <field name="sequence">40</field>
+        <field name="icon">user</field>
+    </record>
+
+    <!-- Seed FAQ items -->
+    <record id="faq_how_to_order" model="cargo.website.faq">
+        <field name="question">How do I place an order?</field>
+        <field name="answer">Browse stores and products in the Cargo app, add items to your cart, and proceed to checkout. Select your delivery address and payment method to confirm.</field>
+        <field name="category_id" ref="faq_category_orders"/>
+        <field name="sequence">10</field>
+    </record>
+    <record id="faq_delivery_time" model="cargo.website.faq">
+        <field name="question">How long does delivery take?</field>
+        <field name="answer">Most orders are delivered within 30–60 minutes depending on your location and the store's distance. You can track your delivery in real time through the app.</field>
+        <field name="category_id" ref="faq_category_orders"/>
+        <field name="sequence">20</field>
+    </record>
+    <record id="faq_payment_methods" model="cargo.website.faq">
+        <field name="question">What payment methods are accepted?</field>
+        <field name="answer">We accept cash on delivery and Cargo Wallet. You can top up your wallet using bank transfer or Instapay.</field>
+        <field name="category_id" ref="faq_category_payment"/>
+        <field name="sequence">10</field>
+    </record>
+    <record id="faq_cancel_order" model="cargo.website.faq">
+        <field name="question">Can I cancel my order?</field>
+        <field name="answer">You can cancel an order before the store confirms it. Once the order is being prepared, cancellation is no longer possible. Contact support for assistance.</field>
+        <field name="category_id" ref="faq_category_orders"/>
+        <field name="sequence">30</field>
+    </record>
+    <record id="faq_wallet" model="cargo.website.faq">
+        <field name="question">What is the Cargo Wallet?</field>
+        <field name="answer">Cargo Wallet is a digital balance stored in your account. You can use it to pay for orders instantly without needing cash. Top it up anytime from your profile.</field>
+        <field name="category_id" ref="faq_category_payment"/>
+        <field name="sequence">20</field>
+    </record>
+    <record id="faq_account_register" model="cargo.website.faq">
+        <field name="question">How do I create an account?</field>
+        <field name="answer">Download the Cargo app, enter your mobile number, and verify it with the OTP sent to your phone. That's it — you're ready to order.</field>
+        <field name="category_id" ref="faq_category_account"/>
+        <field name="sequence">10</field>
+    </record>
+
+    <!-- Default blog categories -->
+    <record id="blog_category_news" model="cargo.website.blog.category">
+        <field name="name">News</field>
+        <field name="slug">news</field>
+        <field name="icon">newspaper</field>
+    </record>
+    <record id="blog_category_tips" model="cargo.website.blog.category">
+        <field name="name">Tips &amp; Guides</field>
+        <field name="slug">tips</field>
+        <field name="icon">lightbulb</field>
+    </record>
+    <record id="blog_category_vendors" model="cargo.website.blog.category">
+        <field name="name">For Vendors</field>
+        <field name="slug">vendors</field>
+        <field name="icon">store</field>
+    </record>
+
+    <!-- Default job departments -->
+    <record id="job_engineering" model="cargo.website.job">
+        <field name="title">Senior Flutter Developer</field>
+        <field name="department">Engineering</field>
+        <field name="location">Cairo, Egypt</field>
+        <field name="job_type">full_time</field>
+        <field name="description">&lt;p&gt;We're looking for an experienced Flutter developer to build and maintain our customer and driver mobile apps.&lt;/p&gt;</field>
+        <field name="requirements">&lt;ul&gt;&lt;li&gt;3+ years Flutter experience&lt;/li&gt;&lt;li&gt;Strong Dart skills&lt;/li&gt;&lt;li&gt;REST API integration experience&lt;/li&gt;&lt;/ul&gt;</field>
+    </record>
+    <record id="job_operations" model="cargo.website.job">
+        <field name="title">Operations Coordinator</field>
+        <field name="department">Operations</field>
+        <field name="location">Cairo, Egypt</field>
+        <field name="job_type">full_time</field>
+        <field name="description">&lt;p&gt;Help manage day-to-day delivery operations, driver onboarding, and vendor relations.&lt;/p&gt;</field>
+        <field name="requirements">&lt;ul&gt;&lt;li&gt;Experience in logistics or e-commerce operations&lt;/li&gt;&lt;li&gt;Strong communication skills&lt;/li&gt;&lt;/ul&gt;</field>
+    </record>
+</odoo>

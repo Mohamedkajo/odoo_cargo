@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ── Top-level Website menu under Cargo root ──────────────────────── -->
+    <menuitem id="menu_cargo_website_root"
+              name="Website"
+              parent="cargo_base.cargo_menu_root"
+              sequence="90"/>
+
+    <!-- Website Configuration -->
+    <menuitem id="menu_cargo_website_config"
+              name="Configuration"
+              parent="menu_cargo_website_root"
+              action="action_cargo_website_config"
+              sequence="10"/>
+
+    <!-- Banners -->
+    <menuitem id="menu_cargo_website_banner"
+              name="Banners"
+              parent="menu_cargo_website_root"
+              action="action_cargo_website_banner"
+              sequence="20"/>
+
+    <!-- Promotions sub-menu -->
+    <menuitem id="menu_cargo_website_promotions"
+              name="Promotions"
+              parent="menu_cargo_website_root"
+              sequence="30"/>
+
+    <menuitem id="menu_cargo_website_flash_sale"
+              name="Flash Sales"
+              parent="menu_cargo_website_promotions"
+              action="action_cargo_website_flash_sale"
+              sequence="10"/>
+
+    <!-- Blog sub-menu -->
+    <menuitem id="menu_cargo_website_blog"
+              name="Blog"
+              parent="menu_cargo_website_root"
+              sequence="40"/>
+
+    <menuitem id="menu_cargo_website_blog_posts"
+              name="Posts"
+              parent="menu_cargo_website_blog"
+              action="action_cargo_website_blog_post"
+              sequence="10"/>
+
+    <menuitem id="menu_cargo_website_blog_categories"
+              name="Categories"
+              parent="menu_cargo_website_blog"
+              action="action_cargo_website_blog_category"
+              sequence="20"/>
+
+    <!-- FAQ sub-menu -->
+    <menuitem id="menu_cargo_website_faq"
+              name="FAQ"
+              parent="menu_cargo_website_root"
+              sequence="50"/>
+
+    <menuitem id="menu_cargo_website_faq_items"
+              name="FAQ Items"
+              parent="menu_cargo_website_faq"
+              action="action_cargo_website_faq"
+              sequence="10"/>
+
+    <menuitem id="menu_cargo_website_faq_categories"
+              name="Categories"
+              parent="menu_cargo_website_faq"
+              action="action_cargo_website_faq_category"
+              sequence="20"/>
+
+    <!-- Careers -->
+    <menuitem id="menu_cargo_website_careers"
+              name="Careers"
+              parent="menu_cargo_website_root"
+              action="action_cargo_website_job"
+              sequence="60"/>
+
+    <!-- Contact submissions -->
+    <menuitem id="menu_cargo_website_contact"
+              name="Contact Inbox"
+              parent="menu_cargo_website_root"
+              action="action_cargo_website_contact"
+              sequence="70"/>
+
+</odoo>

@@ -191,6 +191,7 @@ CONFIG_SUPPORT_EMAIL     = 'cargo.support.email'
 CONFIG_SUPPORT_PHONE     = 'cargo.support.phone'
 CONFIG_DEFAULT_CURRENCY  = 'cargo.default_currency'
 CONFIG_DEFAULT_COUNTRY   = 'cargo.default_country_code'
+CONFIG_FCM_SERVER_KEY    = 'cargo.fcm.server_key'
 
 # ── Pagination Defaults ───────────────────────────────────────────────────────
 DEFAULT_PAGE      = 1

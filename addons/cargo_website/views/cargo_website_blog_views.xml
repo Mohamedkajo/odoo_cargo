@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Blog Categories -->
+    <record id="view_cargo_website_blog_category_list" model="ir.ui.view">
+        <field name="name">cargo.website.blog.category.list</field>
+        <field name="model">cargo.website.blog.category</field>
+        <field name="arch" type="xml">
+            <list string="Blog Categories">
+                <field name="name"/>
+                <field name="slug"/>
+                <field name="icon"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_cargo_website_blog_category_form" model="ir.ui.view">
+        <field name="name">cargo.website.blog.category.form</field>
+        <field name="model">cargo.website.blog.category</field>
+        <field name="arch" type="xml">
+            <form string="Blog Category">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="slug"/>
+                        <field name="icon"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_cargo_website_blog_category" model="ir.actions.act_window">
+        <field name="name">Blog Categories</field>
+        <field name="res_model">cargo.website.blog.category</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Blog Posts -->
+    <record id="view_cargo_website_blog_post_list" model="ir.ui.view">
+        <field name="name">cargo.website.blog.post.list</field>
+        <field name="model">cargo.website.blog.post</field>
+        <field name="arch" type="xml">
+            <list string="Blog Posts" default_order="published_date desc">
+                <field name="title"/>
+                <field name="category_id"/>
+                <field name="author_name"/>
+                <field name="read_time"/>
+                <field name="published_date"/>
+                <field name="is_featured" widget="toggle_button"/>
+                <field name="is_published" widget="toggle_button"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_cargo_website_blog_post_form" model="ir.ui.view">
+        <field name="name">cargo.website.blog.post.form</field>
+        <field name="model">cargo.website.blog.post</field>
+        <field name="arch" type="xml">
+            <form string="Blog Post">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_toggle_published" type="object"
+                                class="oe_stat_button" icon="fa-globe"
+                                invisible="is_published">
+                            <span>Draft — Click to Publish</span>
+                        </button>
+                        <button name="action_toggle_published" type="object"
+                                class="oe_stat_button" icon="fa-check-circle"
+                                invisible="not is_published">
+                            <span>Published — Click to Unpublish</span>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="title" placeholder="Post Title"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="slug"/>
+                            <field name="category_id"/>
+                            <field name="author_id"/>
+                            <field name="read_time"/>
+                        </group>
+                        <group>
+                            <field name="is_published"/>
+                            <field name="published_date"/>
+                            <field name="is_featured"/>
+                            <field name="image_url"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Content" name="content">
+                            <field name="summary" placeholder="Short excerpt shown in post list…"/>
+                            <field name="content" widget="html"/>
+                        </page>
+                        <page string="SEO" name="seo">
+                            <group>
+                                <field name="meta_title"/>
+                                <field name="meta_description"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_cargo_website_blog_post" model="ir.actions.act_window">
+        <field name="name">Blog Posts</field>
+        <field name="res_model">cargo.website.blog.post</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

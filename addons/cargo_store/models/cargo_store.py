@@ -104,14 +104,17 @@ class CargoStore(models.Model):
         for store in self:
             store.slug = _slugify(store.name) if store.name else False
 
-    @api.model
-    def create(self, vals):
-        record = super().create(vals)
-        if record.slug:
-            clash = self.search([('slug', '=', record.slug), ('id', '!=', record.id)], limit=1)
-            if clash:
-                record.slug = f'{record.slug}-{record.id}'
-        return record
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        for record in records:
+            if record.slug:
+                clash = self.search(
+                    [('slug', '=', record.slug), ('id', '!=', record.id)], limit=1
+                )
+                if clash:
+                    record.slug = f'{record.slug}-{record.id}'
+        return records
 
     # ── Flutter serialisation ─────────────────────────────────────────────────
 

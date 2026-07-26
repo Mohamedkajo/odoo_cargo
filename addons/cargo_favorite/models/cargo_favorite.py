@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Cargo Marketplace. See LICENSE file for full copyright and licensing details.
 """
-cargo.favorite — User-favorited stores and products.
+cargo.favorite — User-favourited stores and products.
 
 Flutter contract:
-  GET /api/favorites → { stores: [StoreDict], products: [ProductDict] }
-  POST /api/favorites/toggle → { isFavorite: bool, type: 'store'|'product', id: int }
+  GET  /api/favorites         → { stores: [StoreDict], products: [ProductDict] }
+  POST /api/favorites/toggle  → { isFavorite: bool, type: 'store'|'product', id: int }
+
+product_id FK references product.template (the native marketplace product model).
 """
 from odoo import api, fields, models
 from cargo_base.constants import FAVORITE_TYPES
@@ -13,7 +15,7 @@ from cargo_base.constants import FAVORITE_TYPES
 
 class CargoFavorite(models.Model):
     _name = 'cargo.favorite'
-    _description = 'Cargo Favorite'
+    _description = 'Cargo Favourite'
     _rec_name = 'user_id'
     _order = 'id desc'
 
@@ -31,25 +33,28 @@ class CargoFavorite(models.Model):
         'cargo.store', 'Store',
         ondelete='cascade',
     )
+    # FK to product.template (native model — replaces removed cargo.product)
     product_id = fields.Many2one(
-        'cargo.product', 'Product',
+        'product.template', 'Product',
         ondelete='cascade',
+        domain=[('cargo_store_id', '!=', False)],
+        help='Marketplace product (product.template with cargo_store_id set).',
     )
 
     _sql_constraints = [
         ('unique_store_fav',
          'UNIQUE(user_id, store_id)',
-         'User can only favorite a store once.'),
+         'User can only favourite a store once.'),
         ('unique_product_fav',
          'UNIQUE(user_id, product_id)',
-         'User can only favorite a product once.'),
+         'User can only favourite a product once.'),
     ]
 
     @api.model
     def toggle(self, user_id, fav_type, ref_id):
         """
-        Toggle the favorite for user_id+type+ref_id.
-        Returns (is_favorite_now: bool).
+        Toggle favourite for user_id + type + ref_id.
+        Returns True if the item is now favourited, False if removed.
         """
         domain = [('user_id', '=', user_id), ('type', '=', fav_type)]
         if fav_type == 'store':
@@ -69,3 +74,15 @@ class CargoFavorite(models.Model):
                 vals['product_id'] = ref_id
             self.sudo().create(vals)
             return True
+
+    def to_favorite_dict(self) -> dict:
+        self.ensure_one()
+        d = {
+            'id':   self.id,
+            'type': self.type,
+        }
+        if self.store_id:
+            d['store']   = self.store_id.to_store_dict()
+        if self.product_id:
+            d['product'] = self.product_id.cargo_to_api_dict()
+        return d

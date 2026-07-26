@@ -1,45 +1,52 @@
 # -*- coding: utf-8 -*-
-"""cargo_vendor — basic model and API tests."""
+"""cargo_vendor — vendor profile tests.
+
+Vendor fields are on res.partner (user.partner_id), not a custom cargo.vendor model.
+"""
 from odoo.tests.common import TransactionCase
 
 
 class TestCargoVendor(TransactionCase):
 
-    def _make_vendor_user(self):
+    def _make_vendor_user(self, suffix=''):
         user = self.env['res.users'].sudo().create({
-            'name':       'Test Vendor',
-            'login':      'vendor_test@cargo.test',
-            'email':      'vendor_test@cargo.test',
+            'name':       f'Test Vendor{suffix}',
+            'login':      f'vendor_test{suffix}@cargo.test',
+            'email':      f'vendor_test{suffix}@cargo.test',
             'password':   'Test1234!',
             'cargo_role': 'vendor',
         })
         return user
 
-    def test_create_vendor_profile(self):
-        user   = self._make_vendor_user()
-        vendor = self.env['cargo.vendor'].sudo().create({
-            'user_id':       user.id,
-            'business_name': 'Test Kitchen',
+    def test_vendor_partner_has_cargo_fields(self):
+        user = self._make_vendor_user('A')
+        user.partner_id.sudo().write({
+            'cargo_vendor_business_name': 'Test Kitchen',
         })
-        self.assertEqual(vendor.business_name, 'Test Kitchen')
-        self.assertFalse(vendor.is_approved)
+        self.assertEqual(user.partner_id.cargo_vendor_business_name, 'Test Kitchen')
+        self.assertFalse(user.partner_id.cargo_vendor_is_approved)
 
     def test_approve_vendor(self):
-        user   = self._make_vendor_user()
-        vendor = self.env['cargo.vendor'].sudo().create({
-            'user_id':       user.id,
-            'business_name': 'Approved Kitchen',
-        })
-        vendor.action_approve()
-        self.assertTrue(vendor.is_approved)
-        self.assertIsNotNone(vendor.approved_at)
+        user = self._make_vendor_user('B')
+        user.partner_id.cargo_vendor_approve()
+        self.assertTrue(user.partner_id.cargo_vendor_is_approved)
+        self.assertIsNotNone(user.partner_id.cargo_vendor_approved_at)
 
-    def test_vendor_dict_shape(self):
-        user   = self._make_vendor_user()
-        vendor = self.env['cargo.vendor'].sudo().create({
-            'user_id':       user.id,
-            'business_name': 'Dict Kitchen',
+    def test_reject_vendor(self):
+        user = self._make_vendor_user('C')
+        user.partner_id.cargo_vendor_reject('Incomplete documents')
+        self.assertFalse(user.partner_id.cargo_vendor_is_approved)
+        self.assertEqual(user.partner_id.cargo_vendor_reject_reason, 'Incomplete documents')
+
+    def test_vendor_to_api_dict_shape(self):
+        user = self._make_vendor_user('D')
+        user.partner_id.sudo().write({
+            'cargo_vendor_business_name': 'Dict Kitchen',
         })
-        d = vendor.to_vendor_dict()
+        d = user.partner_id.cargo_vendor_to_api_dict()
         for key in ('id', 'businessName', 'isApproved', 'commissionRate'):
-            self.assertIn(key, d)
+            self.assertIn(key, d, f'Missing key: {key}')
+
+    def test_default_commission_rate(self):
+        user = self._make_vendor_user('E')
+        self.assertEqual(user.partner_id.cargo_vendor_commission_rate, 15.0)

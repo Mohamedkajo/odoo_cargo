@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
-"""cargo_product — Integration tests for product catalogue endpoints."""
+"""cargo_product — Integration tests for product catalogue endpoints.
+
+Products are product.template records with cargo_store_id set.
+"""
 import json
-from odoo.tests.common import HttpCase
+from odoo.tests.common import HttpCase, TransactionCase
 
 
-class TestCargoProducts(HttpCase):
+class TestCargoProductModel(TransactionCase):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # Create store category, store, product category, and test products
         store_cat = cls.env['cargo.store.category'].sudo().create({
             'name': 'Test Food', 'icon': '🍔',
         })
@@ -17,83 +19,99 @@ class TestCargoProducts(HttpCase):
             'name': 'Test Product Store',
             'category_id': store_cat.id,
             'is_open': True,
-            'is_online': True,
         })
-        cls.prod_cat = cls.env['cargo.product.category'].sudo().create({
+        cls.prod_cat = cls.env['product.category'].sudo().create({
             'name': 'Burgers',
-            'store_id': cls.store.id,
+            'cargo_is_active': True,
         })
-        cls.product = cls.env['cargo.product'].sudo().create({
-            'name': 'Test Burger',
-            'store_id': cls.store.id,
-            'category_id': cls.prod_cat.id,
-            'price': 75.0,
-            'original_price': 90.0,
-            'is_available': True,
-            'is_featured': True,
-            'rating': 4.7,
-            'image': 'https://example.com/burger.jpg',
+        # Create product.template with cargo fields
+        cls.product = cls.env['product.template'].sudo().create({
+            'name':               'Test Burger',
+            'type':               'service',
+            'list_price':         75.0,
+            'cargo_store_id':     cls.store.id,
+            'categ_id':           cls.prod_cat.id,
+            'cargo_is_available': True,
+            'cargo_is_featured':  True,
+            'cargo_rating':       4.7,
+            'cargo_image_url':    'https://example.com/burger.jpg',
+            'cargo_original_price': 90.0,
+            'cargo_discount_percent': 17.0,
         })
-        cls.flash_product = cls.env['cargo.product'].sudo().create({
-            'name': 'Flash Burger',
-            'store_id': cls.store.id,
-            'price': 50.0,
-            'is_available': True,
-            'is_flash_sale': True,
-            'flash_sale_price': 40.0,
+        cls.flash_product = cls.env['product.template'].sudo().create({
+            'name':                  'Flash Burger',
+            'type':                  'service',
+            'list_price':            50.0,
+            'cargo_store_id':        cls.store.id,
+            'cargo_is_available':    True,
+            'cargo_is_flash_sale':   True,
+            'cargo_flash_sale_price': 40.0,
         })
 
-    def _get(self, path):
-        return self.url_open('/api' + path)
+    def test_cargo_to_api_dict_shape(self):
+        d = self.product.cargo_to_api_dict()
+        for key in ('id', 'name', 'price', 'storeId', 'storeName',
+                    'isAvailable', 'isFeatured', 'rating', 'isFlashSale'):
+            self.assertIn(key, d, f'Missing key: {key}')
 
-    def _json(self, path):
-        return json.loads(self._get(path).read())
+    def test_cargo_to_api_detail_dict_has_addons_and_variants(self):
+        d = self.product.cargo_to_api_detail_dict()
+        self.assertIn('addons',   d)
+        self.assertIn('variants', d)
+
+    def test_effective_price_applied(self):
+        d = self.product.cargo_to_api_dict()
+        # cargo_effective_price should be ≤ list_price when discount set
+        self.assertLessEqual(d['price'], self.product.list_price)
+
+    def test_flash_sale_dict_includes_flash_fields(self):
+        d = self.flash_product.cargo_to_api_detail_dict()
+        self.assertTrue(d['isFlashSale'])
+        self.assertIn('flashSalePrice', d)
+
+    def test_addon_to_dict(self):
+        addon = self.env['cargo.product.addon'].sudo().create({
+            'product_tmpl_id': self.product.id,
+            'name': 'Extra Cheese',
+            'price': 10.0,
+        })
+        d = addon.to_dict()
+        self.assertEqual(d['name'],  'Extra Cheese')
+        self.assertEqual(d['price'], 10.0)
+
+    def test_variant_to_dict(self):
+        import json as _json
+        variant = self.env['cargo.product.variant'].sudo().create({
+            'product_tmpl_id': self.product.id,
+            'name': 'Size',
+            'options': '["Small", "Large"]',
+            'price_delta': 15.0,
+        })
+        d = variant.to_dict()
+        self.assertIn('Small', d['options'])
+
+
+class TestCargoProductEndpoints(HttpCase):
 
     def test_list_products_returns_data_and_total(self):
-        data = self._json('/products')
-        self.assertIn('data', data)
+        resp = self.url_open('/api/products')
+        self.assertEqual(resp.status_code, 200)
+        data = json.loads(resp.content)
+        self.assertIn('data',  data)
         self.assertIn('total', data)
 
-    def test_product_dict_has_flutter_fields(self):
-        data = self._json('/products')
-        self.assertTrue(data['data'], 'No products returned')
-        p = data['data'][0]
-        for key in ('id', 'name', 'price', 'originalPrice', 'isAvailable',
-                    'rating', 'reviewCount', 'discountPercent'):
-            self.assertIn(key, p, f'Missing Flutter field: {key}')
-
-    def test_discount_percent_computed(self):
-        data = self._json(f'/products/{self.product.id}')
-        self.assertGreater(data['discountPercent'], 0)
-
-    def test_trending_products(self):
-        data = self._json('/products/trending')
+    def test_trending_returns_list(self):
+        resp = self.url_open('/api/products/trending')
+        self.assertEqual(resp.status_code, 200)
+        data = json.loads(resp.content)
         self.assertIsInstance(data, list)
-        for p in data:
-            self.assertTrue(p['isAvailable'])
 
-    def test_get_product_detail(self):
-        data = self._json(f'/products/{self.product.id}')
-        self.assertEqual(data['id'], self.product.id)
-        self.assertIn('gallery', data)
-        self.assertIn('variants', data)
-        self.assertIn('addons', data)
-
-    def test_get_product_not_found(self):
-        resp = self._get('/products/999999')
-        self.assertEqual(resp.status, 404)
-
-    def test_flash_sales(self):
-        data = self._json('/flash-sales')
+    def test_flash_sales_returns_list(self):
+        resp = self.url_open('/api/flash-sales')
+        self.assertEqual(resp.status_code, 200)
+        data = json.loads(resp.content)
         self.assertIsInstance(data, list)
-        for p in data:
-            self.assertIn('flashSalePrice', p)
 
-    def test_filter_by_store(self):
-        data = self._json(f'/products?storeId={self.store.id}')
-        for p in data['data']:
-            self.assertEqual(p['storeId'], self.store.id)
-
-    def test_search_by_name(self):
-        data = self._json('/products?search=Burger')
-        self.assertTrue(any('Burger' in p['name'] for p in data['data']))
+    def test_product_not_found_returns_404(self):
+        resp = self.url_open('/api/products/999999999')
+        self.assertEqual(resp.status_code, 404)

@@ -3,10 +3,17 @@
 """
 CargoWalletController — Wallet endpoints for the Cargo Flutter app.
 
+Wallet data lives on res.users (extended by cargo_wallet module):
+  res.users.cargo_wallet_balance   — current balance
+  res.users.cargo_wallet_credit()  — add funds
+  res.users.cargo_wallet_debit()   — deduct funds
+
+Transaction history is in cargo.wallet.transaction (user_id FK).
+
 Routes:
-  GET  /api/wallet                 — wallet balance + loyalty points
-  GET  /api/wallet/transactions    — transaction history
-  POST /api/wallet/topup           — add funds
+  GET  /api/wallet               — wallet balance
+  GET  /api/wallet/transactions  — transaction history
+  POST /api/wallet/topup         — add funds
 """
 import json
 import logging
@@ -29,35 +36,28 @@ def _json_body():
         return {}
 
 
+def _ok(data, status=HTTP_200):
+    return request.make_response(
+        json.dumps(data), status=status,
+        headers=[('Content-Type', 'application/json')],
+    )
+
+
 class CargoWalletController(CargoBaseController):
 
-    @http.route(
-        '/api/wallet',
-        auth='none',
-        methods=['GET'],
-        type='http',
-        csrf=False,
-        save_session=False,
-    )
+    @http.route('/api/wallet', auth='none', methods=['GET'],
+                type='http', csrf=False, save_session=False)
     @require_cargo_auth()
     def cargo_get_wallet(self, **kwargs):
-        """GET /api/wallet"""
-        user   = request.cargo_user
-        wallet = request.env['cargo.wallet'].sudo().get_or_create_for_user(user.id)
-        return request.make_response(
-            json.dumps(wallet.to_wallet_dict()),
-            status=HTTP_200,
-            headers=[('Content-Type', 'application/json')],
-        )
+        """GET /api/wallet — current user's wallet balance."""
+        user = request.cargo_user
+        return _ok({
+            'balance':  user.cargo_wallet_balance,
+            'currency': 'EGP',
+        })
 
-    @http.route(
-        '/api/wallet/transactions',
-        auth='none',
-        methods=['GET'],
-        type='http',
-        csrf=False,
-        save_session=False,
-    )
+    @http.route('/api/wallet/transactions', auth='none', methods=['GET'],
+                type='http', csrf=False, save_session=False)
     @require_cargo_auth()
     def cargo_wallet_transactions(self, **kwargs):
         """GET /api/wallet/transactions[?limit=20&offset=0]"""
@@ -68,39 +68,26 @@ class CargoWalletController(CargoBaseController):
         except (TypeError, ValueError):
             limit, offset = 20, 0
 
-        wallet = request.env['cargo.wallet'].sudo().get_or_create_for_user(user.id)
-        txns   = request.env['cargo.wallet.transaction'].sudo().search(
-            [('wallet_id', '=', wallet.id)],
+        txns = request.env['cargo.wallet.transaction'].sudo().search(
+            [('user_id', '=', user.id)],
             order='id desc',
             limit=limit,
             offset=offset,
         )
         total = request.env['cargo.wallet.transaction'].sudo().search_count(
-            [('wallet_id', '=', wallet.id)]
+            [('user_id', '=', user.id)]
         )
+        return _ok({'data': [t.to_tx_dict() for t in txns], 'total': total})
 
-        data = [t.to_transaction_dict() for t in txns]
-        return request.make_response(
-            json.dumps({'data': data, 'total': total}),
-            status=HTTP_200,
-            headers=[('Content-Type', 'application/json')],
-        )
-
-    @http.route(
-        '/api/wallet/topup',
-        auth='none',
-        methods=['POST'],
-        type='http',
-        csrf=False,
-        save_session=False,
-    )
+    @http.route('/api/wallet/topup', auth='none', methods=['POST'],
+                type='http', csrf=False, save_session=False)
     @require_cargo_auth()
     def cargo_wallet_topup(self, **kwargs):
         """
         POST /api/wallet/topup
 
         Body: { amount, paymentMethod?, reference? }
-        Returns: { balance, currency, loyaltyPoints, transaction }
+        Returns: { balance, currency, transaction }
         """
         user = request.cargo_user
         body = _json_body()
@@ -111,39 +98,24 @@ class CargoWalletController(CargoBaseController):
             amount = 0.0
 
         if amount <= 0:
-            return request.make_response(
-                json.dumps({'error': ERR_VALIDATION, 'message': 'Amount must be a positive number.'}),
-                status=HTTP_400,
-                headers=[('Content-Type', 'application/json')],
-            )
-
-        # Maximum single top-up: EGP 10,000
+            return _ok({'error': ERR_VALIDATION, 'message': 'Amount must be positive.'}, HTTP_400)
         if amount > 10_000:
-            return request.make_response(
-                json.dumps({'error': ERR_VALIDATION, 'message': 'Maximum single top-up is EGP 10,000.'}),
-                status=HTTP_400,
-                headers=[('Content-Type', 'application/json')],
-            )
-
-        wallet = request.env['cargo.wallet'].sudo().get_or_create_for_user(user.id)
+            return _ok({'error': ERR_VALIDATION,
+                        'message': 'Maximum single top-up is EGP 10,000.'}, HTTP_400)
 
         try:
-            txn = wallet.topup(
-                amount=amount,
-                reference=body.get('reference'),
-                description=f'Top-up via {body.get("paymentMethod", "card")} — EGP {amount:.2f}',
-            )
+            note = (f'Top-up via {body.get("paymentMethod", "card")} — EGP {amount:.2f} '
+                    f'{body.get("reference", "")}').strip()
+            new_balance = user.cargo_wallet_credit(amount, note=note)
         except Exception as exc:
-            return request.make_response(
-                json.dumps({'error': 'ERR_TOPUP', 'message': str(exc)}),
-                status=HTTP_400,
-                headers=[('Content-Type', 'application/json')],
-            )
+            _logger.exception('Wallet top-up failed')
+            return _ok({'error': 'ERR_TOPUP', 'message': str(exc)}, HTTP_400)
 
-        result = wallet.to_wallet_dict()
-        result['transaction'] = txn.to_transaction_dict()
-        return request.make_response(
-            json.dumps(result),
-            status=HTTP_200,
-            headers=[('Content-Type', 'application/json')],
+        last_tx = request.env['cargo.wallet.transaction'].sudo().search(
+            [('user_id', '=', user.id)], order='id desc', limit=1,
         )
+        return _ok({
+            'balance':     new_balance,
+            'currency':    'EGP',
+            'transaction': last_tx.to_tx_dict() if last_tx else None,
+        })

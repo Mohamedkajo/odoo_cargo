@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
-"""cargo_wallet — wallet model tests."""
+"""cargo_wallet — wallet model tests.
+
+Wallet balance is a field on res.users (cargo_wallet_balance).
+Transactions are cargo.wallet.transaction records keyed by user_id.
+"""
 from odoo.tests.common import TransactionCase
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError
 
 
 class TestCargoWallet(TransactionCase):
@@ -10,39 +14,47 @@ class TestCargoWallet(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.user = cls.env['res.users'].sudo().create({
-            'name': 'Wallet User', 'login': 'walletuser@cargo.test',
-            'email': 'walletuser@cargo.test', 'password': 'Test1234!', 'cargo_role': 'customer',
+            'name':       'Wallet User',
+            'login':      'walletuser@cargo.test',
+            'email':      'walletuser@cargo.test',
+            'password':   'Test1234!',
+            'cargo_role': 'customer',
         })
 
-    def _get_wallet(self):
-        wallet = self.env['cargo.wallet'].sudo().search(
-            [('user_id', '=', self.user.id)], limit=1
-        )
-        if not wallet:
-            wallet = self.env['cargo.wallet'].sudo().create({'user_id': self.user.id})
-        return wallet
+    def test_initial_balance_is_zero(self):
+        self.assertEqual(self.user.cargo_wallet_balance, 0.0)
 
-    def test_topup_increases_balance(self):
-        wallet = self._get_wallet()
-        before = wallet.balance
-        wallet.topup(amount=500.0, description='Test top-up')
-        self.assertAlmostEqual(wallet.balance, before + 500.0)
+    def test_credit_increases_balance(self):
+        self.user.sudo().write({'cargo_wallet_balance': 0.0})
+        self.user.cargo_wallet_credit(500.0, note='Test top-up')
+        self.assertAlmostEqual(self.user.cargo_wallet_balance, 500.0)
 
     def test_debit_decreases_balance(self):
-        wallet = self._get_wallet()
-        wallet.topup(amount=300.0, description='Seed balance')
-        before = wallet.balance
-        wallet.debit(amount=100.0, description='Test purchase', tx_type='purchase')
-        self.assertAlmostEqual(wallet.balance, before - 100.0)
+        self.user.sudo().write({'cargo_wallet_balance': 300.0})
+        self.user.cargo_wallet_debit(100.0, note='Test purchase')
+        self.assertAlmostEqual(self.user.cargo_wallet_balance, 200.0)
 
     def test_debit_raises_if_insufficient_funds(self):
-        wallet = self._get_wallet()
-        wallet.write({'balance': 0.0})
-        with self.assertRaises(Exception):
-            wallet.debit(amount=100.0, description='Should fail', tx_type='purchase')
+        self.user.sudo().write({'cargo_wallet_balance': 0.0})
+        with self.assertRaises(UserError):
+            self.user.cargo_wallet_debit(100.0, note='Should fail')
 
-    def test_balance_non_negative_constraint(self):
-        with self.assertRaises(Exception):
-            self.env['cargo.wallet'].sudo().create({
-                'user_id': self.user.id, 'balance': -50.0,
-            })
+    def test_credit_creates_transaction(self):
+        before = self.env['cargo.wallet.transaction'].sudo().search_count(
+            [('user_id', '=', self.user.id)]
+        )
+        self.user.cargo_wallet_credit(50.0, note='Tx test')
+        after = self.env['cargo.wallet.transaction'].sudo().search_count(
+            [('user_id', '=', self.user.id)]
+        )
+        self.assertEqual(after, before + 1)
+
+    def test_transaction_dict_shape(self):
+        self.user.sudo().write({'cargo_wallet_balance': 200.0})
+        self.user.cargo_wallet_debit(50.0, note='Dict test')
+        tx = self.env['cargo.wallet.transaction'].sudo().search(
+            [('user_id', '=', self.user.id)], order='id desc', limit=1,
+        )
+        d = tx.to_tx_dict()
+        for key in ('id', 'type', 'amount', 'balanceAfter', 'note'):
+            self.assertIn(key, d, f'Missing key: {key}')

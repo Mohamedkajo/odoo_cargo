@@ -1,8 +1,14 @@
 # -*- coding: utf-8 -*-
-"""CargoReportsController — Admin analytics endpoints."""
+# Part of Cargo Marketplace. See LICENSE file for full copyright and licensing details.
+"""CargoReportsController — Admin analytics endpoints.
+
+All ORM queries use native Odoo models:
+  sale.order (with cargo_status) instead of cargo.order
+  product.template instead of cargo.product
+  res.users instead of cargo.driver
+"""
 import json
 import logging
-from collections import defaultdict
 from datetime import datetime, timedelta
 
 from odoo import http
@@ -26,34 +32,42 @@ class CargoReportsController(CargoBaseController):
 
     @http.route('/api/admin/reports/summary', auth='none', methods=['GET'],
                 type='http', csrf=False, save_session=False)
-    @require_cargo_auth('admin')
+    @require_cargo_auth(roles=['admin'])
     def admin_summary(self, **kw):
         """GET /api/admin/reports/summary — key platform metrics."""
         env = request.env
 
-        orders       = env['cargo.order'].sudo().search([])
-        stores       = env['cargo.store'].sudo().search([('active', '=', True)])
-        users        = env['res.users'].sudo().search([('cargo_role', '=', 'customer')])
-        wallets      = env['cargo.wallet'].sudo().search([]) if 'cargo.wallet' in env else []
-        total_wallet = sum(w.balance for w in wallets) if wallets else 0.0
+        # sale.order with cargo_status = Cargo delivery orders
+        orders    = env['sale.order'].sudo().search([('cargo_status', '!=', False)])
+        stores    = env['cargo.store'].sudo().search([('active', '=', True)])
+        customers = env['res.users'].sudo().search([('cargo_role', '=', 'customer')])
+        drivers   = env['res.users'].sudo().search([('cargo_role', '=', 'driver')])
 
-        delivered  = [o for o in orders if o.status == 'delivered']
-        cancelled  = [o for o in orders if o.status == 'cancelled']
-        revenue    = sum(o.total for o in delivered)
+        delivered = orders.filtered(lambda o: o.cargo_status == 'delivered')
+        cancelled = orders.filtered(lambda o: o.cargo_status == 'cancelled')
+        revenue   = sum(o.amount_total for o in delivered)
+
+        # Total wallet funds held by customers
+        total_wallet = sum(
+            u.cargo_wallet_balance
+            for u in customers
+            if hasattr(u, 'cargo_wallet_balance')
+        )
 
         return _ok({
             'totalOrders':      len(orders),
             'deliveredOrders':  len(delivered),
             'cancelledOrders':  len(cancelled),
-            'totalRevenue':     revenue,
+            'totalRevenue':     round(revenue, 2),
             'totalStores':      len(stores),
-            'totalCustomers':   len(users),
-            'totalWalletFunds': total_wallet,
+            'totalCustomers':   len(customers),
+            'totalDrivers':     len(drivers),
+            'totalWalletFunds': round(total_wallet, 2),
         })
 
     @http.route('/api/admin/reports/orders', auth='none', methods=['GET'],
                 type='http', csrf=False, save_session=False)
-    @require_cargo_auth('admin')
+    @require_cargo_auth(roles=['admin'])
     def orders_by_date(self, **kw):
         """GET /api/admin/reports/orders?days=30 — orders grouped by day."""
         try:
@@ -61,20 +75,43 @@ class CargoReportsController(CargoBaseController):
         except (TypeError, ValueError):
             days = 30
 
-        cutoff = datetime.utcnow() - timedelta(days=days)
-        orders = request.env['cargo.order'].sudo().search(
-            [('create_date', '>=', cutoff.isoformat())]
-        )
+        stats = request.env['cargo.reports'].sudo().get_order_stats(days=days)
+        daily = request.env['cargo.reports'].sudo().get_daily_revenue(days=days)
+        return _ok({'stats': stats, 'series': daily})
 
-        by_day = defaultdict(lambda: {'count': 0, 'revenue': 0.0})
-        for o in orders:
-            day = o.create_date.strftime('%Y-%m-%d') if o.create_date else 'unknown'
-            by_day[day]['count'] += 1
-            if o.status == 'delivered':
-                by_day[day]['revenue'] += o.total
+    @http.route('/api/admin/reports/stores', auth='none', methods=['GET'],
+                type='http', csrf=False, save_session=False)
+    @require_cargo_auth(roles=['admin'])
+    def store_performance(self, **kw):
+        """GET /api/admin/reports/stores — revenue per store."""
+        try:
+            days = int(request.httprequest.args.get('days', 30))
+        except (TypeError, ValueError):
+            days = 30
+        data = request.env['cargo.reports'].sudo().get_store_performance(days=days)
+        return _ok(data)
 
-        series = sorted(
-            [{'date': d, **v} for d, v in by_day.items()],
-            key=lambda x: x['date'],
-        )
-        return _ok({'days': days, 'series': series})
+    @http.route('/api/admin/reports/products', auth='none', methods=['GET'],
+                type='http', csrf=False, save_session=False)
+    @require_cargo_auth(roles=['admin'])
+    def top_products(self, **kw):
+        """GET /api/admin/reports/products — top-selling products."""
+        try:
+            days  = int(request.httprequest.args.get('days', 30))
+            limit = int(request.httprequest.args.get('limit', 10))
+        except (TypeError, ValueError):
+            days, limit = 30, 10
+        data = request.env['cargo.reports'].sudo().get_top_products(limit=limit, days=days)
+        return _ok(data)
+
+    @http.route('/api/admin/reports/drivers', auth='none', methods=['GET'],
+                type='http', csrf=False, save_session=False)
+    @require_cargo_auth(roles=['admin'])
+    def driver_performance(self, **kw):
+        """GET /api/admin/reports/drivers — deliveries + earnings per driver."""
+        try:
+            days = int(request.httprequest.args.get('days', 30))
+        except (TypeError, ValueError):
+            days = 30
+        data = request.env['cargo.reports'].sudo().get_driver_performance(days=days)
+        return _ok(data)

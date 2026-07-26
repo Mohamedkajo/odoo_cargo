@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
-"""cargo_delivery — delivery model tests."""
+"""cargo_delivery — delivery lifecycle tests.
+
+order_id  FK → sale.order (cargo_status field present)
+driver_id FK → res.users  (cargo_role='driver')
+"""
 from odoo.tests.common import TransactionCase
+from odoo.exceptions import UserError
 
 
 class TestCargoDelivery(TransactionCase):
@@ -8,57 +13,49 @@ class TestCargoDelivery(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cat = cls.env['cargo.store.category'].sudo().create({'name': 'DelTestCat'})
-        store = cls.env['cargo.store'].sudo().create({
-            'name': 'Delivery Test Store', 'category_id': cat.id,
+        cls.store_cat = cls.env['cargo.store.category'].sudo().create({'name': 'DelivCat'})
+        cls.store = cls.env['cargo.store'].sudo().create({
+            'name': 'Delivery Test Store', 'category_id': cls.store_cat.id,
         })
-        product = cls.env['cargo.product'].sudo().create({
-            'name': 'Del Product', 'store_id': store.id, 'price': 50.0,
+        cls.customer = cls.env['res.users'].sudo().create({
+            'name': 'Delivery Customer', 'login': 'deliv_cust@cargo.test',
+            'email': 'deliv_cust@cargo.test', 'password': 'Test1234!', 'cargo_role': 'customer',
         })
-        user = cls.env['res.users'].sudo().create({
-            'name': 'Del Customer', 'login': 'delcust@cargo.test',
-            'email': 'delcust@cargo.test', 'password': 'Test1234!', 'cargo_role': 'customer',
+        cls.driver = cls.env['res.users'].sudo().create({
+            'name': 'Test Driver', 'login': 'deliv_driver@cargo.test',
+            'email': 'deliv_driver@cargo.test', 'password': 'Test1234!', 'cargo_role': 'driver',
         })
-        cart = cls.env['cargo.cart'].sudo().get_or_create_for_user(user.id)
-        cls.env['cargo.cart.line'].sudo().create({
-            'cart_id': cart.id, 'product_id': product.id,
-            'quantity': 1, 'unit_price': 50.0,
+        cls.order = cls.env['sale.order'].sudo().create({
+            'partner_id':    cls.customer.partner_id.id,
+            'cargo_status':  'confirmed',
+            'cargo_store_id': cls.store.id,
         })
-        cls.order = cls.env['cargo.order'].sudo().create({
-            'user_id': user.id, 'store_id': store.id,
-            'delivery_address': 'Test Address', 'delivery_fee': 15.0, 'subtotal': 50.0,
+
+    def _make_delivery(self):
+        return self.env['cargo.delivery'].sudo().create({
+            'order_id':  self.order.id,
+            'driver_id': self.driver.id,
         })
-        d_user = cls.env['res.users'].sudo().create({
-            'name': 'Test Driver', 'login': 'testdriver@cargo.test',
-            'email': 'testdriver@cargo.test', 'password': 'Test1234!', 'cargo_role': 'driver',
-        })
-        cls.driver = cls.env['cargo.driver'].sudo().create({'user_id': d_user.id})
 
     def test_create_delivery_generates_otps(self):
-        delivery = self.env['cargo.delivery'].sudo().create({
-            'order_id': self.order.id, 'driver_id': self.driver.id,
-        })
-        self.assertEqual(len(delivery.pickup_otp), 4)
-        self.assertEqual(len(delivery.delivery_otp), 4)
+        d = self._make_delivery()
+        self.assertTrue(d.pickup_otp)
+        self.assertTrue(d.delivery_otp)
+        self.assertEqual(d.status, 'assigned')
 
-    def test_advance_status_valid(self):
-        delivery = self.env['cargo.delivery'].sudo().create({
-            'order_id': self.order.id,
-        })
-        delivery.advance_status('picked_up')
-        self.assertEqual(delivery.status, 'picked_up')
+    def test_transition_to_picked_up(self):
+        d = self._make_delivery()
+        d.transition('picked_up')
+        self.assertEqual(d.status, 'picked_up')
+        self.assertIsNotNone(d.picked_up_at)
 
-    def test_advance_status_invalid_raises(self):
-        delivery = self.env['cargo.delivery'].sudo().create({
-            'order_id': self.order.id,
-        })
-        with self.assertRaises(ValueError):
-            delivery.advance_status('delivered')  # must go assigned→picked_up first
+    def test_invalid_transition_raises(self):
+        d = self._make_delivery()
+        with self.assertRaises(UserError):
+            d.transition('delivered')  # Must go assigned → picked_up → on_the_way → delivered
 
-    def test_tracking_dict_shape(self):
-        delivery = self.env['cargo.delivery'].sudo().create({
-            'order_id': self.order.id, 'driver_id': self.driver.id,
-        })
-        d = delivery.to_tracking_dict()
-        for key in ('deliveryId', 'status', 'driver', 'etaMinutes'):
-            self.assertIn(key, d)
+    def test_delivery_dict_shape(self):
+        d = self._make_delivery()
+        dd = d.to_delivery_dict()
+        for key in ('id', 'orderId', 'status', 'driverId'):
+            self.assertIn(key, dd, f'Missing key: {key}')

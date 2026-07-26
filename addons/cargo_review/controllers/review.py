@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-"""CargoReviewController — Store and product review endpoints."""
+# Part of Cargo Marketplace. See LICENSE file for full copyright and licensing details.
+"""CargoReviewController — Store and product review endpoints.
+
+Product lookups use product.template (native model, filtered by cargo_store_id).
+"""
 import json
 import logging
 
@@ -39,7 +43,7 @@ class CargoReviewController(CargoBaseController):
             return _ok({'error': ERR_NOT_FOUND, 'message': 'Store not found.'}, HTTP_404)
         reviews = request.env['cargo.review'].sudo().search([
             ('review_type', '=', 'store'),
-            ('store_id', '=', store_id),
+            ('store_id',    '=', store_id),
             ('is_approved', '=', True),
         ])
         return _ok([r.to_review_dict() for r in reviews])
@@ -57,13 +61,14 @@ class CargoReviewController(CargoBaseController):
             if not 1 <= rating <= 5:
                 raise ValueError
         except (TypeError, ValueError):
-            return _ok({'error': ERR_VALIDATION, 'message': 'rating must be an integer between 1 and 5.'}, HTTP_400)
+            return _ok({'error': ERR_VALIDATION,
+                        'message': 'rating must be an integer between 1 and 5.'}, HTTP_400)
         review = request.env['cargo.review'].sudo().create({
             'user_id':     request.cargo_user.id,
             'review_type': 'store',
             'store_id':    store_id,
             'rating':      rating,
-            'body':        body.get('body', ''),
+            'comment':     body.get('comment', ''),
         })
         return _ok(review.to_review_dict(), HTTP_201)
 
@@ -72,12 +77,13 @@ class CargoReviewController(CargoBaseController):
     @http.route('/api/products/<int:product_id>/reviews', auth='none', methods=['GET'],
                 type='http', csrf=False, save_session=False)
     def list_product_reviews(self, product_id, **kw):
-        product = request.env['cargo.product'].sudo().browse(product_id)
-        if not product.exists():
+        """product_id is a product.template id."""
+        product = request.env['product.template'].sudo().browse(product_id)
+        if not product.exists() or not product.cargo_store_id:
             return _ok({'error': ERR_NOT_FOUND, 'message': 'Product not found.'}, HTTP_404)
         reviews = request.env['cargo.review'].sudo().search([
             ('review_type', '=', 'product'),
-            ('product_id', '=', product_id),
+            ('product_id',  '=', product_id),
             ('is_approved', '=', True),
         ])
         return _ok([r.to_review_dict() for r in reviews])
@@ -86,8 +92,9 @@ class CargoReviewController(CargoBaseController):
                 type='http', csrf=False, save_session=False)
     @require_cargo_auth()
     def create_product_review(self, product_id, **kw):
-        product = request.env['cargo.product'].sudo().browse(product_id)
-        if not product.exists():
+        """product_id is a product.template id."""
+        product = request.env['product.template'].sudo().browse(product_id)
+        if not product.exists() or not product.cargo_store_id:
             return _ok({'error': ERR_NOT_FOUND, 'message': 'Product not found.'}, HTTP_404)
         body = _body()
         try:
@@ -95,12 +102,13 @@ class CargoReviewController(CargoBaseController):
             if not 1 <= rating <= 5:
                 raise ValueError
         except (TypeError, ValueError):
-            return _ok({'error': ERR_VALIDATION, 'message': 'rating must be an integer between 1 and 5.'}, HTTP_400)
+            return _ok({'error': ERR_VALIDATION,
+                        'message': 'rating must be an integer between 1 and 5.'}, HTTP_400)
         review = request.env['cargo.review'].sudo().create({
             'user_id':     request.cargo_user.id,
             'review_type': 'product',
             'product_id':  product_id,
             'rating':      rating,
-            'body':        body.get('body', ''),
+            'comment':     body.get('comment', ''),
         })
         return _ok(review.to_review_dict(), HTTP_201)

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Part of Cargo Marketplace. See LICENSE file for full copyright and licensing details.
 """CargoDeliveryController — Delivery tracking and status endpoints."""
 import json
 import logging
@@ -6,7 +7,7 @@ import logging
 from odoo import http
 from odoo.http import request
 
-from cargo_base.constants import HTTP_200, HTTP_400, HTTP_404, ERR_VALIDATION, ERR_NOT_FOUND
+from cargo_base.constants import HTTP_200, HTTP_400, HTTP_403, HTTP_404, ERR_VALIDATION, ERR_NOT_FOUND, ERR_PERMISSION
 from cargo_api.controllers.base import CargoBaseController
 from cargo_api.utils.decorators import require_cargo_auth
 
@@ -35,35 +36,37 @@ class CargoDeliveryController(CargoBaseController):
     def order_tracking(self, order_id, **kw):
         """GET /api/orders/:orderId/tracking — live delivery info for the customer."""
         user  = request.cargo_user
-        order = request.env['cargo.order'].sudo().browse(order_id)
-        if not order.exists() or order.user_id.id != user.id:
+        order = request.env['sale.order'].sudo().browse(order_id)
+        if not order.exists() or not order.cargo_status:
             return _ok({'error': ERR_NOT_FOUND, 'message': 'Order not found.'}, HTTP_404)
+        if order.partner_id.id != user.partner_id.id:
+            return _ok({'error': ERR_PERMISSION, 'message': 'Access denied.'}, HTTP_403)
 
         delivery = request.env['cargo.delivery'].sudo().search(
-            [('order_id', '=', order_id)], limit=1
+            [('order_id', '=', order_id)], limit=1,
         )
         if not delivery:
             return _ok({
                 'deliveryId': None,
-                'status': order.status,
-                'driver': None,
-                'etaMinutes': None,
+                'status':     order.cargo_status,
+                'driver':     None,
+                'etaMinutes': order.cargo_estimated_time or None,
             })
-        return _ok(delivery.to_tracking_dict())
+        return _ok(delivery.to_delivery_dict())
 
     @http.route('/api/deliveries/<int:delivery_id>', auth='none', methods=['GET'],
                 type='http', csrf=False, save_session=False)
-    @require_cargo_auth('driver', 'admin')
+    @require_cargo_auth(roles=['driver', 'admin'])
     def get_delivery(self, delivery_id, **kw):
         """GET /api/deliveries/:id — delivery detail for driver or admin."""
         delivery = request.env['cargo.delivery'].sudo().browse(delivery_id)
         if not delivery.exists():
             return _ok({'error': ERR_NOT_FOUND, 'message': 'Delivery not found.'}, HTTP_404)
-        return _ok(delivery.to_tracking_dict())
+        return _ok(delivery.to_delivery_dict())
 
     @http.route('/api/deliveries/<int:delivery_id>/status', auth='none', methods=['PATCH'],
                 type='http', csrf=False, save_session=False)
-    @require_cargo_auth('driver', 'admin')
+    @require_cargo_auth(roles=['driver', 'admin'])
     def update_delivery_status(self, delivery_id, **kw):
         """PATCH /api/deliveries/:id/status  body: { status, lat?, lng?, eta? }"""
         body     = _body()
@@ -75,7 +78,6 @@ class CargoDeliveryController(CargoBaseController):
         if not new_status:
             return _ok({'error': ERR_VALIDATION, 'message': 'status is required.'}, HTTP_400)
 
-        # Update live location if provided
         loc_vals = {}
         if body.get('lat'):
             loc_vals['driver_lat'] = float(body['lat'])
@@ -87,8 +89,8 @@ class CargoDeliveryController(CargoBaseController):
             delivery.write(loc_vals)
 
         try:
-            delivery.advance_status(new_status)
-        except ValueError as exc:
+            delivery.transition(new_status)
+        except Exception as exc:
             return _ok({'error': ERR_VALIDATION, 'message': str(exc)}, HTTP_400)
 
-        return _ok(delivery.to_tracking_dict())
+        return _ok(delivery.to_delivery_dict())

@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!--
+        Cargo orders use sale.order (native model) whose sequence is managed
+        by Odoo's built-in 'sale.order' ir.sequence.  The native sequence
+        produces references like S00001, S00002, etc.
+
+        If the project requires a custom ORD/YYYY/NNNNN prefix, install the
+        sequence below.  It is loaded as noupdate=1 so it can be adjusted
+        without being reset on module update.
+    -->
     <record id="seq_cargo_order" model="ir.sequence">
         <field name="name">Cargo Order</field>
-        <field name="code">cargo.order</field>
+        <field name="code">sale.order</field>
         <field name="prefix">ORD/%(year)s/</field>
         <field name="padding">5</field>
         <field name="company_id" eval="False"/>

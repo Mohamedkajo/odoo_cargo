@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Main dashboard action: redirects to orders graph + live order count card -->
+    <!-- Main dashboard action: Cargo orders graph (sale.order filtered by cargo_status) -->
     <record id="action_cargo_dashboard" model="ir.actions.act_window">
         <field name="name">Cargo Dashboard</field>
-        <field name="res_model">cargo.order</field>
+        <field name="res_model">sale.order</field>
         <field name="view_mode">graph,pivot,list</field>
+        <field name="domain">[('cargo_status', '!=', False)]</field>
         <field name="view_id" ref="cargo_reports.view_cargo_order_graph"/>
-        <field name="context">{'search_default_group_status': 1}</field>
+        <field name="context">{'search_default_group_by_cargo_status': 1}</field>
     </record>
 
 </odoo>

@@ -1,50 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="view_cargo_wallet_form" model="ir.ui.view">
-        <field name="name">cargo.wallet.form</field>
-        <field name="model">cargo.wallet</field>
+    <!-- Extend native res.users form with wallet section -->
+    <record id="view_res_users_cargo_wallet_form" model="ir.ui.view">
+        <field name="name">res.users.cargo.wallet.form</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
         <field name="arch" type="xml">
-            <form string="Wallet">
+            <xpath expr="//notebook" position="inside">
+                <page string="Cargo Wallet" name="cargo_wallet">
+                    <group>
+                        <field name="cargo_wallet_balance"/>
+                        <field name="cargo_wallet_currency_id"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Wallet transactions list -->
+    <record id="view_cargo_wallet_transaction_list" model="ir.ui.view">
+        <field name="name">cargo.wallet.transaction.list</field>
+        <field name="model">cargo.wallet.transaction</field>
+        <field name="arch" type="xml">
+            <list string="Wallet Transactions">
+                <field name="user_id"/>
+                <field name="type"/>
+                <field name="amount"/>
+                <field name="balance_after"/>
+                <field name="note"/>
+                <field name="order_id"/>
+                <field name="create_date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_cargo_wallet_transaction_form" model="ir.ui.view">
+        <field name="name">cargo.wallet.transaction.form</field>
+        <field name="model">cargo.wallet.transaction</field>
+        <field name="arch" type="xml">
+            <form string="Wallet Transaction">
                 <sheet>
                     <group>
                         <field name="user_id"/>
-                        <field name="balance"/>
-                        <field name="currency"/>
+                        <field name="type"/>
+                        <field name="amount"/>
+                        <field name="balance_after"/>
+                        <field name="note"/>
+                        <field name="order_id"/>
                     </group>
-                    <notebook>
-                        <page string="Transactions">
-                            <field name="transaction_ids">
-                                <list>
-                                    <field name="created_at"/>
-                                    <field name="type"/>
-                                    <field name="amount"/>
-                                    <field name="description"/>
-                                    <field name="balance_after"/>
-                                </list>
-                            </field>
-                        </page>
-                    </notebook>
                 </sheet>
             </form>
         </field>
     </record>
 
-    <record id="view_cargo_wallet_list" model="ir.ui.view">
-        <field name="name">cargo.wallet.list</field>
-        <field name="model">cargo.wallet</field>
-        <field name="arch" type="xml">
-            <list string="Wallets">
-                <field name="user_id"/>
-                <field name="balance"/>
-                <field name="currency"/>
-            </list>
-        </field>
-    </record>
-
-    <record id="action_cargo_wallet" model="ir.actions.act_window">
-        <field name="name">Wallets</field>
-        <field name="res_model">cargo.wallet</field>
+    <record id="action_cargo_wallet_transactions" model="ir.actions.act_window">
+        <field name="name">Wallet Transactions</field>
+        <field name="res_model">cargo.wallet.transaction</field>
         <field name="view_mode">list,form</field>
     </record>
 

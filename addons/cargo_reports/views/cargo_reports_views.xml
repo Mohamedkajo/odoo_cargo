@@ -1,46 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- ── Orders pivot ──────────────────────────────────────────────────── -->
+    <!-- ── Orders pivot / graph (native sale.order, filtered by cargo_status) ── -->
 
     <record id="view_cargo_order_pivot" model="ir.ui.view">
-        <field name="name">cargo.order.pivot.reports</field>
-        <field name="model">cargo.order</field>
+        <field name="name">sale.order.cargo.pivot.reports</field>
+        <field name="model">sale.order</field>
         <field name="arch" type="xml">
-            <pivot string="Orders">
-                <field name="create_date" type="row" interval="day"/>
-                <field name="status" type="col"/>
-                <field name="total" type="measure"/>
+            <pivot string="Cargo Orders">
+                <field name="date_order"     type="row" interval="day"/>
+                <field name="cargo_status"   type="col"/>
+                <field name="amount_total"   type="measure"/>
             </pivot>
         </field>
     </record>
 
     <record id="view_cargo_order_graph" model="ir.ui.view">
-        <field name="name">cargo.order.graph.reports</field>
-        <field name="model">cargo.order</field>
+        <field name="name">sale.order.cargo.graph.reports</field>
+        <field name="model">sale.order</field>
         <field name="arch" type="xml">
             <graph string="Order Trend" type="bar">
-                <field name="create_date" interval="day"/>
-                <field name="total" type="measure"/>
+                <field name="date_order"   interval="day"/>
+                <field name="amount_total" type="measure"/>
             </graph>
         </field>
     </record>
 
     <record id="action_cargo_order_report" model="ir.actions.act_window">
         <field name="name">Order Analytics</field>
-        <field name="res_model">cargo.order</field>
+        <field name="res_model">sale.order</field>
         <field name="view_mode">graph,pivot,list</field>
+        <field name="domain">[('cargo_status', '!=', False)]</field>
         <field name="view_id" ref="view_cargo_order_graph"/>
     </record>
 
-    <!-- ── Wallet pivot ──────────────────────────────────────────────────── -->
+    <!-- ── Wallet transaction pivot ─────────────────────────────────────────── -->
 
     <record id="view_cargo_wallet_tx_pivot" model="ir.ui.view">
         <field name="name">cargo.wallet.transaction.pivot</field>
         <field name="model">cargo.wallet.transaction</field>
         <field name="arch" type="xml">
             <pivot string="Wallet Transactions">
-                <field name="transaction_type" type="row"/>
+                <field name="type"   type="row"/>
                 <field name="amount" type="measure"/>
             </pivot>
         </field>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="page_services" name="Cargo — Services">
+    <t t-call="cargo_website.layout">
+
+      <!-- Hero -->
+      <section class="py-20" style="background:linear-gradient(135deg,rgba(124,58,237,0.05) 0%,#faf5ff 100%)">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 class="text-4xl md:text-5xl font-extrabold mb-6">Our Services</h1>
+          <p class="text-xl text-gray-500">Everything you need to shop, sell, and grow — in one platform.</p>
+        </div>
+      </section>
+
+      <!-- Services grid -->
+      <section class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+          <div class="border rounded-2xl p-6 bg-white hover:shadow-md transition-all" style="border-color:rgba(124,58,237,0.1)">
+            <span class="text-xs font-semibold px-2 py-1 rounded-full" style="color:rgb(var(--color-primary));background:rgba(124,58,237,0.1)">For Shoppers</span>
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center mt-4 mb-3" style="background:rgba(124,58,237,0.1)">
+              <i class="fas fa-shopping-bag" style="font-size:18px;color:rgb(var(--color-primary))"></i>
+            </div>
+            <h3 class="font-bold text-base mb-2">Multi-Store Marketplace</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">Browse and shop from hundreds of stores across every category — fashion, electronics, food, and more — all in one unified checkout experience.</p>
+          </div>
+
+          <div class="border rounded-2xl p-6 bg-white hover:shadow-md transition-all" style="border-color:rgba(124,58,237,0.1)">
+            <span class="text-xs font-semibold px-2 py-1 rounded-full" style="color:rgb(var(--color-primary));background:rgba(124,58,237,0.1)">For Merchants</span>
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center mt-4 mb-3" style="background:rgba(124,58,237,0.1)">
+              <i class="fas fa-store" style="font-size:18px;color:rgb(var(--color-primary))"></i>
+            </div>
+            <h3 class="font-bold text-base mb-2">Merchant Storefronts</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">Launch your digital storefront in minutes. Manage products, pricing, inventory, and promotions from one simple dashboard.</p>
+          </div>
+
+          <div class="border rounded-2xl p-6 bg-white hover:shadow-md transition-all" style="border-color:rgba(124,58,237,0.1)">
+            <span class="text-xs font-semibold px-2 py-1 rounded-full" style="color:rgb(var(--color-primary));background:rgba(124,58,237,0.1)">Logistics</span>
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center mt-4 mb-3" style="background:rgba(124,58,237,0.1)">
+              <i class="fas fa-truck" style="font-size:18px;color:rgb(var(--color-primary))"></i>
+            </div>
+            <h3 class="font-bold text-base mb-2">Smart Delivery</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">Real-time order tracking, optimized delivery routes, and same-day fulfillment powered by our driver network.</p>
+          </div>
+
+          <div class="border rounded-2xl p-6 bg-white hover:shadow-md transition-all" style="border-color:rgba(124,58,237,0.1)">
+            <span class="text-xs font-semibold px-2 py-1 rounded-full" style="color:rgb(var(--color-primary));background:rgba(124,58,237,0.1)">Business Intelligence</span>
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center mt-4 mb-3" style="background:rgba(124,58,237,0.1)">
+              <i class="fas fa-chart-bar" style="font-size:18px;color:rgb(var(--color-primary))"></i>
+            </div>
+            <h3 class="font-bold text-base mb-2">Analytics &amp; Insights</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">Deep analytics on sales, customer behavior, and inventory. Make smarter decisions with data you can actually use.</p>
+          </div>
+
+          <div class="border rounded-2xl p-6 bg-white hover:shadow-md transition-all" style="border-color:rgba(124,58,237,0.1)">
+            <span class="text-xs font-semibold px-2 py-1 rounded-full" style="color:rgb(var(--color-primary));background:rgba(124,58,237,0.1)">Payments</span>
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center mt-4 mb-3" style="background:rgba(124,58,237,0.1)">
+              <i class="fas fa-shield-alt" style="font-size:18px;color:rgb(var(--color-primary))"></i>
+            </div>
+            <h3 class="font-bold text-base mb-2">Secure Payments</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">Integrated wallet system with buyer protection, refund management, and support for multiple payment methods.</p>
+          </div>
+
+          <div class="border rounded-2xl p-6 bg-white hover:shadow-md transition-all" style="border-color:rgba(124,58,237,0.1)">
+            <span class="text-xs font-semibold px-2 py-1 rounded-full" style="color:rgb(var(--color-primary));background:rgba(124,58,237,0.1)">Engagement</span>
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center mt-4 mb-3" style="background:rgba(124,58,237,0.1)">
+              <i class="fas fa-bell" style="font-size:18px;color:rgb(var(--color-primary))"></i>
+            </div>
+            <h3 class="font-bold text-base mb-2">Smart Notifications</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">Push notifications for order updates, flash sales, promotions, and personalized product recommendations.</p>
+          </div>
+
+          <div class="border rounded-2xl p-6 bg-white hover:shadow-md transition-all" style="border-color:rgba(124,58,237,0.1)">
+            <span class="text-xs font-semibold px-2 py-1 rounded-full" style="color:rgb(var(--color-primary));background:rgba(124,58,237,0.1)">Mobile</span>
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center mt-4 mb-3" style="background:rgba(124,58,237,0.1)">
+              <i class="fas fa-mobile-alt" style="font-size:18px;color:rgb(var(--color-primary))"></i>
+            </div>
+            <h3 class="font-bold text-base mb-2">Mobile-First App</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">Native iOS and Android apps built for speed. Shop, track orders, and manage your store on the go.</p>
+          </div>
+
+          <div class="border rounded-2xl p-6 bg-white hover:shadow-md transition-all" style="border-color:rgba(124,58,237,0.1)">
+            <span class="text-xs font-semibold px-2 py-1 rounded-full" style="color:rgb(var(--color-primary));background:rgba(124,58,237,0.1)">Support</span>
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center mt-4 mb-3" style="background:rgba(124,58,237,0.1)">
+              <i class="fas fa-headphones" style="font-size:18px;color:rgb(var(--color-primary))"></i>
+            </div>
+            <h3 class="font-bold text-base mb-2">24/7 Support</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">Dedicated support teams for merchants and shoppers. Live chat, email, and phone support around the clock.</p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="py-16 text-white" style="background-color:rgb(var(--color-primary))">
+        <div class="max-w-3xl mx-auto px-4 text-center">
+          <h2 class="text-3xl font-extrabold mb-4">Ready to get started?</h2>
+          <p class="mb-8" style="opacity:0.8">Join thousands of merchants and customers already on Cargo.</p>
+          <div class="flex flex-wrap justify-center gap-4">
+            <a href="/download" class="bg-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-50 transition-all" style="color:rgb(var(--color-primary))">Download the App</a>
+            <a href="/contact"  class="border text-white px-6 py-3 rounded-xl font-semibold hover:bg-white/10 transition-all" style="border-color:rgba(255,255,255,0.3)">Contact Sales</a>
+          </div>
+        </div>
+      </section>
+
+    </t>
+  </template>
+</odoo>

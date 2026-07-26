@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="page_404" name="Cargo — 404">
+    <t t-call="cargo_website.layout">
+      <section class="py-32 text-center" style="background:linear-gradient(135deg,rgba(124,58,237,0.05) 0%,#faf5ff 100%)">
+        <div class="max-w-2xl mx-auto px-4">
+          <div class="text-8xl md:text-9xl font-black mb-6" style="color:rgba(124,58,237,0.15)">404</div>
+          <h1 class="text-3xl md:text-4xl font-extrabold mb-4">Page Not Found</h1>
+          <p class="text-gray-500 text-lg mb-10">
+            Sorry, we couldn't find the page you're looking for. It may have been moved or doesn't exist.
+          </p>
+          <div class="flex flex-wrap justify-center gap-4">
+            <a href="/" class="flex items-center gap-2 text-white px-6 py-3 rounded-xl font-semibold transition-all" style="background-color:rgb(var(--color-primary))">
+              <i class="fas fa-home" style="font-size:16px;"></i> Go Home
+            </a>
+            <a href="/contact" class="flex items-center gap-2 border px-6 py-3 rounded-xl font-semibold transition-all text-gray-600 hover:bg-gray-50">
+              <i class="fas fa-envelope" style="font-size:16px;"></i> Contact Support
+            </a>
+          </div>
+        </div>
+      </section>
+    </t>
+  </template>
+</odoo>

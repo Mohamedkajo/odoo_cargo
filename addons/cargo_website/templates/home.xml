@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="page_home" name="Cargo — Home">
+    <t t-call="cargo_website.layout">
+
+      <!-- ── Hero ──────────────────────────────────────────────────────── -->
+      <section class="relative overflow-hidden py-20 md:py-32" style="background:linear-gradient(135deg,rgba(124,58,237,0.05) 0%,#fff 50%,#faf5ff 100%)">
+        <div class="hero-glow absolute inset-0 pointer-events-none"/>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium mb-6" style="background:rgba(124,58,237,0.1);color:rgb(var(--color-primary))">
+                <i class="fas fa-bolt" style="font-size:14px;"></i> Flash deals updated daily
+              </div>
+              <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
+                Shop Smarter,<br/>
+                <span style="color:rgb(var(--color-primary))">Deliver Faster</span>
+              </h1>
+              <p class="text-lg text-gray-500 mb-8 leading-relaxed">
+                Cargo connects you with thousands of local stores and premium brands. Shop everything in one place and get it delivered to your door.
+              </p>
+              <div class="flex flex-wrap gap-4">
+                <a href="/download" class="flex items-center gap-2 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg" style="background-color:rgb(var(--color-primary))">
+                  <i class="fab fa-apple" style="font-size:18px;"></i> Download for iOS
+                </a>
+                <a href="/download" class="flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-800 transition-all">
+                  <i class="fab fa-google-play" style="font-size:16px;"></i> Get on Android
+                </a>
+              </div>
+              <div class="flex items-center gap-6 mt-8">
+                <div class="flex" style="margin-right:0.5rem;">
+                  <div class="w-8 h-8 rounded-full border-2 border-white -ml-0 flex-shrink-0" style="background:linear-gradient(135deg,#a78bfa,rgb(var(--color-primary)))"/>
+                  <div class="w-8 h-8 rounded-full border-2 border-white -ml-2 flex-shrink-0" style="background:linear-gradient(135deg,#a78bfa,rgb(var(--color-primary)))"/>
+                  <div class="w-8 h-8 rounded-full border-2 border-white -ml-2 flex-shrink-0" style="background:linear-gradient(135deg,#a78bfa,rgb(var(--color-primary)))"/>
+                  <div class="w-8 h-8 rounded-full border-2 border-white -ml-2 flex-shrink-0" style="background:linear-gradient(135deg,#a78bfa,rgb(var(--color-primary)))"/>
+                </div>
+                <div class="text-sm text-gray-500">
+                  <span class="font-bold text-gray-900">50,000+</span> happy shoppers
+                </div>
+                <div class="flex items-center gap-1 text-sm">
+                  <i class="fas fa-star text-yellow-400" style="font-size:14px;"></i>
+                  <span class="font-bold">4.9</span>
+                  <span class="text-gray-500">rating</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Hero graphic -->
+            <div class="relative hidden lg:flex justify-center">
+              <div class="w-72 h-72 rounded-full flex items-center justify-center" style="background:rgba(124,58,237,0.1)">
+                <div class="w-56 h-56 rounded-full flex items-center justify-center" style="background:rgba(124,58,237,0.15)">
+                  <div class="w-40 h-40 rounded-full flex items-center justify-center" style="background:rgba(124,58,237,0.2)">
+                    <i class="fas fa-shopping-bag" style="font-size:80px;color:rgb(var(--color-primary))"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="absolute top-4 right-8 bg-white rounded-xl p-3 shadow-lg border">
+                <div class="flex items-center gap-2 text-sm">
+                  <i class="fas fa-bolt text-yellow-500" style="font-size:14px;"></i>
+                  <span class="font-semibold">Flash Sale Live!</span>
+                </div>
+              </div>
+              <div class="absolute bottom-8 left-4 bg-white rounded-xl p-3 shadow-lg border">
+                <div class="flex items-center gap-2 text-sm">
+                  <i class="fas fa-check-circle text-green-500" style="font-size:14px;"></i>
+                  <span class="font-semibold">Order Delivered ✓</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Stats ──────────────────────────────────────────────────────── -->
+      <section class="py-14" style="background-color:rgb(var(--color-primary))">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-white">
+            <div><div class="text-3xl md:text-4xl font-black mb-1">50K+</div><div class="text-sm" style="opacity:0.8">Happy Customers</div></div>
+            <div><div class="text-3xl md:text-4xl font-black mb-1">1,200+</div><div class="text-sm" style="opacity:0.8">Partner Stores</div></div>
+            <div><div class="text-3xl md:text-4xl font-black mb-1">99.8%</div><div class="text-sm" style="opacity:0.8">Satisfaction Rate</div></div>
+            <div><div class="text-3xl md:text-4xl font-black mb-1">24/7</div><div class="text-sm" style="opacity:0.8">Customer Support</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Features ───────────────────────────────────────────────────── -->
+      <section class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-14">
+          <h2 class="text-3xl md:text-4xl font-extrabold mb-4">Why Choose Cargo?</h2>
+          <p class="text-gray-500 text-lg max-w-2xl mx-auto">Everything you need in one convenient platform.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="border rounded-2xl p-6 bg-white hover:shadow-md transition-shadow text-center">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style="background:rgba(124,58,237,0.1)">
+              <i class="fas fa-shopping-bag" style="font-size:22px;color:rgb(var(--color-primary))"></i>
+            </div>
+            <h3 class="font-bold text-lg mb-2">Huge Selection</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">Browse thousands of products from hundreds of local and premium stores all in one place.</p>
+          </div>
+          <div class="border rounded-2xl p-6 bg-white hover:shadow-md transition-shadow text-center">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style="background:rgba(124,58,237,0.1)">
+              <i class="fas fa-bolt" style="font-size:22px;color:rgb(var(--color-primary))"></i>
+            </div>
+            <h3 class="font-bold text-lg mb-2">Flash Deals</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">Limited-time offers and flash sales with discounts up to 70% off, updated daily.</p>
+          </div>
+          <div class="border rounded-2xl p-6 bg-white hover:shadow-md transition-shadow text-center">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style="background:rgba(124,58,237,0.1)">
+              <i class="fas fa-truck" style="font-size:22px;color:rgb(var(--color-primary))"></i>
+            </div>
+            <h3 class="font-bold text-lg mb-2">Fast Delivery</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">Real-time tracking and same-day delivery options to your doorstep.</p>
+          </div>
+          <div class="border rounded-2xl p-6 bg-white hover:shadow-md transition-shadow text-center">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style="background:rgba(124,58,237,0.1)">
+              <i class="fas fa-shield-alt" style="font-size:22px;color:rgb(var(--color-primary))"></i>
+            </div>
+            <h3 class="font-bold text-lg mb-2">Safe &amp; Secure</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">Secure payments, buyer protection, and verified merchant accounts.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Flash Sales (dynamic) ──────────────────────────────────────── -->
+      <t t-if="flash_sales">
+        <section class="py-16" style="background:linear-gradient(135deg,#faf5ff 0%,#fff 100%)">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between mb-10">
+              <div>
+                <h2 class="text-3xl font-extrabold flex items-center gap-2">
+                  <i class="fas fa-bolt text-yellow-500" style="font-size:28px;"></i> Flash Sales
+                </h2>
+                <p class="text-gray-500 mt-1">Limited-time deals, grab them fast!</p>
+              </div>
+              <a href="/promotions" class="flex items-center gap-1 font-medium hover:gap-2 transition-all" style="color:rgb(var(--color-primary))">
+                View all <i class="fas fa-arrow-right" style="font-size:14px;"></i>
+              </a>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <t t-foreach="flash_sales" t-as="sale">
+                <div class="border rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
+                  <t t-if="sale.image_url">
+                    <img t-att-src="sale.image_url" class="w-full h-40 object-cover" t-att-alt="sale.title"/>
+                  </t>
+                  <div class="p-5">
+                    <div class="flex items-center justify-between mb-2">
+                      <h3 class="font-bold text-lg" t-esc="sale.title"/>
+                      <span class="bg-red-100 text-red-600 font-bold px-2 py-1 rounded-lg text-sm">
+                        <t t-esc="int(sale.discount_percent)"/>% OFF
+                      </span>
+                    </div>
+                    <t t-if="sale.subtitle">
+                      <p class="text-gray-500 text-sm" t-esc="sale.subtitle"/>
+                    </t>
+                  </div>
+                </div>
+              </t>
+            </div>
+          </div>
+        </section>
+      </t>
+
+      <!-- ── Featured Stores (dynamic) ─────────────────────────────────── -->
+      <t t-if="stores">
+        <section class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex items-center justify-between mb-10">
+            <div>
+              <h2 class="text-3xl font-extrabold">Featured Stores</h2>
+              <p class="text-gray-500 mt-1">Top-rated merchants on Cargo</p>
+            </div>
+            <a href="/marketplace" class="flex items-center gap-1 font-medium hover:gap-2 transition-all" style="color:rgb(var(--color-primary))">
+              All stores <i class="fas fa-arrow-right" style="font-size:14px;"></i>
+            </a>
+          </div>
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <t t-foreach="stores" t-as="store">
+              <a href="/marketplace" class="border rounded-xl p-4 text-center hover:shadow-sm transition-all bg-white" style="border-color:rgba(124,58,237,0.1);">
+                <t t-if="store.logo">
+                  <img t-att-src="store.logo" class="w-12 h-12 rounded-lg object-cover mx-auto mb-2" t-att-alt="store.name"/>
+                </t>
+                <t t-else="">
+                  <div class="w-12 h-12 rounded-lg mx-auto mb-2 flex items-center justify-center font-bold text-lg" style="background:rgba(124,58,237,0.1);color:rgb(var(--color-primary))">
+                    <t t-esc="store.name[:1]"/>
+                  </div>
+                </t>
+                <p class="font-medium text-sm truncate" t-esc="store.name"/>
+                <div class="flex items-center justify-center gap-0.5 mt-1">
+                  <i class="fas fa-star text-yellow-400" style="font-size:11px;"></i>
+                  <span class="text-xs text-gray-500" t-esc="'%.1f' % (store.rating or 4.5)"/>
+                </div>
+              </a>
+            </t>
+          </div>
+        </section>
+      </t>
+
+      <!-- ── CTA ───────────────────────────────────────────────────────── -->
+      <section class="py-20 bg-gray-950 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 class="text-3xl md:text-5xl font-extrabold mb-6">Ready to start shopping?</h2>
+          <p class="text-gray-400 text-lg mb-10 max-w-2xl mx-auto">Join thousands of happy customers. Download Cargo now and get 15% off your first order.</p>
+          <div class="flex flex-wrap justify-center gap-4">
+            <a href="/download" class="flex items-center gap-2 bg-white text-gray-900 px-6 py-3 rounded-xl font-semibold hover:bg-gray-100 transition-all">
+              <i class="fab fa-apple" style="font-size:18px;"></i> App Store
+            </a>
+            <a href="/download" class="flex items-center gap-2 text-white px-6 py-3 rounded-xl font-semibold transition-all" style="background-color:rgb(var(--color-primary))">
+              <i class="fab fa-google-play" style="font-size:16px;"></i> Google Play
+            </a>
+          </div>
+        </div>
+      </section>
+
+    </t>
+  </template>
+</odoo>

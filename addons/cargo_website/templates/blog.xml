@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!-- ── Blog list ─────────────────────────────────────────────────────── -->
+  <template id="page_blog" name="Cargo — Blog">
+    <t t-call="cargo_website.layout">
+
+      <section class="py-20" style="background:linear-gradient(135deg,rgba(124,58,237,0.05) 0%,#faf5ff 100%)">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+          <h1 class="text-4xl md:text-5xl font-extrabold mb-4">Cargo Blog</h1>
+          <p class="text-gray-500 text-lg">News, insights, and tips for merchants and shoppers.</p>
+        </div>
+      </section>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- Category filter -->
+        <t t-if="categories">
+          <div class="flex gap-2 flex-wrap mb-8">
+            <a href="/blog"
+               t-attf-class="px-4 py-2 rounded-full text-sm font-medium transition-colors #{not current_category and 'text-white' or 'text-gray-500 bg-gray-100 hover:bg-gray-200'}"
+               t-attf-style="#{not current_category and 'background-color:rgb(var(--color-primary))' or ''}">All</a>
+            <t t-foreach="categories" t-as="cat">
+              <a t-attf-href="/blog?category=#{cat.slug}"
+                 t-attf-class="px-4 py-2 rounded-full text-sm font-medium transition-colors #{current_category == cat.slug and 'text-white' or 'text-gray-500 bg-gray-100 hover:bg-gray-200'}"
+                 t-attf-style="#{current_category == cat.slug and 'background-color:rgb(var(--color-primary))' or ''}"
+                 t-esc="cat.name"/>
+            </t>
+          </div>
+        </t>
+
+        <t t-if="posts">
+          <!-- Featured / first post -->
+          <t t-if="posts[0]">
+            <a t-attf-href="/blog/#{posts[0].slug}" class="block mb-8 group">
+              <div class="border rounded-2xl overflow-hidden bg-white hover:shadow-lg transition-shadow grid grid-cols-1 md:grid-cols-2">
+                <t t-if="posts[0].image_url">
+                  <img t-att-src="posts[0].image_url" class="h-64 md:h-full object-cover w-full" t-att-alt="posts[0].title"/>
+                </t>
+                <t t-else="">
+                  <div class="h-64 md:h-full min-h-48" style="background:linear-gradient(135deg,rgba(124,58,237,0.1),#f3e8ff)"/>
+                </t>
+                <div class="p-8 flex flex-col justify-center">
+                  <div class="flex items-center gap-2 mb-4">
+                    <span class="text-xs font-semibold px-2 py-1 rounded-full" style="background:rgba(124,58,237,0.1);color:rgb(var(--color-primary))">Featured</span>
+                    <t t-if="posts[0].category_id">
+                      <span class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-500" t-esc="posts[0].category_id.name"/>
+                    </t>
+                  </div>
+                  <h2 class="text-2xl font-extrabold mb-3 group-hover:transition-colors" t-esc="posts[0].title" style="transition:color 0.2s"/>
+                  <t t-if="posts[0].summary">
+                    <p class="text-gray-500 mb-4 line-clamp-3" t-esc="posts[0].summary"/>
+                  </t>
+                  <div class="flex items-center gap-4 text-sm text-gray-400">
+                    <span class="flex items-center gap-1">
+                      <i class="fas fa-user" style="font-size:12px;"></i>
+                      <t t-esc="posts[0].author_name or 'Cargo Team'"/>
+                    </span>
+                    <span class="flex items-center gap-1">
+                      <i class="fas fa-clock" style="font-size:12px;"></i>
+                      <t t-esc="posts[0].read_time"/> min read
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </t>
+
+          <!-- Remaining posts -->
+          <t t-if="len(posts) > 1">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <t t-foreach="posts[1:]" t-as="post">
+                <a t-attf-href="/blog/#{post.slug}" class="group block border rounded-2xl overflow-hidden bg-white hover:shadow-md transition-shadow">
+                  <t t-if="post.image_url">
+                    <img t-att-src="post.image_url" class="w-full h-44 object-cover" t-att-alt="post.title"/>
+                  </t>
+                  <t t-else="">
+                    <div class="w-full h-44" style="background:linear-gradient(135deg,rgba(124,58,237,0.1),#f3e8ff)"/>
+                  </t>
+                  <div class="p-5">
+                    <t t-if="post.category_id">
+                      <span class="text-xs font-semibold" style="color:rgb(var(--color-primary))" t-esc="post.category_id.name"/>
+                    </t>
+                    <h3 class="font-bold text-base mt-1 mb-2 line-clamp-2" t-esc="post.title"/>
+                    <t t-if="post.summary">
+                      <p class="text-gray-500 text-sm line-clamp-2 mb-3" t-esc="post.summary"/>
+                    </t>
+                    <div class="flex items-center gap-3 text-xs text-gray-400">
+                      <span class="flex items-center gap-1">
+                        <i class="fas fa-user" style="font-size:10px;"></i>
+                        <t t-esc="post.author_name or 'Cargo Team'"/>
+                      </span>
+                      <span class="flex items-center gap-1">
+                        <i class="fas fa-clock" style="font-size:10px;"></i>
+                        <t t-esc="post.read_time"/> min
+                      </span>
+                    </div>
+                  </div>
+                </a>
+              </t>
+            </div>
+          </t>
+        </t>
+
+        <!-- Empty state -->
+        <t t-else="">
+          <div class="text-center py-16 text-gray-400">No posts yet.</div>
+        </t>
+      </div>
+
+    </t>
+  </template>
+
+  <!-- ── Blog post ──────────────────────────────────────────────────────── -->
+  <template id="page_blog_post" name="Cargo — Blog Post">
+    <t t-call="cargo_website.layout">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+
+        <a href="/blog" class="inline-flex items-center gap-1 text-gray-400 hover:text-primary text-sm mb-8 transition-colors">
+          <i class="fas fa-arrow-left" style="font-size:13px;"></i> Back to Blog
+        </a>
+
+        <t t-if="post.category_id">
+          <span class="text-xs font-semibold px-2 py-1 rounded-full" style="color:rgb(var(--color-primary));background:rgba(124,58,237,0.1)" t-esc="post.category_id.name"/>
+        </t>
+
+        <h1 class="text-3xl md:text-4xl font-extrabold mt-4 mb-4" t-esc="post.title"/>
+
+        <t t-if="post.summary">
+          <p class="text-gray-500 text-lg mb-6 leading-relaxed" t-esc="post.summary"/>
+        </t>
+
+        <div class="flex items-center gap-6 text-sm text-gray-400 mb-8 pb-8 border-b">
+          <span class="flex items-center gap-1.5">
+            <i class="fas fa-user" style="font-size:14px;"></i>
+            <t t-esc="post.author_name or 'Cargo Team'"/>
+          </span>
+          <span class="flex items-center gap-1.5">
+            <i class="fas fa-clock" style="font-size:14px;"></i>
+            <t t-esc="post.read_time"/> min read
+          </span>
+          <t t-if="post.published_date">
+            <span t-esc="post.published_date.strftime('%B %d, %Y') if post.published_date else ''"/>
+          </t>
+        </div>
+
+        <t t-if="post.image_url">
+          <img t-att-src="post.image_url" class="w-full h-64 md:h-80 object-cover rounded-2xl mb-10" t-att-alt="post.title"/>
+        </t>
+
+        <div class="cargo-prose">
+          <t t-if="post.content">
+            <t t-out="post.content"/>
+          </t>
+          <t t-else="">
+            <p class="text-gray-400 italic">No content available.</p>
+          </t>
+        </div>
+
+      </div>
+    </t>
+  </template>
+
+</odoo>

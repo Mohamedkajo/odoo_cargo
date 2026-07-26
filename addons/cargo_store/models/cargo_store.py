@@ -52,8 +52,11 @@ class CargoStore(models.Model):
         'cargo.store.category', 'Store Category',
         ondelete='set null', index=True,
     )
-    category_name = fields.Char(related='category_id.name', store=True, readonly=True)
-    category_icon = fields.Char(related='category_id.icon', store=True, readonly=True)
+    # translate=False is required: category_id.name has translate=True and Odoo 18
+    # inherits that onto stored related fields, making it write jsonb into a
+    # character varying column → psycopg2 UndefinedFunction crash.
+    category_name = fields.Char(related='category_id.name', store=True, readonly=True, translate=False)
+    category_icon = fields.Char(related='category_id.icon', store=True, readonly=True, translate=False)
 
     # ── Rating ────────────────────────────────────────────────────────────────
     rating       = fields.Float('Rating', default=4.0, digits=(3, 1))

@@ -76,9 +76,9 @@ class CargoDelivery(models.Model):
     eta_minutes = fields.Integer('ETA (min)')
 
     # ── Denormalised for quick display ────────────────────────────────────────
-    order_name    = fields.Char(related='order_id.name',              store=True, readonly=True)
+    order_name    = fields.Char(related='order_id.name',              store=True, readonly=True, translate=False)
     customer_name = fields.Char(related='order_id.partner_id.name',   store=True, readonly=True)
-    driver_name   = fields.Char(related='driver_id.name',             store=True, readonly=True)
+    driver_name   = fields.Char(related='driver_id.name',             store=True, readonly=True, translate=False)
 
     # ── Lifecycle ─────────────────────────────────────────────────────────────
 

@@ -29,6 +29,8 @@ class CargoStoreProductTemplate(models.Model):
         related='cargo_store_id.name',
         store=True,
         readonly=True,
+        translate=False,  # cargo_store.name has translate=True; must override or Odoo 18
+                          # writes jsonb into a character varying column → DB crash
     )
 
     # ── API serialisation override ────────────────────────────────────────────

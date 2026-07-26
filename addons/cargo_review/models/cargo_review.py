@@ -64,7 +64,7 @@ class CargoReview(models.Model):
     is_anonymous = fields.Boolean('Anonymous', default=False)
 
     # ── Denormalised reviewer info ────────────────────────────────────────────
-    reviewer_name   = fields.Char(related='user_id.name',           store=True, readonly=True)
+    reviewer_name   = fields.Char(related='user_id.name',           store=True, readonly=True, translate=False)
     reviewer_avatar = fields.Char('Reviewer Avatar URL')
 
     _sql_constraints = [

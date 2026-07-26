@@ -9,7 +9,7 @@
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
                 <page string="Cargo Vendor" name="cargo_vendor"
-                      attrs="{'invisible': [('cargo_role', '!=', 'vendor')]}">
+                      invisible="cargo_role != 'vendor'">
                     <group string="Business Details">
                         <field name="cargo_vendor_business_name"/>
                         <field name="cargo_vendor_tax_number"/>
@@ -22,7 +22,7 @@
                         <field name="cargo_vendor_approved_by" readonly="1"/>
                         <field name="cargo_vendor_store_count" readonly="1"/>
                     </group>
-                    <group string="Rejection" attrs="{'invisible': [('cargo_vendor_is_approved', '=', True)]}">
+                    <group string="Rejection" invisible="cargo_vendor_is_approved">
                         <field name="cargo_vendor_reject_reason"/>
                     </group>
                 </page>

@@ -40,17 +40,23 @@ class CargoResUsers(models.Model):
         help='Number of unread cargo.notification records for this user.',
     )
 
-    # ── Default properties overrides ──────────────────────────────────────────
+    # ── Self-service field access (Odoo 18: classmethod API) ─────────────────
+    # Odoo 17+ replaced the class-level SELF_READABLE_FIELDS / SELF_WRITEABLE_FIELDS
+    # sets with classmethods.  Using the old sets raises AttributeError on install.
 
-    SELF_READABLE_FIELDS = models.Model.SELF_READABLE_FIELDS | {
-        'cargo_role',
-        'cargo_device_token',
-        'cargo_unread_count',
-    }
+    @classmethod
+    def _get_self_readable_fields(cls):
+        return super()._get_self_readable_fields() | {
+            'cargo_role',
+            'cargo_device_token',
+            'cargo_unread_count',
+        }
 
-    SELF_WRITEABLE_FIELDS = models.Model.SELF_WRITEABLE_FIELDS | {
-        'cargo_device_token',
-    }
+    @classmethod
+    def _get_self_writeable_fields(cls):
+        return super()._get_self_writeable_fields() | {
+            'cargo_device_token',
+        }
 
     # ── Computes ──────────────────────────────────────────────────────────────
 

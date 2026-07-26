@@ -18,9 +18,10 @@
                 <field name="is_revoked"/>
                 <field name="is_expired"  optional="show"/>
                 <field name="is_valid"    optional="hide"/>
+                <!-- Odoo 18: attrs= removed; use invisible= with boolean expression -->
                 <button name="action_revoke" string="Revoke" type="object"
                         class="btn-danger"
-                        attrs="{'invisible': [('is_revoked', '=', True)]}"/>
+                        invisible="is_revoked"/>
             </list>
         </field>
     </record>
@@ -32,11 +33,17 @@
         <field name="arch" type="xml">
             <form string="API Token" create="false">
                 <header>
+                    <!--
+                        Odoo 18: widget="statusbar" only works on Selection fields.
+                        is_revoked is Boolean → display as a badge via a char field or
+                        use the button row and the readonly field in the sheet instead.
+                    -->
                     <button name="action_revoke" string="Revoke Token" type="object"
                             class="btn-danger"
-                            attrs="{'invisible': [('is_revoked', '=', True)]}"/>
-                    <field name="is_revoked" widget="statusbar"
-                           statusbar_visible="0,1"/>
+                            invisible="is_revoked"/>
+                    <button string="Revoked" type="object" name="action_revoke"
+                            class="btn-secondary" disabled="1"
+                            invisible="not is_revoked"/>
                 </header>
                 <sheet>
                     <group>
@@ -80,8 +87,8 @@
                 <filter string="Revoked" name="revoked" domain="[('is_revoked', '=', True)]"/>
                 <separator/>
                 <group expand="0" string="Group By">
-                    <filter string="User"      name="group_user"   context="{'group_by': 'user_id'}"/>
-                    <filter string="Issue Date" name="group_date"  context="{'group_by': 'created_at:month'}"/>
+                    <filter string="User"       name="group_user" context="{'group_by': 'user_id'}"/>
+                    <filter string="Issue Date" name="group_date" context="{'group_by': 'created_at:month'}"/>
                 </group>
             </search>
         </field>

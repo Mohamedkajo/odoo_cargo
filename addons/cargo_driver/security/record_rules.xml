@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="rule_driver_own_profile" model="ir.rule">
-        <field name="name">Cargo Driver: driver sees own profile only</field>
-        <field name="model_id" ref="model_cargo_driver"/>
-        <field name="domain_force">[('user_id', '=', user.id)]</field>
+    <!--
+        cargo.driver was removed.  Driver profiles now live on res.users,
+        extended by cargo_driver (cargo_driver_* fields).
+
+        Drivers may only read and update their own user record.
+        Odoo's built-in access control already prevents users from accessing
+        other users' records; this rule makes that explicit for the driver group
+        and is required for the RPC-based driver app profile endpoint.
+    -->
+
+    <record id="rule_cargo_driver_own_user" model="ir.rule">
+        <field name="name">Cargo Driver: driver manages own user record only</field>
+        <field name="model_id" ref="base.model_res_users"/>
+        <field name="domain_force">[('id', '=', user.id)]</field>
         <field name="groups" eval="[(4, ref('cargo_base.cargo_group_driver'))]"/>
+        <field name="perm_read"   eval="True"/>
+        <field name="perm_write"  eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
     </record>
+
 </odoo>

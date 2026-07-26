@@ -1,26 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!--
+        cargo.order was removed.  Orders now live on sale.order, extended by
+        cargo_base (cargo_status) and cargo_store (cargo_store_id).
+
+        sale.order does NOT have a user_id field — the ordering party is
+        identified through partner_id.  Vendor isolation uses cargo_store_id.
+    -->
+
     <!-- Customers see only their own orders -->
     <record id="rule_cargo_order_customer_own" model="ir.rule">
         <field name="name">Cargo Order: Customer sees own orders only</field>
-        <field name="model_id" ref="model_cargo_order"/>
-        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="domain_force">[('partner_id', '=', user.partner_id.id),
+                                    ('cargo_status', '!=', False)]</field>
         <field name="groups" eval="[(4, ref('cargo_base.cargo_group_customer'))]"/>
-        <field name="perm_read" eval="True"/>
-        <field name="perm_write" eval="False"/>
+        <field name="perm_read"   eval="True"/>
+        <field name="perm_write"  eval="False"/>
         <field name="perm_create" eval="True"/>
         <field name="perm_unlink" eval="False"/>
     </record>
 
-    <!-- Vendors see orders for their store -->
+    <!-- Vendors see orders for their store(s) only -->
     <record id="rule_cargo_order_vendor_store" model="ir.rule">
         <field name="name">Cargo Order: Vendor sees store orders only</field>
-        <field name="model_id" ref="model_cargo_order"/>
-        <field name="domain_force">[('store_id.vendor_id', '=', user.id)]</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="domain_force">[('cargo_store_id.vendor_id', '=', user.id),
+                                    ('cargo_status', '!=', False)]</field>
         <field name="groups" eval="[(4, ref('cargo_base.cargo_group_vendor'))]"/>
-        <field name="perm_read" eval="True"/>
-        <field name="perm_write" eval="True"/>
+        <field name="perm_read"   eval="True"/>
+        <field name="perm_write"  eval="True"/>
         <field name="perm_create" eval="False"/>
         <field name="perm_unlink" eval="False"/>
     </record>
+
 </odoo>

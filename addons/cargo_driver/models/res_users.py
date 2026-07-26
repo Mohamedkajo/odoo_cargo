@@ -61,28 +61,35 @@ class CargoDriverUser(models.Model):
     cargo_driver_total_deliveries = fields.Integer('Deliveries', default=0)
     cargo_driver_total_earnings   = fields.Float('Earnings (EGP)', digits=(10, 2), default=0.0)
 
-    # ── Defaults override (expose driver fields as SELF_READABLE) ─────────────
-    SELF_READABLE_FIELDS = models.Model.SELF_READABLE_FIELDS | {
-        'cargo_driver_vehicle_type',
-        'cargo_driver_vehicle_plate',
-        'cargo_driver_vehicle_color',
-        'cargo_driver_vehicle_year',
-        'cargo_driver_is_online',
-        'cargo_driver_current_lat',
-        'cargo_driver_current_lng',
-        'cargo_driver_location_at',
-        'cargo_driver_rating',
-        'cargo_driver_rating_count',
-        'cargo_driver_total_deliveries',
-        'cargo_driver_total_earnings',
-    }
+    # ── Self-service field access (Odoo 18: classmethod API) ─────────────────
+    # Odoo 17+ removed the class-level SELF_READABLE_FIELDS / SELF_WRITEABLE_FIELDS
+    # sets.  Override the classmethods instead to avoid AttributeError on install.
 
-    SELF_WRITEABLE_FIELDS = models.Model.SELF_WRITEABLE_FIELDS | {
-        'cargo_driver_vehicle_type',
-        'cargo_driver_vehicle_plate',
-        'cargo_driver_vehicle_color',
-        'cargo_driver_vehicle_year',
-    }
+    @classmethod
+    def _get_self_readable_fields(cls):
+        return super()._get_self_readable_fields() | {
+            'cargo_driver_vehicle_type',
+            'cargo_driver_vehicle_plate',
+            'cargo_driver_vehicle_color',
+            'cargo_driver_vehicle_year',
+            'cargo_driver_is_online',
+            'cargo_driver_current_lat',
+            'cargo_driver_current_lng',
+            'cargo_driver_location_at',
+            'cargo_driver_rating',
+            'cargo_driver_rating_count',
+            'cargo_driver_total_deliveries',
+            'cargo_driver_total_earnings',
+        }
+
+    @classmethod
+    def _get_self_writeable_fields(cls):
+        return super()._get_self_writeable_fields() | {
+            'cargo_driver_vehicle_type',
+            'cargo_driver_vehicle_plate',
+            'cargo_driver_vehicle_color',
+            'cargo_driver_vehicle_year',
+        }
 
     # ── Helpers ───────────────────────────────────────────────────────────────
 

@@ -1,5 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_cargo_wallet_customer,cargo.wallet customer,model_cargo_wallet,cargo_base.cargo_group_customer,1,1,1,0
-access_cargo_wallet_admin,cargo.wallet admin,model_cargo_wallet,cargo_base.cargo_group_admin,1,1,1,1
 access_cargo_wallet_transaction_customer,cargo.wallet.transaction customer,model_cargo_wallet_transaction,cargo_base.cargo_group_customer,1,0,0,0
 access_cargo_wallet_transaction_admin,cargo.wallet.transaction admin,model_cargo_wallet_transaction,cargo_base.cargo_group_admin,1,1,1,1
+access_cargo_wallet_transaction_operations,cargo.wallet.transaction operations,model_cargo_wallet_transaction,cargo_base.cargo_group_operations,1,0,0,0

@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="rule_vendor_own_profile" model="ir.rule">
-        <field name="name">Cargo Vendor: vendor sees own profile only</field>
-        <field name="model_id" ref="model_cargo_vendor"/>
-        <field name="domain_force">[('user_id', '=', user.id)]</field>
+    <!--
+        cargo.vendor was removed.  Vendor profiles now live on res.partner,
+        extended by cargo_vendor (cargo_vendor_* fields).
+
+        The cargo_base module already restricts vendors to their own partner
+        record via cargo_rule_partner_vendor_own.
+
+        This rule adds an explicit write restriction so vendors can only
+        update their own cargo vendor profile fields, not other partners.
+    -->
+
+    <record id="rule_cargo_vendor_own_partner" model="ir.rule">
+        <field name="name">Cargo Vendor: vendor edits own partner only</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="domain_force">[('id', '=', user.partner_id.id)]</field>
         <field name="groups" eval="[(4, ref('cargo_base.cargo_group_vendor'))]"/>
+        <field name="perm_read"   eval="True"/>
+        <field name="perm_write"  eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
     </record>
+
 </odoo>

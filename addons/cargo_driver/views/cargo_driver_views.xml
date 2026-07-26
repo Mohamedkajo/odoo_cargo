@@ -9,7 +9,7 @@
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
                 <page string="Driver Profile" name="cargo_driver"
-                      attrs="{'invisible': [('cargo_role', '!=', 'driver')]}">
+                      invisible="cargo_role != 'driver'">
                     <group string="Vehicle">
                         <field name="cargo_driver_vehicle_type"/>
                         <field name="cargo_driver_vehicle_plate"/>

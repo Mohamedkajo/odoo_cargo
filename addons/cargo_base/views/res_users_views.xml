@@ -13,10 +13,10 @@
                     <field name="cargo_role"/>
                     <field name="cargo_device_token"
                            string="Device Token (FCM)"
-                           attrs="{'invisible': [('cargo_role', '=', False)]}"/>
+                           invisible="not cargo_role"/>
                     <field name="cargo_unread_count" string="Unread Notifications"
                            readonly="1"
-                           attrs="{'invisible': [('cargo_role', '=', False)]}"/>
+                           invisible="not cargo_role"/>
                 </group>
             </sheet>
 

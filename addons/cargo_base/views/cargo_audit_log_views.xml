@@ -65,7 +65,7 @@
                     </group>
                     <group string="Changes">
                         <field name="changes" readonly="1" widget="code"
-                               attrs="{'invisible': [('changes', '=', False)]}"/>
+                               invisible="not changes"/>
                     </group>
                 </sheet>
             </form>

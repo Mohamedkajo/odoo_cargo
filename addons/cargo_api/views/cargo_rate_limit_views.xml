@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ── cargo.rate.limit — List view ─────────────────────────────────── -->
+    <record id="view_cargo_rate_limit_list" model="ir.ui.view">
+        <field name="name">cargo.rate.limit.list</field>
+        <field name="model">cargo.rate.limit</field>
+        <field name="arch" type="xml">
+            <list string="Rate Limit Counters" create="false" delete="false" editable="false"
+                  default_order="window_start desc">
+                <field name="ip_address"/>
+                <field name="window_start"/>
+                <field name="request_count"
+                       decoration-danger="request_count &gt;= 60"
+                       decoration-warning="request_count &gt;= 40"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ── cargo.rate.limit — Search view ────────────────────────────────── -->
+    <record id="view_cargo_rate_limit_search" model="ir.ui.view">
+        <field name="name">cargo.rate.limit.search</field>
+        <field name="model">cargo.rate.limit</field>
+        <field name="arch" type="xml">
+            <search string="Search Rate Limits">
+                <field name="ip_address"/>
+                <filter string="High traffic (≥40 req/min)" name="high"
+                        domain="[('request_count', '&gt;=', 40)]"/>
+                <filter string="Current minute" name="current"
+                        domain="[('window_start', '&gt;=',
+                                  (datetime.datetime.now() - datetime.timedelta(minutes=1)).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+                <group expand="0" string="Group By">
+                    <filter string="IP Address" name="group_ip"
+                            context="{'group_by': 'ip_address'}"/>
+                    <filter string="Window"     name="group_window"
+                            context="{'group_by': 'window_start:minute'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ── Action ─────────────────────────────────────────────────────────── -->
+    <record id="action_cargo_rate_limit" model="ir.actions.act_window">
+        <field name="name">Rate Limit Monitor</field>
+        <field name="res_model">cargo.rate.limit</field>
+        <field name="view_mode">list</field>
+        <field name="search_view_id" ref="view_cargo_rate_limit_search"/>
+        <field name="context">{'search_default_current': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No rate limit data yet.</p>
+            <p>Per-IP request counters appear here during API traffic.</p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,86 @@
+[options]
+; ─────────────────────────────────────────────────────────────────────────────
+; Cargo Marketplace — Odoo 18 Configuration Template
+; Copy to /etc/odoo/odoo.conf (or specify with --config=odoo.conf)
+; ─────────────────────────────────────────────────────────────────────────────
+
+; ── Database ──────────────────────────────────────────────────────────────────
+db_host = localhost
+db_port = 5432
+db_user = cargo_user
+db_password = change_me_strong_password
+db_name = cargo_db
+; db_maxconn — max DB connections per worker (default 64)
+db_maxconn = 64
+
+; ── HTTP Server ───────────────────────────────────────────────────────────────
+http_port = 8069
+; For reverse proxy (nginx) deployments, set proxy_mode = True
+proxy_mode = False
+; Long-polling port (required for live chat and Discuss)
+longpolling_port = 8072
+
+; ── Addons Path ───────────────────────────────────────────────────────────────
+; Always include the standard Odoo addons first, then your custom addons
+addons_path = /opt/odoo/odoo/addons,/opt/odoo/addons,/opt/odoo/cargo/addons
+
+; ── Logging ───────────────────────────────────────────────────────────────────
+logfile = /var/log/odoo/odoo.log
+log_level = info
+; log_handler = :INFO
+; Enable per-module log levels (useful for debugging specific modules):
+; log_handler = cargo_api:DEBUG,cargo_base:DEBUG,:WARNING
+
+; ── Workers (production) ──────────────────────────────────────────────────────
+; Set workers > 0 for multi-process mode.
+; Rule of thumb: 2 × CPU cores + 1 (for long-polling)
+workers = 4
+max_cron_threads = 2
+; Memory limits per worker (in bytes)
+limit_memory_hard = 2684354560   ; 2.5 GB
+limit_memory_soft = 2147483648   ; 2.0 GB
+; CPU time limit per request (seconds)
+limit_time_cpu = 60
+; Wall-clock time limit per request (seconds)
+limit_time_real = 120
+; Requests per worker before restart (prevents memory leaks)
+limit_request = 8192
+
+; ── Security ──────────────────────────────────────────────────────────────────
+; Master password to create/drop databases (CHANGE THIS!)
+admin_passwd = change_me_admin_master_password
+; Disable the database manager in production
+; list_db = False
+
+; ── Email ─────────────────────────────────────────────────────────────────────
+email_from = noreply@yourdomain.com
+smtp_server = smtp.example.com
+smtp_port = 587
+smtp_ssl = starttls
+smtp_user = noreply@yourdomain.com
+smtp_password = change_me_smtp_password
+
+; ── Miscellaneous ─────────────────────────────────────────────────────────────
+; Data directory (where Odoo stores uploads, sessions, etc.)
+data_dir = /var/lib/odoo
+
+; ── Development only (remove in production) ───────────────────────────────────
+; dev_mode = reload,qweb,werkzeug,xml
+; without_demo = all
+
+; ─────────────────────────────────────────────────────────────────────────────
+; NGINX Reverse Proxy (recommended for production)
+; ─────────────────────────────────────────────────────────────────────────────
+; When running behind nginx, set:
+;   proxy_mode = True
+; And add to nginx config:
+;   location / {
+;       proxy_pass http://127.0.0.1:8069;
+;       proxy_set_header Host $host;
+;       proxy_set_header X-Real-IP $remote_addr;
+;       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+;       proxy_set_header X-Forwarded-Proto $scheme;
+;   }
+;   location /longpolling {
+;       proxy_pass http://127.0.0.1:8072;
+;   }

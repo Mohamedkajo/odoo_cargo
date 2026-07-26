@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ── List view ──────────────────────────────────────────────────────── -->
+    <record id="cargo_audit_log_view_list" model="ir.ui.view">
+        <field name="name">cargo.audit.log.list</field>
+        <field name="model">cargo.audit.log</field>
+        <field name="arch" type="xml">
+            <list string="Audit Log" create="false" edit="false" delete="false"
+                  decoration-danger="response_code &gt;= 500"
+                  decoration-warning="response_code &gt;= 400 and response_code &lt; 500"
+                  decoration-muted="action == 'read'">
+                <field name="created_at"/>
+                <field name="user_id"/>
+                <field name="user_name"/>
+                <field name="action"/>
+                <field name="model_name"/>
+                <field name="record_id"/>
+                <field name="endpoint"/>
+                <field name="http_method"/>
+                <field name="response_code"/>
+                <field name="duration_ms" string="Duration (ms)"/>
+                <field name="ip_address"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ── Form view ─────────────────────────────────────────────────────── -->
+    <record id="cargo_audit_log_view_form" model="ir.ui.view">
+        <field name="name">cargo.audit.log.form</field>
+        <field name="model">cargo.audit.log</field>
+        <field name="arch" type="xml">
+            <form string="Audit Log Entry" create="false" edit="false" delete="false">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="action" readonly="1"/>
+                            on
+                            <field name="model_name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Who">
+                            <field name="user_id" readonly="1"/>
+                            <field name="user_name" readonly="1"/>
+                            <field name="ip_address" readonly="1"/>
+                            <field name="user_agent" readonly="1"/>
+                        </group>
+                        <group string="What">
+                            <field name="action" readonly="1"/>
+                            <field name="model_name" readonly="1"/>
+                            <field name="record_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="HTTP Context">
+                            <field name="endpoint" readonly="1"/>
+                            <field name="http_method" readonly="1"/>
+                            <field name="response_code" readonly="1"/>
+                            <field name="duration_ms" string="Duration (ms)" readonly="1"/>
+                        </group>
+                        <group string="When">
+                            <field name="created_at" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Changes">
+                        <field name="changes" readonly="1" widget="code"
+                               attrs="{'invisible': [('changes', '=', False)]}"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ── Search view ───────────────────────────────────────────────────── -->
+    <record id="cargo_audit_log_view_search" model="ir.ui.view">
+        <field name="name">cargo.audit.log.search</field>
+        <field name="model">cargo.audit.log</field>
+        <field name="arch" type="xml">
+            <search string="Search Audit Log">
+                <field name="user_id"/>
+                <field name="user_name"/>
+                <field name="action"/>
+                <field name="model_name"/>
+                <field name="endpoint"/>
+                <field name="ip_address"/>
+                <filter name="filter_login"    string="Logins"    domain="[('action', '=', 'login')]"/>
+                <filter name="filter_register" string="Registers" domain="[('action', '=', 'register')]"/>
+                <filter name="filter_errors"   string="Errors"    domain="[('response_code', '&gt;=', 400)]"/>
+                <filter name="filter_server_errors" string="Server Errors"
+                        domain="[('response_code', '&gt;=', 500)]"/>
+                <separator/>
+                <filter name="filter_today" string="Today"
+                        domain="[('created_at', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00'))]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_action"    string="Action"     context="{'group_by': 'action'}"/>
+                    <filter name="group_model"     string="Model"      context="{'group_by': 'model_name'}"/>
+                    <filter name="group_user"      string="User"       context="{'group_by': 'user_id'}"/>
+                    <filter name="group_response"  string="HTTP Code"  context="{'group_by': 'response_code'}"/>
+                    <filter name="group_date"      string="Date"       context="{'group_by': 'created_at:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ── Window action ─────────────────────────────────────────────────── -->
+    <record id="action_cargo_audit_log" model="ir.actions.act_window">
+        <field name="name">Audit Log</field>
+        <field name="res_model">cargo.audit.log</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="cargo_audit_log_view_search"/>
+        <field name="context">{'search_default_filter_today': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No audit log entries yet.
+            </p>
+            <p>
+                API requests and data changes are recorded here automatically.
+            </p>
+        </field>
+    </record>
+
+</odoo>

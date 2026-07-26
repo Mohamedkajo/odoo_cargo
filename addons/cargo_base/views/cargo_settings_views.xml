@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="cargo_config_settings_view_form" model="ir.ui.view">
+        <field name="name">cargo.config.settings.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <form string="Cargo Settings" class="oe_form_configuration">
+                <app string="Cargo Marketplace" name="cargo_base"
+                     data-string="Cargo Marketplace"
+                     data-key="cargo_base">
+
+                    <!-- ── Authentication ── -->
+                    <block title="Authentication (JWT)">
+                        <setting string="JWT Secret"
+                                 help="HMAC-SHA256 key used to sign JWT tokens. Generated automatically on install. Changing this invalidates ALL active user sessions.">
+                            <field name="cargo_jwt_secret" password="True"/>
+                        </setting>
+                        <setting string="Access Token Expiry (seconds)"
+                                 help="Default: 86400 (24 hours). Shorter values increase security at the cost of more frequent re-logins.">
+                            <field name="cargo_jwt_access_expiry"/>
+                        </setting>
+                        <setting string="Refresh Token Expiry (seconds)"
+                                 help="Default: 2592000 (30 days).">
+                            <field name="cargo_jwt_refresh_expiry"/>
+                        </setting>
+                    </block>
+
+                    <!-- ── Rate Limiting ── -->
+                    <block title="API Rate Limiting">
+                        <setting string="Requests per Minute"
+                                 help="Maximum API requests per minute per IP. Requests above this limit receive a 429 response.">
+                            <field name="cargo_rate_limit_rpm"/>
+                        </setting>
+                    </block>
+
+                    <!-- ── Commerce ── -->
+                    <block title="Commerce">
+                        <setting string="Default Commission Rate (%)"
+                                 help="Platform commission applied to every order. Overridable per store.">
+                            <field name="cargo_commission_default"/>
+                        </setting>
+                    </block>
+
+                    <!-- ── Delivery ── -->
+                    <block title="Delivery OTP">
+                        <setting string="OTP Expiry (minutes)"
+                                 help="How long a delivery OTP remains valid after the driver starts collecting.">
+                            <field name="cargo_otp_expiry_minutes"/>
+                        </setting>
+                    </block>
+
+                    <!-- ── Media ── -->
+                    <block title="Media">
+                        <setting string="Max Image Upload Size (MB)"
+                                 help="Images above this size are rejected with a 422 error.">
+                            <field name="cargo_max_image_mb"/>
+                        </setting>
+                    </block>
+
+                    <!-- ── Customer Support ── -->
+                    <block title="Customer Support">
+                        <setting string="Support Email">
+                            <field name="cargo_support_email"/>
+                        </setting>
+                        <setting string="Support Phone">
+                            <field name="cargo_support_phone"/>
+                        </setting>
+                    </block>
+
+                    <!-- ── Locale ── -->
+                    <block title="Locale">
+                        <setting string="Default Currency (ISO code)"
+                                 help="e.g. EGP for Egyptian Pound. Used when creating wallet transactions.">
+                            <field name="cargo_default_currency"/>
+                        </setting>
+                        <setting string="Default Country (ISO alpha-2)"
+                                 help="e.g. EG for Egypt. Used for phone validation.">
+                            <field name="cargo_default_country"/>
+                        </setting>
+                    </block>
+
+                </app>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_cargo_config_settings" model="ir.actions.act_window">
+        <field name="name">Cargo Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="cargo_config_settings_view_form"/>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'cargo_base'}</field>
+    </record>
+
+</odoo>

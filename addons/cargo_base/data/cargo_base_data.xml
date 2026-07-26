@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--
+        ═══════════════════════════════════════════════════════════
+        ir.config_parameter defaults
+        (Only set if not already present — handled by post_init_hook)
+        ═══════════════════════════════════════════════════════════
+        These records serve as fallbacks when the hook cannot run
+        (e.g. demo installation). The JWT secret MUST be rotated
+        via Settings after installation.
+        -->
+
+        <!--
+        DO NOT pre-seed cargo.jwt.secret here — it must be generated
+        as a cryptographically random value by the Python hook, not
+        stored as a predictable string in XML.
+        -->
+
+        <record id="cargo_config_jwt_access_expiry" model="ir.config_parameter">
+            <field name="key">cargo.jwt.access_expiry_seconds</field>
+            <field name="value">86400</field>
+        </record>
+
+        <record id="cargo_config_jwt_refresh_expiry" model="ir.config_parameter">
+            <field name="key">cargo.jwt.refresh_expiry_seconds</field>
+            <field name="value">2592000</field>
+        </record>
+
+        <record id="cargo_config_rate_limit" model="ir.config_parameter">
+            <field name="key">cargo.rate_limit.requests_per_minute</field>
+            <field name="value">60</field>
+        </record>
+
+        <record id="cargo_config_commission_default" model="ir.config_parameter">
+            <field name="key">cargo.commission.default_rate</field>
+            <field name="value">10.0</field>
+        </record>
+
+        <record id="cargo_config_otp_expiry" model="ir.config_parameter">
+            <field name="key">cargo.otp.expiry_minutes</field>
+            <field name="value">10</field>
+        </record>
+
+        <record id="cargo_config_max_image_mb" model="ir.config_parameter">
+            <field name="key">cargo.media.max_image_size_mb</field>
+            <field name="value">5</field>
+        </record>
+
+        <record id="cargo_config_support_email" model="ir.config_parameter">
+            <field name="key">cargo.support.email</field>
+            <field name="value">support@cargo.marketplace</field>
+        </record>
+
+        <record id="cargo_config_support_phone" model="ir.config_parameter">
+            <field name="key">cargo.support.phone</field>
+            <field name="value">+201000000000</field>
+        </record>
+
+        <record id="cargo_config_currency" model="ir.config_parameter">
+            <field name="key">cargo.default_currency</field>
+            <field name="value">EGP</field>
+        </record>
+
+        <record id="cargo_config_country" model="ir.config_parameter">
+            <field name="key">cargo.default_country_code</field>
+            <field name="value">EG</field>
+        </record>
+
+    </data>
+</odoo>

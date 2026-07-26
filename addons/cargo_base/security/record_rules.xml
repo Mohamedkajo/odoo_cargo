@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--
+        ═══════════════════════════════════════════════════════════
+        res.partner record rules
+        ═══════════════════════════════════════════════════════════
+        -->
+
+        <!--
+        Customers can only read their own partner record.
+        They cannot browse other users' contact data.
+        -->
+        <record id="cargo_rule_partner_customer_own" model="ir.rule">
+            <field name="name">Cargo: Customer sees own partner only</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="domain_force">[('id', '=', user.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('cargo_base.cargo_group_customer'))]"/>
+            <field name="perm_read"  eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!--
+        Drivers can only read their own partner record.
+        -->
+        <record id="cargo_rule_partner_driver_own" model="ir.rule">
+            <field name="name">Cargo: Driver sees own partner only</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="domain_force">[('id', '=', user.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('cargo_base.cargo_group_driver'))]"/>
+            <field name="perm_read"  eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!--
+        Vendors can read their own partner record and company partners.
+        The cargo_store module extends this with a store-specific rule.
+        -->
+        <record id="cargo_rule_partner_vendor_own" model="ir.rule">
+            <field name="name">Cargo: Vendor sees own partner only</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="domain_force">[('id', '=', user.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('cargo_base.cargo_group_vendor'))]"/>
+            <field name="perm_read"  eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!--
+        Operations staff see all Cargo partners (customers, vendors, drivers).
+        They cannot see internal Odoo company partners (is_company = False
+        filter is intentionally omitted here — Operations needs full visibility).
+        -->
+        <record id="cargo_rule_partner_operations_all" model="ir.rule">
+            <field name="name">Cargo: Operations sees all Cargo partners</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="domain_force">
+                [('cargo_role', 'in', ['customer', 'vendor', 'driver'])]
+            </field>
+            <field name="groups" eval="[(4, ref('cargo_base.cargo_group_operations'))]"/>
+            <field name="perm_read"  eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!--
+        Administrators have unrestricted access to all partner records.
+        Rule uses [(1, '=', 1)] = no restriction.
+        -->
+        <record id="cargo_rule_partner_admin_all" model="ir.rule">
+            <field name="name">Cargo: Admin sees all partners</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('cargo_base.cargo_group_admin'))]"/>
+            <field name="perm_read"  eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!--
+        ═══════════════════════════════════════════════════════════
+        cargo.audit.log record rules
+        ═══════════════════════════════════════════════════════════
+        Audit logs are globally visible to admin-tier groups only.
+        The Python model already blocks write/unlink; these rules
+        restrict read access.
+        -->
+
+        <record id="cargo_rule_audit_log_admin" model="ir.rule">
+            <field name="name">Cargo: Audit log visible to admin+</field>
+            <field name="model_id" ref="cargo_base.model_cargo_audit_log"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('cargo_base.cargo_group_admin'))]"/>
+            <field name="perm_read"  eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

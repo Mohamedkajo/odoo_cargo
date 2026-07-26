@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!--
+        cargo.api.token record rules
+        ============================
+        Users can only see their own tokens.
+        Admins can see all tokens.
+    -->
+
+    <record id="cargo_rule_api_token_own" model="ir.rule">
+        <field name="name">Cargo API Token: Users see only their own tokens</field>
+        <field name="model_id" ref="model_cargo_api_token"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('cargo_base.cargo_group_customer')),
+                                    (4, ref('cargo_base.cargo_group_driver')),
+                                    (4, ref('cargo_base.cargo_group_vendor')),
+                                    (4, ref('cargo_base.cargo_group_vendor_manager'))]"/>
+        <field name="perm_read">True</field>
+        <field name="perm_write">True</field>
+        <field name="perm_create">True</field>
+        <field name="perm_unlink">True</field>
+    </record>
+
+    <record id="cargo_rule_api_token_operations_all" model="ir.rule">
+        <field name="name">Cargo API Token: Operations team sees all tokens</field>
+        <field name="model_id" ref="model_cargo_api_token"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('cargo_base.cargo_group_operations')),
+                                    (4, ref('cargo_base.cargo_group_admin')),
+                                    (4, ref('cargo_base.cargo_group_super_admin'))]"/>
+        <field name="perm_read">True</field>
+        <field name="perm_write">False</field>
+        <field name="perm_create">False</field>
+        <field name="perm_unlink">False</field>
+    </record>
+
+</odoo>

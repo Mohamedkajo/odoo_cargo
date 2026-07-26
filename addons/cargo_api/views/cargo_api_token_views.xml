@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ── cargo.api.token — List view ──────────────────────────────────── -->
+    <record id="view_cargo_api_token_list" model="ir.ui.view">
+        <field name="name">cargo.api.token.list</field>
+        <field name="model">cargo.api.token</field>
+        <field name="arch" type="xml">
+            <list string="API Refresh Tokens" create="false" editable="false"
+                  decoration-muted="is_revoked or is_expired"
+                  decoration-success="is_valid">
+                <field name="user_id"/>
+                <field name="device_info"/>
+                <field name="ip_address"/>
+                <field name="created_at"/>
+                <field name="expires_at"/>
+                <field name="last_used_at"/>
+                <field name="is_revoked"/>
+                <field name="is_expired"  optional="show"/>
+                <field name="is_valid"    optional="hide"/>
+                <button name="action_revoke" string="Revoke" type="object"
+                        class="btn-danger"
+                        attrs="{'invisible': [('is_revoked', '=', True)]}"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ── cargo.api.token — Form view ──────────────────────────────────── -->
+    <record id="view_cargo_api_token_form" model="ir.ui.view">
+        <field name="name">cargo.api.token.form</field>
+        <field name="model">cargo.api.token</field>
+        <field name="arch" type="xml">
+            <form string="API Token" create="false">
+                <header>
+                    <button name="action_revoke" string="Revoke Token" type="object"
+                            class="btn-danger"
+                            attrs="{'invisible': [('is_revoked', '=', True)]}"/>
+                    <field name="is_revoked" widget="statusbar"
+                           statusbar_visible="0,1"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Identity">
+                            <field name="user_id"    readonly="1"/>
+                            <field name="token_hash" readonly="1" password="True"/>
+                        </group>
+                        <group string="Status">
+                            <field name="is_valid"   readonly="1"/>
+                            <field name="is_revoked" readonly="1"/>
+                            <field name="is_expired" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Timestamps">
+                            <field name="created_at"   readonly="1"/>
+                            <field name="expires_at"   readonly="1"/>
+                            <field name="last_used_at" readonly="1"/>
+                        </group>
+                        <group string="Device Context">
+                            <field name="ip_address"  readonly="1"/>
+                            <field name="user_agent"  readonly="1"/>
+                            <field name="device_info" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ── cargo.api.token — Search view ─────────────────────────────────── -->
+    <record id="view_cargo_api_token_search" model="ir.ui.view">
+        <field name="name">cargo.api.token.search</field>
+        <field name="model">cargo.api.token</field>
+        <field name="arch" type="xml">
+            <search string="Search API Tokens">
+                <field name="user_id"/>
+                <field name="ip_address"/>
+                <field name="device_info"/>
+                <filter string="Valid"   name="valid"   domain="[('is_revoked', '=', False)]"/>
+                <filter string="Revoked" name="revoked" domain="[('is_revoked', '=', True)]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="User"      name="group_user"   context="{'group_by': 'user_id'}"/>
+                    <filter string="Issue Date" name="group_date"  context="{'group_by': 'created_at:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ── Action ─────────────────────────────────────────────────────────── -->
+    <record id="action_cargo_api_token" model="ir.actions.act_window">
+        <field name="name">API Tokens</field>
+        <field name="res_model">cargo.api.token</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_cargo_api_token_search"/>
+        <field name="context">{'search_default_valid': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No API tokens yet.</p>
+            <p>Refresh tokens appear here when users log in via the mobile apps.</p>
+        </field>
+    </record>
+
+</odoo>

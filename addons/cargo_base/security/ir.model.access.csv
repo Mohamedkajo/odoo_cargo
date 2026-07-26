@@ -1,0 +1,5 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+cargo_audit_log_operations,cargo.audit.log operations,model_cargo_audit_log,cargo_base.cargo_group_operations,1,0,0,0
+cargo_audit_log_finance,cargo.audit.log finance,model_cargo_audit_log,cargo_base.cargo_group_finance,1,0,0,0
+cargo_audit_log_admin,cargo.audit.log admin,model_cargo_audit_log,cargo_base.cargo_group_admin,1,0,1,0
+cargo_audit_log_super_admin,cargo.audit.log super admin,model_cargo_audit_log,cargo_base.cargo_group_super_admin,1,0,1,0

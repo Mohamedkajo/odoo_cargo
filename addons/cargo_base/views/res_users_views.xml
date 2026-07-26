@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ── Inherit user form to expose Cargo fields ─────────────────────── -->
+    <record id="cargo_res_users_view_form" model="ir.ui.view">
+        <field name="name">res.users.form.cargo</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+
+            <sheet position="inside">
+                <group string="Cargo Mobile App" name="cargo_mobile_group">
+                    <field name="cargo_role"/>
+                    <field name="cargo_device_token"
+                           string="Device Token (FCM)"
+                           attrs="{'invisible': [('cargo_role', '=', False)]}"/>
+                    <field name="cargo_unread_count" string="Unread Notifications"
+                           readonly="1"
+                           attrs="{'invisible': [('cargo_role', '=', False)]}"/>
+                </group>
+            </sheet>
+
+        </field>
+    </record>
+
+</odoo>

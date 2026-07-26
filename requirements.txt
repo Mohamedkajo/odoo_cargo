@@ -1,0 +1,70 @@
+# Cargo Marketplace — Odoo 18 Python dependencies
+#
+# These packages are required ON TOP OF the standard Odoo 18 installation.
+# The standard Odoo 18 requirements are managed by Odoo itself (see
+# https://github.com/odoo/odoo/blob/18.0/requirements.txt).
+#
+# Install with:
+#   pip install -r requirements.txt
+
+# ── Odoo 18 core requirements (pinned for reproducibility) ────────────────────
+# Run `pip freeze > requirements.txt` after `pip install odoo` to pin all deps.
+# Below are the most important packages; full freeze is in requirements.lock
+
+Babel==2.9.1
+chardet==4.0.0
+cryptography>=41.0.0
+decorator==4.4.2
+docutils==0.17
+ebaysdk==2.1.5
+freezegun==1.1.0
+geoip2==2.9.0
+gevent==22.10.2
+greenlet==1.1.2
+idna==2.10
+Jinja2==3.0.3
+libsass==0.21.0
+lxml==4.8.0
+Markdown==3.3.7
+MarkupSafe==2.0.1
+num2words==0.5.10
+ofxparse==0.21
+passlib==1.7.4
+Pillow==9.0.1
+polib==1.1.1
+psutil==5.9.0
+psycopg2-binary==2.9.9
+pyOpenSSL==22.0.0
+PyPDF2==1.26.0
+pyserial==3.5
+python-dateutil==2.8.1
+python-ldap==3.4.0
+python-stdnum==1.17
+pytz>=2022.1
+pyusb==1.2.1
+qrcode==7.3.1
+reportlab==3.6.9
+requests==2.27.1
+rjsmin==1.2.0
+six==1.16.0
+urllib3==1.26.8
+vobject==0.9.6.1
+Werkzeug==2.0.2
+xlrd==1.2.0
+XlsxWriter==3.0.2
+xlwt==1.3.0
+zeep==4.1.0
+
+# ── Cargo-specific additions ──────────────────────────────────────────────────
+# No external packages required for cargo_base or cargo_api.
+# JWT is implemented using Python stdlib (hmac, hashlib, base64).
+# All cargo modules are zero-external-dependency by design.
+
+# ── Development / testing tools ───────────────────────────────────────────────
+# Install these in development environments only:
+#   pip install -r requirements-dev.txt
+
+# ── Future module dependencies (uncomment when module is added) ───────────────
+# firebase-admin==6.2.0      # cargo_notification (FCM push notifications)
+# stripe==7.0.0              # cargo_payment (if using Stripe)
+# boto3==1.26.0              # cargo_media (S3/DigitalOcean Spaces)

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ── Inherit form view — add Cargo tab ────────────────────────────── -->
+    <record id="cargo_product_template_view_form" model="ir.ui.view">
+        <field name="name">product.template.form.cargo</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+
+            <notebook position="inside">
+                <page string="Cargo Marketplace" name="cargo_marketplace">
+                    <group>
+                        <group string="Pricing">
+                            <field name="cargo_original_price" widget="monetary"/>
+                            <field name="cargo_discount_percent"
+                                   widget="percentage" string="Discount (%)"/>
+                            <field name="cargo_effective_price" readonly="1"
+                                   widget="monetary" string="Customer Price"/>
+                        </group>
+                        <group string="Visibility">
+                            <field name="cargo_is_available"/>
+                            <field name="cargo_is_featured"/>
+                            <field name="cargo_is_trending"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Discovery">
+                            <field name="cargo_tags"
+                                   placeholder="halal, spicy, vegan …"/>
+                        </group>
+                        <group string="Social Proof">
+                            <field name="cargo_rating" readonly="1"/>
+                            <field name="cargo_review_count" readonly="1"/>
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+
+        </field>
+    </record>
+
+    <!-- ── Inherit list view — add key Cargo columns ─────────────────────── -->
+    <record id="cargo_product_template_view_list" model="ir.ui.view">
+        <field name="name">product.template.list.cargo</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="list_price" position="after">
+                <field name="cargo_effective_price" string="Customer Price"
+                       optional="show"/>
+                <field name="cargo_discount_percent" string="Discount %"
+                       optional="show"/>
+                <field name="cargo_is_available" optional="show"/>
+                <field name="cargo_rating" string="Rating" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- ── Inherit search view ───────────────────────────────────────────── -->
+    <record id="cargo_product_template_view_search" model="ir.ui.view">
+        <field name="name">product.template.search.cargo</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <filter name="filter_to_publish" position="after">
+                <separator/>
+                <filter name="cargo_featured"   string="Featured"
+                        domain="[('cargo_is_featured', '=', True)]"/>
+                <filter name="cargo_trending"   string="Trending"
+                        domain="[('cargo_is_trending', '=', True)]"/>
+                <filter name="cargo_available"  string="Available"
+                        domain="[('cargo_is_available', '=', True)]"/>
+                <filter name="cargo_discounted" string="On Discount"
+                        domain="[('cargo_discount_percent', '&gt;', 0)]"/>
+            </filter>
+        </field>
+    </record>
+
+</odoo>

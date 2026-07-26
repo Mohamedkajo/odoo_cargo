@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Cargo API — Scheduled jobs (ir.cron)
+
+        1. Expired token cleanup   — runs daily at 03:00
+        2. Rate limit window GC    — runs hourly
+    -->
+
+    <!-- ── 1. Expired API token cleanup ─────────────────────────────────── -->
+    <record id="ir_cron_cargo_api_token_cleanup" model="ir.cron">
+        <field name="name">Cargo: Clean up expired API tokens</field>
+        <field name="model_id" ref="model_cargo_api_token"/>
+        <field name="state">code</field>
+        <field name="code">model.cargo_cleanup_expired()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+        <field name="doall">False</field>
+    </record>
+
+    <!-- ── 2. Rate limit window garbage collection ───────────────────────── -->
+    <record id="ir_cron_cargo_rate_limit_cleanup" model="ir.cron">
+        <field name="name">Cargo: Clean up old rate limit windows</field>
+        <field name="model_id" ref="model_cargo_rate_limit"/>
+        <field name="state">code</field>
+        <field name="code">model.cargo_cleanup_old_windows()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+        <field name="doall">False</field>
+    </record>
+
+</odoo>

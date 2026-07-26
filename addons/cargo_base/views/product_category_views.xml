@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ── Inherit form view — add Cargo fields ─────────────────────────── -->
+    <record id="cargo_product_category_view_form" model="ir.ui.view">
+        <field name="name">product.category.form.cargo</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view"/>
+        <field name="arch" type="xml">
+
+            <field name="parent_id" position="after">
+                <field name="cargo_icon" placeholder="☕"/>
+                <field name="cargo_slug"/>
+                <field name="cargo_is_active"/>
+                <field name="cargo_sort_order"/>
+                <field name="cargo_store_count" readonly="1"/>
+            </field>
+
+        </field>
+    </record>
+
+</odoo>

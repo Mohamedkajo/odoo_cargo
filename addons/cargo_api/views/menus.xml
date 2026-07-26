@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Cargo API — Backend menu items.
+
+        Registers under the existing Cargo root menu (defined in cargo_base).
+        Adds an "API Management" sub-menu with:
+          - API Tokens        (refresh token viewer and revocation)
+          - Rate Limit Monitor (live traffic monitor)
+    -->
+
+    <!-- API Management parent menu -->
+    <menuitem
+        id="menu_cargo_api_management"
+        name="API Management"
+        parent="cargo_base.menu_cargo_root"
+        sequence="90"
+        groups="cargo_base.cargo_group_admin,cargo_base.cargo_group_super_admin"/>
+
+    <!-- API Tokens -->
+    <menuitem
+        id="menu_cargo_api_tokens"
+        name="API Tokens"
+        parent="menu_cargo_api_management"
+        action="action_cargo_api_token"
+        sequence="10"
+        groups="cargo_base.cargo_group_admin,cargo_base.cargo_group_super_admin"/>
+
+    <!-- Rate Limit Monitor -->
+    <menuitem
+        id="menu_cargo_rate_limit"
+        name="Rate Limit Monitor"
+        parent="menu_cargo_api_management"
+        action="action_cargo_rate_limit"
+        sequence="20"
+        groups="cargo_base.cargo_group_admin,cargo_base.cargo_group_super_admin"/>
+
+</odoo>

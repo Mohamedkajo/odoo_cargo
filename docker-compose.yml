@@ -1,0 +1,108 @@
+---
+# ─────────────────────────────────────────────────────────────────────────────
+# Cargo Marketplace — Docker Compose
+# Runs Odoo 18 + PostgreSQL 15 for local development
+#
+# Usage:
+#   docker compose up -d        # start in background
+#   docker compose logs -f odoo # tail Odoo logs
+#   docker compose down -v      # stop and remove volumes
+#
+# Access:
+#   Odoo UI:    http://localhost:8069
+#   pgAdmin:    http://localhost:5050  (admin@cargo.local / admin)
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: cargo_marketplace
+
+services:
+
+  # ── PostgreSQL 15 ──────────────────────────────────────────────────────────
+  db:
+    image: postgres:15-alpine
+    container_name: cargo_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       ${POSTGRES_DB:-cargo_db}
+      POSTGRES_USER:     ${POSTGRES_USER:-cargo_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cargo_dev_password}
+      PGDATA:            /var/lib/postgresql/data/pgdata
+    volumes:
+      - cargo_pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-cargo_user} -d ${POSTGRES_DB:-cargo_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - cargo_net
+
+  # ── Odoo 18 ───────────────────────────────────────────────────────────────
+  odoo:
+    image: odoo:18.0
+    container_name: cargo_odoo
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      HOST:     db
+      PORT:     ${POSTGRES_PORT:-5432}
+      USER:     ${POSTGRES_USER:-cargo_user}
+      PASSWORD: ${POSTGRES_PASSWORD:-cargo_dev_password}
+    volumes:
+      # Custom addons (cargo modules)
+      - ./addons:/mnt/extra-addons:ro
+      # Odoo configuration
+      - ./config/odoo.conf:/etc/odoo/odoo.conf:ro
+      # Persistent data (uploads, sessions)
+      - cargo_odoo_data:/var/lib/odoo
+      # Log output
+      - cargo_odoo_logs:/var/log/odoo
+    ports:
+      - "${ODOO_HTTP_PORT:-8069}:8069"
+      - "${ODOO_LONGPOLLING_PORT:-8072}:8072"
+    command: ["odoo", "--config=/etc/odoo/odoo.conf"]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8069/web/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    networks:
+      - cargo_net
+
+  # ── pgAdmin (development only — optional) ─────────────────────────────────
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: cargo_pgadmin
+    restart: unless-stopped
+    profiles: ["dev"]    # only starts with: docker compose --profile dev up
+    environment:
+      PGADMIN_DEFAULT_EMAIL:    admin@cargo.local
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      - cargo_pgadmin_data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+    networks:
+      - cargo_net
+
+volumes:
+  cargo_pgdata:
+    driver: local
+  cargo_odoo_data:
+    driver: local
+  cargo_odoo_logs:
+    driver: local
+  cargo_pgadmin_data:
+    driver: local
+
+networks:
+  cargo_net:
+    driver: bridge

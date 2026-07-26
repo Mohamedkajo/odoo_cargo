@@ -1,12 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-# cargo.api.token — only admin/super_admin and the token owner (enforced by record rule)
 access_cargo_api_token_admin,cargo.api.token admin,model_cargo_api_token,cargo_base.cargo_group_admin,1,1,1,1
 access_cargo_api_token_super_admin,cargo.api.token super_admin,model_cargo_api_token,cargo_base.cargo_group_super_admin,1,1,1,1
 access_cargo_api_token_operations,cargo.api.token operations,model_cargo_api_token,cargo_base.cargo_group_operations,1,0,0,0
-# All authenticated users can create their own tokens (via sudo in controller)
-# No direct ORM-level create for regular users — controllers use sudo()
-
-# cargo.rate.limit — internal, only admin can view
 access_cargo_rate_limit_admin,cargo.rate.limit admin,model_cargo_rate_limit,cargo_base.cargo_group_admin,1,1,1,1
 access_cargo_rate_limit_super_admin,cargo.rate.limit super_admin,model_cargo_rate_limit,cargo_base.cargo_group_super_admin,1,1,1,1
 access_cargo_rate_limit_operations,cargo.rate.limit operations,model_cargo_rate_limit,cargo_base.cargo_group_operations,1,0,0,0

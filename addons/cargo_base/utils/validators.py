@@ -128,6 +128,10 @@ def validate_phone(phone: str, field: str = 'phone') -> str:
     return cleaned
 
 
+# Alias used by auth controller
+normalize_egyptian_phone = validate_phone
+
+
 def validate_password(password: str, field: str = 'password') -> str:
     """
     Validate password strength.

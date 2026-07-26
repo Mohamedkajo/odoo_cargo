@@ -15,9 +15,7 @@
         <field name="code">model.cargo_cleanup_expired()</field>
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>
-        <field name="numbercall">-1</field>
         <field name="active">True</field>
-        <field name="doall">False</field>
     </record>
 
     <!-- ── 2. Rate limit window garbage collection ───────────────────────── -->
@@ -28,9 +26,7 @@
         <field name="code">model.cargo_cleanup_old_windows()</field>
         <field name="interval_number">1</field>
         <field name="interval_type">hours</field>
-        <field name="numbercall">-1</field>
         <field name="active">True</field>
-        <field name="doall">False</field>
     </record>
 
 </odoo>

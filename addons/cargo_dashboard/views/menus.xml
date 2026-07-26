@@ -4,7 +4,7 @@
     <!-- Top-level Cargo menu item with dashboard as the landing action -->
     <menuitem id="menu_cargo_dashboard_home"
               name="Dashboard"
-              parent="cargo_base.menu_cargo_root"
+              parent="cargo_base.cargo_menu_root"
               action="action_cargo_dashboard"
               sequence="1"/>
 

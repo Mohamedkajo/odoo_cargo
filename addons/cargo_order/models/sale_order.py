@@ -27,7 +27,7 @@ Flutter Order.fromJson complete contract:
   couponCode, driverName, driverPhone, driverRating
 """
 from odoo import api, fields, models
-from cargo_base.constants import (
+from odoo.addons.cargo_base.constants import (
     ORDER_STATUSES,
     ORDER_STATUS_CONFIRMED,
     ORDER_TRANSITIONS,

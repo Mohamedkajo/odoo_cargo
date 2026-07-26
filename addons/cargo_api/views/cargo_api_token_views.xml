@@ -6,7 +6,7 @@
         <field name="name">cargo.api.token.list</field>
         <field name="model">cargo.api.token</field>
         <field name="arch" type="xml">
-            <list string="API Refresh Tokens" create="false" editable="false"
+            <list string="API Refresh Tokens" create="false"
                   decoration-muted="is_revoked or is_expired"
                   decoration-success="is_valid">
                 <field name="user_id"/>

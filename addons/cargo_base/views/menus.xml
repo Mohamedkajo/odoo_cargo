@@ -11,10 +11,7 @@
               name="Cargo"
               web_icon="cargo_base,static/description/icon.png"
               sequence="50"
-              groups="cargo_base.cargo_group_operations,
-                      cargo_base.cargo_group_finance,
-                      cargo_base.cargo_group_admin,
-                      cargo_base.cargo_group_super_admin"/>
+              groups="cargo_base.cargo_group_operations,cargo_base.cargo_group_finance,cargo_base.cargo_group_admin,cargo_base.cargo_group_super_admin"/>
 
     <!-- ── Administration sub-menu ─────────────────────────────────────── -->
     <menuitem id="cargo_menu_admin"

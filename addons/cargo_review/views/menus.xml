@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <menuitem id="menu_cargo_review_root" name="Reviews"
-              parent="cargo_base.menu_cargo_root" sequence="65"/>
+              parent="cargo_base.cargo_menu_root" sequence="65"/>
     <menuitem id="menu_cargo_review_list" name="All Reviews"
               parent="menu_cargo_review_root" action="action_cargo_review" sequence="10"/>
 </odoo>

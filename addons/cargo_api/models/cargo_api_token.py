@@ -182,7 +182,6 @@ class CargoApiToken(models.Model):
         _logger.info('cargo.api.token cleanup: removed %d expired token(s).', count)
         return count
 
-    @api.model
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:

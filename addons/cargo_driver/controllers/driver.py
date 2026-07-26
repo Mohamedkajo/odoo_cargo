@@ -21,9 +21,9 @@ from datetime import datetime, timezone
 from odoo import http
 from odoo.http import request
 
-from cargo_base.constants import HTTP_200, HTTP_400
-from cargo_api.controllers.base import CargoBaseController
-from cargo_api.utils.decorators import require_cargo_auth
+from odoo.addons.cargo_base.constants import HTTP_200, HTTP_400
+from odoo.addons.cargo_api.controllers.base import CargoBaseController
+from odoo.addons.cargo_api.utils.decorators import require_cargo_auth
 
 _logger = logging.getLogger(__name__)
 
@@ -51,14 +51,14 @@ class CargoDriverController(CargoBaseController):
 
     @http.route('/api/driver/profile', auth='none', methods=['GET'],
                 type='http', csrf=False, save_session=False)
-    @require_cargo_auth(roles=['driver'])
+    @require_cargo_auth('driver')
     def cargo_driver_profile(self, **kwargs):
         """GET /api/driver/profile — full driver profile."""
         return _ok(request.cargo_user.cargo_driver_to_api_dict())
 
     @http.route('/api/driver/profile', auth='none', methods=['PATCH'],
                 type='http', csrf=False, save_session=False)
-    @require_cargo_auth(roles=['driver'])
+    @require_cargo_auth('driver')
     def cargo_driver_update_profile(self, **kwargs):
         """PATCH /api/driver/profile — update vehicle details."""
         user = request.cargo_user
@@ -76,7 +76,7 @@ class CargoDriverController(CargoBaseController):
 
     @http.route('/api/driver/status', auth='none', methods=['POST'],
                 type='http', csrf=False, save_session=False)
-    @require_cargo_auth(roles=['driver'])
+    @require_cargo_auth('driver')
     def cargo_driver_status(self, **kwargs):
         """POST /api/driver/status — { "online": true/false, "lat": N, "lng": N }"""
         user    = request.cargo_user
@@ -92,7 +92,7 @@ class CargoDriverController(CargoBaseController):
 
     @http.route('/api/driver/location', auth='none', methods=['PATCH'],
                 type='http', csrf=False, save_session=False)
-    @require_cargo_auth(roles=['driver'])
+    @require_cargo_auth('driver')
     def cargo_driver_location(self, **kwargs):
         """PATCH /api/driver/location — { "lat": N, "lng": N }"""
         user = request.cargo_user
@@ -116,7 +116,7 @@ class CargoDriverController(CargoBaseController):
 
     @http.route('/api/driver/earnings', auth='none', methods=['GET'],
                 type='http', csrf=False, save_session=False)
-    @require_cargo_auth(roles=['driver'])
+    @require_cargo_auth('driver')
     def cargo_driver_earnings(self, **kwargs):
         """GET /api/driver/earnings — today's delivery stats."""
         user  = request.cargo_user
@@ -142,7 +142,7 @@ class CargoDriverController(CargoBaseController):
 
     @http.route('/api/driver/orders', auth='none', methods=['GET'],
                 type='http', csrf=False, save_session=False)
-    @require_cargo_auth(roles=['driver'])
+    @require_cargo_auth('driver')
     def cargo_driver_orders(self, **kwargs):
         """GET /api/driver/orders — orders currently assigned to this driver."""
         user = request.cargo_user

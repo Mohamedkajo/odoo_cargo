@@ -18,9 +18,9 @@ import logging
 from odoo import http
 from odoo.http import request
 
-from cargo_base.constants import HTTP_200, HTTP_201, HTTP_400, HTTP_403, HTTP_404, ERR_PERMISSION
-from cargo_api.controllers.base import CargoBaseController
-from cargo_api.utils.decorators import require_cargo_auth
+from odoo.addons.cargo_base.constants import HTTP_200, HTTP_201, HTTP_400, HTTP_403, HTTP_404, ERR_PERMISSION
+from odoo.addons.cargo_api.controllers.base import CargoBaseController
+from odoo.addons.cargo_api.utils.decorators import require_cargo_auth
 
 _logger = logging.getLogger(__name__)
 
@@ -48,7 +48,7 @@ class CargoVendorController(CargoBaseController):
 
     @http.route('/api/vendor/profile', auth='none', methods=['GET'],
                 type='http', csrf=False, save_session=False)
-    @require_cargo_auth(roles=['vendor'])
+    @require_cargo_auth('vendor')
     def cargo_vendor_profile(self, **kwargs):
         """GET /api/vendor/profile — vendor profile from res.partner."""
         user    = request.cargo_user
@@ -67,7 +67,7 @@ class CargoVendorController(CargoBaseController):
 
     @http.route('/api/vendor/profile', auth='none', methods=['PATCH'],
                 type='http', csrf=False, save_session=False)
-    @require_cargo_auth(roles=['vendor'])
+    @require_cargo_auth('vendor')
     def cargo_vendor_update_profile(self, **kwargs):
         """PATCH /api/vendor/profile — update vendor business details."""
         user    = request.cargo_user
@@ -91,7 +91,7 @@ class CargoVendorController(CargoBaseController):
 
     @http.route('/api/vendor/stats', auth='none', methods=['GET'],
                 type='http', csrf=False, save_session=False)
-    @require_cargo_auth(roles=['vendor'])
+    @require_cargo_auth('vendor')
     def cargo_vendor_stats(self, **kwargs):
         """GET /api/vendor/stats — aggregated order stats for the vendor's stores."""
         user   = request.cargo_user

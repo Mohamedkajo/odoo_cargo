@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <menuitem id="menu_cargo_reports_root" name="Reports"
-              parent="cargo_base.menu_cargo_root" sequence="90"/>
+              parent="cargo_base.cargo_menu_root" sequence="90"/>
     <menuitem id="menu_cargo_order_report" name="Order Analytics"
               parent="menu_cargo_reports_root" action="action_cargo_order_report" sequence="10"/>
     <menuitem id="menu_cargo_wallet_report" name="Wallet Analytics"

@@ -6,7 +6,7 @@
         <field name="name">cargo.rate.limit.list</field>
         <field name="model">cargo.rate.limit</field>
         <field name="arch" type="xml">
-            <list string="Rate Limit Counters" create="false" delete="false" editable="false"
+            <list string="Rate Limit Counters" create="false" delete="false"
                   default_order="window_start desc">
                 <field name="ip_address"/>
                 <field name="window_start"/>

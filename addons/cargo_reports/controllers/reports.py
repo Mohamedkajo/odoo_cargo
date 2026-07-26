@@ -14,9 +14,9 @@ from datetime import datetime, timedelta
 from odoo import http
 from odoo.http import request
 
-from cargo_base.constants import HTTP_200
-from cargo_api.controllers.base import CargoBaseController
-from cargo_api.utils.decorators import require_cargo_auth
+from odoo.addons.cargo_base.constants import HTTP_200
+from odoo.addons.cargo_api.controllers.base import CargoBaseController
+from odoo.addons.cargo_api.utils.decorators import require_cargo_auth
 
 _logger = logging.getLogger(__name__)
 
@@ -32,7 +32,7 @@ class CargoReportsController(CargoBaseController):
 
     @http.route('/api/admin/reports/summary', auth='none', methods=['GET'],
                 type='http', csrf=False, save_session=False)
-    @require_cargo_auth(roles=['admin'])
+    @require_cargo_auth('admin')
     def admin_summary(self, **kw):
         """GET /api/admin/reports/summary — key platform metrics."""
         env = request.env
@@ -67,7 +67,7 @@ class CargoReportsController(CargoBaseController):
 
     @http.route('/api/admin/reports/orders', auth='none', methods=['GET'],
                 type='http', csrf=False, save_session=False)
-    @require_cargo_auth(roles=['admin'])
+    @require_cargo_auth('admin')
     def orders_by_date(self, **kw):
         """GET /api/admin/reports/orders?days=30 — orders grouped by day."""
         try:
@@ -81,7 +81,7 @@ class CargoReportsController(CargoBaseController):
 
     @http.route('/api/admin/reports/stores', auth='none', methods=['GET'],
                 type='http', csrf=False, save_session=False)
-    @require_cargo_auth(roles=['admin'])
+    @require_cargo_auth('admin')
     def store_performance(self, **kw):
         """GET /api/admin/reports/stores — revenue per store."""
         try:
@@ -93,7 +93,7 @@ class CargoReportsController(CargoBaseController):
 
     @http.route('/api/admin/reports/products', auth='none', methods=['GET'],
                 type='http', csrf=False, save_session=False)
-    @require_cargo_auth(roles=['admin'])
+    @require_cargo_auth('admin')
     def top_products(self, **kw):
         """GET /api/admin/reports/products — top-selling products."""
         try:
@@ -106,7 +106,7 @@ class CargoReportsController(CargoBaseController):
 
     @http.route('/api/admin/reports/drivers', auth='none', methods=['GET'],
                 type='http', csrf=False, save_session=False)
-    @require_cargo_auth(roles=['admin'])
+    @require_cargo_auth('admin')
     def driver_performance(self, **kw):
         """GET /api/admin/reports/drivers — deliveries + earnings per driver."""
         try:

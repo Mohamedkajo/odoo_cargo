@@ -8,15 +8,15 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
 
-            <!-- Status bar pill -->
-            <field name="state" position="before">
+            <!-- Status bar pill — use XPath to target header's state field precisely -->
+            <xpath expr="//header/field[@name='state']" position="before">
                 <field name="cargo_status" widget="statusbar"
                        statusbar_visible="confirmed,preparing,ready,collecting,delivering,otp_check,delivered"
-                       string="Delivery Status"/>
-            </field>
+                       string="Cargo Status"/>
+            </xpath>
 
             <!-- Cargo delivery group after existing fields -->
-            <page name="order_line" position="after">
+            <page name="order_lines" position="after">
                 <page string="Cargo Delivery" name="cargo_delivery">
                     <group>
                         <group string="Delivery">

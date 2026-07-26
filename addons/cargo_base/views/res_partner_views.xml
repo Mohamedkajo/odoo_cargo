@@ -61,7 +61,9 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_res_partner_filter"/>
         <field name="arch" type="xml">
-            <filter name="filter_customers" position="after">
+            <!-- Anchor on 'inactive' which exists in Odoo 18 base partner search view.
+                 (filter_customers was removed in Odoo 17.) -->
+            <filter name="inactive" position="after">
                 <separator/>
                 <filter name="cargo_customer" string="Cargo Customers"
                         domain="[('cargo_role', '=', 'customer')]"/>

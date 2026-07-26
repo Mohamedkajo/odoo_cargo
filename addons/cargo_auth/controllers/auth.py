@@ -25,7 +25,7 @@ from odoo import fields, http
 from odoo.exceptions import AccessDenied
 from odoo.http import request
 
-from cargo_base.constants import (
+from odoo.addons.cargo_base.constants import (
     HTTP_200,
     HTTP_201,
     HTTP_400,
@@ -39,21 +39,21 @@ from cargo_base.constants import (
     CONFIG_JWT_SECRET,
     JWT_REFRESH_EXPIRY_SECS,
 )
-from cargo_base.utils.jwt_utils import (
+from odoo.addons.cargo_base.utils.jwt_utils import (
     generate_access_token,
     generate_refresh_token,
     verify_token,
     hash_token,
 )
-from cargo_base.utils.validators import (
+from odoo.addons.cargo_base.utils.validators import (
     validate_email,
     validate_password,
     normalize_egyptian_phone,
 )
-from cargo_base.utils.image_utils import decode_base64
-from cargo_api.controllers.base import CargoBaseController
-from cargo_api.utils.decorators import require_cargo_auth
-from cargo_api.utils.upload import read_image_upload
+from odoo.addons.cargo_base.utils.image_utils import decode_base64
+from odoo.addons.cargo_api.controllers.base import CargoBaseController
+from odoo.addons.cargo_api.utils.decorators import require_cargo_auth
+from odoo.addons.cargo_api.utils.upload import read_image_upload
 
 _logger = logging.getLogger(__name__)
 

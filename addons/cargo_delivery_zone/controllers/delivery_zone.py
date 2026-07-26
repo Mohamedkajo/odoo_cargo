@@ -6,9 +6,9 @@ import logging
 from odoo import http
 from odoo.http import request
 
-from cargo_base.constants import HTTP_200, HTTP_400, ERR_VALIDATION
-from cargo_api.controllers.base import CargoBaseController
-from cargo_delivery_zone.models.cargo_delivery_zone import CargoDeliveryZone
+from odoo.addons.cargo_base.constants import HTTP_200, HTTP_400, ERR_VALIDATION
+from odoo.addons.cargo_api.controllers.base import CargoBaseController
+from odoo.addons.cargo_delivery_zone.models.cargo_delivery_zone import CargoDeliveryZone
 
 _logger = logging.getLogger(__name__)
 

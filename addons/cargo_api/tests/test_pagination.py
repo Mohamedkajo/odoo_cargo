@@ -15,7 +15,7 @@ Covers:
 
 from odoo.tests.common import BaseCase
 
-from cargo_api.utils.pagination import (
+from odoo.addons.cargo_api.utils.pagination import (
     PaginationParams,
     build_pagination_meta,
 )

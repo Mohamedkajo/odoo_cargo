@@ -47,7 +47,7 @@ class CargoResPartner(models.Model):
         help='Single-line formatted delivery address.',
     )
     cargo_display_name = fields.Char(
-        string='Display Name',
+        string='Cargo Display Name',
         compute='_compute_cargo_display_name',
         help='Short name for API responses.',
     )

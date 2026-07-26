@@ -20,13 +20,13 @@ import logging
 from odoo import http
 from odoo.http import request
 
-from cargo_base.constants import (
+from odoo.addons.cargo_base.constants import (
     HTTP_200, HTTP_201, HTTP_400, HTTP_403, HTTP_404,
     ERR_VALIDATION, ERR_NOT_FOUND, ERR_PERMISSION,
     ORDER_STATUS_CONFIRMED,
 )
-from cargo_api.controllers.base import CargoBaseController
-from cargo_api.utils.decorators import require_cargo_auth
+from odoo.addons.cargo_api.controllers.base import CargoBaseController
+from odoo.addons.cargo_api.utils.decorators import require_cargo_auth
 
 _logger = logging.getLogger(__name__)
 

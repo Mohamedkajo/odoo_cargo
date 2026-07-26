@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <menuitem id="menu_cargo_delivery_zone" name="Delivery Zones"
-              parent="cargo_base.menu_cargo_root" sequence="51"/>
+              parent="cargo_base.cargo_menu_root" sequence="51"/>
     <menuitem id="menu_cargo_delivery_zone_list" name="All Zones"
               parent="menu_cargo_delivery_zone" action="action_cargo_delivery_zone" sequence="10"/>
 </odoo>

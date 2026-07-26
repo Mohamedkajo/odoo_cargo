@@ -23,7 +23,7 @@ Filtering drivers:
   self.env['res.users'].search([('cargo_role', '=', 'driver')])
 """
 from odoo import api, fields, models
-from cargo_base.constants import VEHICLE_TYPES
+from odoo.addons.cargo_base.constants import VEHICLE_TYPES
 
 
 class CargoDriverUser(models.Model):

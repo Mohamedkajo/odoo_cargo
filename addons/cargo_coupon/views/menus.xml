@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <menuitem id="menu_cargo_coupon_root" name="Coupons"
-              parent="cargo_base.menu_cargo_root" sequence="60"/>
+              parent="cargo_base.cargo_menu_root" sequence="60"/>
     <menuitem id="menu_cargo_coupon_list" name="All Coupons"
               parent="menu_cargo_coupon_root" action="action_cargo_coupon" sequence="10"/>
 </odoo>

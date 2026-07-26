@@ -23,7 +23,7 @@ class CargoResUsers(models.Model):
         related='partner_id.cargo_role',
         store=True,
         readonly=False,
-        tracking=True,
+        # tracking=True not allowed on related fields (Odoo 18 warning)
     )
 
     # ── Push notification token (FCM / APNs) ──────────────────────────────────

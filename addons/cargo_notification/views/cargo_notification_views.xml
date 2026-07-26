@@ -6,7 +6,7 @@
         <field name="model">cargo.notification</field>
         <field name="arch" type="xml">
             <list string="Notifications" default_order="id desc">
-                <field name="created_at"/>
+                <field name="create_date"/>
                 <field name="user_id"/>
                 <field name="type"/>
                 <field name="title"/>
@@ -27,8 +27,8 @@
                         <field name="title"/>
                         <field name="body"/>
                         <field name="is_read"/>
-                        <field name="created_at"/>
-                        <field name="read_at"/>
+                        <field name="create_date"/>
+                        <field name="sent_at"/>
                     </group>
                 </sheet>
             </form>

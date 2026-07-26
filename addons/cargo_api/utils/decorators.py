@@ -49,8 +49,8 @@ import logging
 
 from odoo.http import request
 
-from cargo_base.exceptions import CargoBaseException, CargoPermissionError
-from cargo_base.utils.response import from_exception, server_error
+from odoo.addons.cargo_base.exceptions import CargoBaseException, CargoPermissionError
+from odoo.addons.cargo_base.utils.response import from_exception, server_error
 
 _logger = logging.getLogger(__name__)
 

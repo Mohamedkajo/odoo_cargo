@@ -13,7 +13,7 @@
     <menuitem
         id="menu_cargo_api_management"
         name="API Management"
-        parent="cargo_base.menu_cargo_root"
+        parent="cargo_base.cargo_menu_root"
         sequence="90"
         groups="cargo_base.cargo_group_admin,cargo_base.cargo_group_super_admin"/>
 

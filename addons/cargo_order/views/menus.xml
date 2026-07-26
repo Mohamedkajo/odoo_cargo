@@ -3,7 +3,7 @@
 
     <menuitem id="menu_cargo_order"
               name="Orders"
-              parent="cargo_base.menu_cargo_root"
+              parent="cargo_base.cargo_menu_root"
               action="action_cargo_order"
               sequence="30"/>
 

@@ -36,7 +36,7 @@ class CargoSaleOrder(models.Model):
     # ── Cargo order status (parallel to Odoo native state) ────────────────────
     cargo_status = fields.Selection(
         selection=ORDER_STATUSES,
-        string='Delivery Status',
+        string='Cargo Status',
         default=ORDER_STATUS_CONFIRMED,
         index=True,
         tracking=True,

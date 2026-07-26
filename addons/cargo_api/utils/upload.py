@@ -27,7 +27,7 @@ import logging
 
 from odoo.http import request
 
-from cargo_base.exceptions import CargoValidationError
+from odoo.addons.cargo_base.exceptions import CargoValidationError
 
 _logger = logging.getLogger(__name__)
 

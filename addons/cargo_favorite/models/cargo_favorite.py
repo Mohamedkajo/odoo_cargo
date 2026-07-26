@@ -10,7 +10,7 @@ Flutter contract:
 product_id FK references product.template (the native marketplace product model).
 """
 from odoo import api, fields, models
-from cargo_base.constants import FAVORITE_TYPES
+from odoo.addons.cargo_base.constants import FAVORITE_TYPES
 
 
 class CargoFavorite(models.Model):

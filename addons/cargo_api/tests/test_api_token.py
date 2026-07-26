@@ -18,7 +18,7 @@ import time
 from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 
-from cargo_base.utils.jwt_utils import hash_token
+from odoo.addons.cargo_base.utils.jwt_utils import hash_token
 
 
 class TestCargoApiToken(TransactionCase):

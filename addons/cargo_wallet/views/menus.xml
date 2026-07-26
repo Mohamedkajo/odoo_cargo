@@ -3,13 +3,13 @@
 
     <menuitem id="menu_cargo_wallet_root"
               name="Wallets"
-              parent="cargo_base.menu_cargo_root"
+              parent="cargo_base.cargo_menu_root"
               sequence="50"/>
 
     <menuitem id="menu_cargo_wallet_list"
               name="Customer Wallets"
               parent="menu_cargo_wallet_root"
-              action="action_cargo_wallet"
+              action="action_cargo_wallet_transactions"
               sequence="10"/>
 
 </odoo>

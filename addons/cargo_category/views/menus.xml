@@ -3,7 +3,7 @@
 
     <menuitem id="menu_cargo_category_root"
               name="Categories"
-              parent="cargo_base.menu_cargo_root"
+              parent="cargo_base.cargo_menu_root"
               sequence="15"/>
 
     <menuitem id="menu_cargo_store_category"

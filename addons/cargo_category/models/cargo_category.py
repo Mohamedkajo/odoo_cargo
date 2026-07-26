@@ -32,12 +32,10 @@ class CargoStoreCategory(models.Model):
     sequence = fields.Integer('Sequence', default=10)
     active   = fields.Boolean('Active', default=True)
 
-    # Reverse relation — populated once cargo_store is installed
-    store_ids = fields.One2many(
-        'cargo.store', 'category_id',
-        string='Stores',
-        help='Populated by cargo_store; read-only from this module.',
-    )
+    # Note: the reverse store_ids One2many is intentionally NOT defined here.
+    # cargo.store already has category_id pointing here; adding store_ids would
+    # require cargo_category to depend on cargo_store (circular) or defer setup.
+    # Access stores from a category via: env['cargo.store'].search([('category_id','=',id)])
 
     def to_category_dict(self):
         """Minimal dict for the Flutter GET /api/categories response."""

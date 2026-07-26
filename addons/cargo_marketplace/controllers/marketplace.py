@@ -6,8 +6,8 @@ import logging
 from odoo import http
 from odoo.http import request
 
-from cargo_base.constants import HTTP_200
-from cargo_api.controllers.base import CargoBaseController
+from odoo.addons.cargo_base.constants import HTTP_200
+from odoo.addons.cargo_api.controllers.base import CargoBaseController
 
 _logger = logging.getLogger(__name__)
 

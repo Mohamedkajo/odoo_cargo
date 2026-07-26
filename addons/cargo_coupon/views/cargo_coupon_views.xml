@@ -6,12 +6,12 @@
         <field name="arch" type="xml">
             <list string="Coupons">
                 <field name="code"/>
-                <field name="type"/>
+                <field name="coupon_type"/>
                 <field name="discount_value"/>
-                <field name="min_order_amount"/>
+                <field name="min_order_value"/>
                 <field name="usage_limit"/>
                 <field name="used_count"/>
-                <field name="valid_to"/>
+                <field name="valid_until"/>
                 <field name="is_active"/>
             </list>
         </field>

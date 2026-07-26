@@ -58,7 +58,7 @@ class CargoProductTemplate(models.Model):
 
     # ── Tags ─────────────────────────────────────────────────────────────────
     cargo_tags = fields.Char(
-        string='Tags',
+        string='Cargo Tags',
         help='Comma-separated tags for search and filtering (e.g. "halal,spicy").',
     )
 

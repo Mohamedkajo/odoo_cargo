@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <menuitem id="menu_cargo_inventory_root" name="Inventory"
-              parent="cargo_base.menu_cargo_root" sequence="35"/>
+              parent="cargo_base.cargo_menu_root" sequence="35"/>
     <menuitem id="menu_cargo_inventory_list" name="Stock Levels"
               parent="menu_cargo_inventory_root" action="action_cargo_inventory" sequence="10"/>
 </odoo>

@@ -26,14 +26,14 @@ from odoo.http import request
 from odoo.release import version as odoo_version
 from werkzeug.wrappers import Response as WerkzeugResponse
 
-from cargo_base.constants import (
+from odoo.addons.cargo_base.constants import (
     HTTP_200,
     HTTP_429,
     HTTP_500,
     ERR_SERVER,
     ERR_RATE_LIMIT,
 )
-from cargo_base.exceptions import (
+from odoo.addons.cargo_base.exceptions import (
     CargoBaseException,
     CargoAuthError,
     CargoTokenError,
@@ -41,10 +41,10 @@ from cargo_base.exceptions import (
     CargoServerError,
     CargoRateLimitError,
 )
-from cargo_base.utils.jwt_utils import verify_token, token_uid, hash_token
-from cargo_base.utils.response import success, error, from_exception, server_error
+from odoo.addons.cargo_base.utils.jwt_utils import verify_token, token_uid, hash_token
+from odoo.addons.cargo_base.utils.response import success, error, from_exception, server_error
 
-from cargo_api.utils.openapi import get_cargo_openapi_spec
+from odoo.addons.cargo_api.utils.openapi import get_cargo_openapi_spec
 
 _logger = logging.getLogger(__name__)
 

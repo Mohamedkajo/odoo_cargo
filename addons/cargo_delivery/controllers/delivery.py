@@ -7,9 +7,9 @@ import logging
 from odoo import http
 from odoo.http import request
 
-from cargo_base.constants import HTTP_200, HTTP_400, HTTP_403, HTTP_404, ERR_VALIDATION, ERR_NOT_FOUND, ERR_PERMISSION
-from cargo_api.controllers.base import CargoBaseController
-from cargo_api.utils.decorators import require_cargo_auth
+from odoo.addons.cargo_base.constants import HTTP_200, HTTP_400, HTTP_403, HTTP_404, ERR_VALIDATION, ERR_NOT_FOUND, ERR_PERMISSION
+from odoo.addons.cargo_api.controllers.base import CargoBaseController
+from odoo.addons.cargo_api.utils.decorators import require_cargo_auth
 
 _logger = logging.getLogger(__name__)
 
@@ -56,7 +56,7 @@ class CargoDeliveryController(CargoBaseController):
 
     @http.route('/api/deliveries/<int:delivery_id>', auth='none', methods=['GET'],
                 type='http', csrf=False, save_session=False)
-    @require_cargo_auth(roles=['driver', 'admin'])
+    @require_cargo_auth('driver', 'admin')
     def get_delivery(self, delivery_id, **kw):
         """GET /api/deliveries/:id — delivery detail for driver or admin."""
         delivery = request.env['cargo.delivery'].sudo().browse(delivery_id)
@@ -66,7 +66,7 @@ class CargoDeliveryController(CargoBaseController):
 
     @http.route('/api/deliveries/<int:delivery_id>/status', auth='none', methods=['PATCH'],
                 type='http', csrf=False, save_session=False)
-    @require_cargo_auth(roles=['driver', 'admin'])
+    @require_cargo_auth('driver', 'admin')
     def update_delivery_status(self, delivery_id, **kw):
         """PATCH /api/deliveries/:id/status  body: { status, lat?, lng?, eta? }"""
         body     = _body()

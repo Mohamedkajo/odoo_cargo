@@ -2,19 +2,25 @@
 {
     'name': 'Cargo Delivery',
     'version': '18.0.1.0.0',
-    'summary': 'Driver assignment, OTP handshake, and live delivery tracking for Cargo',
-    'description': """
-Owns the delivery lifecycle for each order: driver assignment, pickup/delivery
-OTP codes, live location relay, and status transitions from picked-up to delivered.
+    'summary': 'Delivery task lifecycle: assignment, pickup, GPS tracking, OTP confirmation',
+    'description': '''
+Owns the cargo.delivery model which links a sale.order to an assigned driver (res.users).
 
-Models:
-  * cargo.delivery — one record per order; links order ↔ driver
+Lifecycle: assigned → picked_up → on_the_way → delivered (or failed)
+OTP flow: pickup OTP (vendor → driver) + delivery OTP (driver → customer)
+
+Models (owned):
+  * cargo.delivery — delivery task record
+
+Native models referenced:
+  * sale.order  (order_id FK — the order being delivered)
+  * res.users   (driver_id FK — driver with cargo_role='driver')
 
 REST endpoints:
-  GET   /api/orders/:id/tracking   — live tracking for customer
-  GET   /api/deliveries/:id        — delivery detail for admin/driver
-  PATCH /api/deliveries/:id/status — advance delivery status (driver app)
-""",
+  GET  /api/delivery/active     — active deliveries for the current driver
+  POST /api/delivery/:id/status — advance delivery status
+  POST /api/delivery/:id/location — update driver GPS
+    ''',
     'author': 'Cargo Marketplace',
     'category': 'Cargo/Delivery',
     'depends': ['cargo_order', 'cargo_driver'],

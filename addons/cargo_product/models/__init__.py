@@ -1,3 +1,4 @@
 # -*- coding: utf-8 -*-
-# cargo.product.category is now defined in cargo_category — do not import it here.
+# cargo_product extends product.template and owns add-on / variant sub-models.
+# No cargo.product custom model — product.template is the marketplace product.
 from . import cargo_product

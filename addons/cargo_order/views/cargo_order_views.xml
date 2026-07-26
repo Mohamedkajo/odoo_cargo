@@ -1,78 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="view_cargo_order_form" model="ir.ui.view">
-        <field name="name">cargo.order.form</field>
-        <field name="model">cargo.order</field>
+    <!-- Extend native sale.order form with Cargo delivery fields -->
+    <record id="view_sale_order_cargo_form" model="ir.ui.view">
+        <field name="name">sale.order.cargo.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <form string="Order">
-                <header>
-                    <field name="status" widget="statusbar"
-                           statusbar_visible="confirmed,preparing,ready,collecting,delivering,otp_check,delivered"/>
-                    <button name="action_cancel" string="Cancel" type="object"
-                            class="oe_highlight"
-                            attrs="{'invisible': [('status', 'in', ['delivered', 'cancelled'])]}"/>
-                </header>
-                <sheet>
-                    <group>
-                        <group>
-                            <field name="name"/>
-                            <field name="user_id"/>
-                            <field name="store_id"/>
-                            <field name="payment_method"/>
-                        </group>
-                        <group>
-                            <field name="subtotal"/>
-                            <field name="delivery_fee"/>
-                            <field name="discount"/>
-                            <field name="total"/>
-                            <field name="item_count"/>
-                        </group>
-                    </group>
+            <xpath expr="//notebook" position="inside">
+                <page string="Cargo Delivery" name="cargo_delivery">
                     <group string="Delivery">
-                        <field name="delivery_address"/>
-                        <field name="estimated_time"/>
-                        <field name="driver_id"/>
-                        <field name="driver_name"/>
-                        <field name="driver_phone"/>
+                        <field name="cargo_store_id"/>
+                        <field name="cargo_status"/>
+                        <field name="cargo_delivery_address"/>
+                        <field name="cargo_payment_method"/>
+                        <field name="cargo_delivery_fee"/>
+                        <field name="cargo_discount"/>
+                        <field name="cargo_coupon_code"/>
+                        <field name="cargo_estimated_time"/>
                     </group>
-                    <notebook>
-                        <page string="Items">
-                            <field name="line_ids">
-                                <list>
-                                    <field name="name"/>
-                                    <field name="price"/>
-                                    <field name="quantity"/>
-                                </list>
-                            </field>
-                        </page>
-                    </notebook>
-                </sheet>
-                <chatter/>
-            </form>
+                    <group string="Driver">
+                        <field name="cargo_driver_id"/>
+                        <field name="cargo_driver_name" readonly="1"/>
+                        <field name="cargo_driver_phone" readonly="1"/>
+                        <field name="cargo_driver_rating" readonly="1"/>
+                    </group>
+                    <group string="OTP Verification">
+                        <field name="cargo_otp_code" readonly="1"/>
+                        <field name="cargo_otp_verified" readonly="1"/>
+                        <field name="cargo_otp_expires_at" readonly="1"/>
+                    </group>
+                </page>
+            </xpath>
         </field>
     </record>
 
-    <record id="view_cargo_order_list" model="ir.ui.view">
-        <field name="name">cargo.order.list</field>
-        <field name="model">cargo.order</field>
+    <!-- Cargo orders list (sale.orders that have a cargo_status) -->
+    <record id="view_sale_order_cargo_list" model="ir.ui.view">
+        <field name="name">sale.order.cargo.list</field>
+        <field name="model">sale.order</field>
         <field name="arch" type="xml">
-            <list string="Orders" default_order="id desc">
+            <list string="Cargo Orders">
                 <field name="name"/>
-                <field name="user_id"/>
-                <field name="store_name"/>
-                <field name="status"/>
-                <field name="total"/>
-                <field name="payment_method"/>
-                <field name="created_at"/>
+                <field name="partner_id" string="Customer"/>
+                <field name="cargo_store_id" string="Store"/>
+                <field name="cargo_status" string="Delivery Status"/>
+                <field name="amount_total" string="Total"/>
+                <field name="cargo_delivery_fee"/>
+                <field name="cargo_payment_method"/>
+                <field name="date_order" string="Ordered"/>
             </list>
         </field>
     </record>
 
     <record id="action_cargo_order" model="ir.actions.act_window">
         <field name="name">Orders</field>
-        <field name="res_model">cargo.order</field>
+        <field name="res_model">sale.order</field>
         <field name="view_mode">list,form</field>
+        <field name="domain">[('cargo_status', '!=', False)]</field>
+        <field name="view_id" ref="view_sale_order_cargo_list"/>
     </record>
 
 </odoo>

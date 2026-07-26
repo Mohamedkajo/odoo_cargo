@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <menuitem id="menu_cargo_order_root"
+    <menuitem id="menu_cargo_order"
               name="Orders"
               parent="cargo_base.menu_cargo_root"
-              sequence="40"/>
-
-    <menuitem id="menu_cargo_order_list"
-              name="All Orders"
-              parent="menu_cargo_order_root"
               action="action_cargo_order"
-              sequence="10"/>
+              sequence="30"/>
 
 </odoo>

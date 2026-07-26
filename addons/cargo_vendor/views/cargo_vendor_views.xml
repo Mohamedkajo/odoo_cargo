@@ -1,52 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_cargo_vendor_list" model="ir.ui.view">
-        <field name="name">cargo.vendor.list</field>
-        <field name="model">cargo.vendor</field>
+
+    <!-- Extend native res.partner form with Cargo vendor section -->
+    <record id="view_res_partner_cargo_vendor_form" model="ir.ui.view">
+        <field name="name">res.partner.cargo.vendor.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Cargo Vendor" name="cargo_vendor"
+                      attrs="{'invisible': [('cargo_role', '!=', 'vendor')]}">
+                    <group string="Business Details">
+                        <field name="cargo_vendor_business_name"/>
+                        <field name="cargo_vendor_tax_number"/>
+                        <field name="cargo_vendor_bank_account"/>
+                        <field name="cargo_vendor_commission_rate"/>
+                    </group>
+                    <group string="Approval Status">
+                        <field name="cargo_vendor_is_approved"/>
+                        <field name="cargo_vendor_approved_at" readonly="1"/>
+                        <field name="cargo_vendor_approved_by" readonly="1"/>
+                        <field name="cargo_vendor_store_count" readonly="1"/>
+                    </group>
+                    <group string="Rejection" attrs="{'invisible': [('cargo_vendor_is_approved', '=', True)]}">
+                        <field name="cargo_vendor_reject_reason"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Vendor list view (partners with vendor role) -->
+    <record id="view_res_partner_vendor_list" model="ir.ui.view">
+        <field name="name">res.partner.vendor.list</field>
+        <field name="model">res.partner</field>
         <field name="arch" type="xml">
             <list string="Vendors">
-                <field name="business_name"/>
-                <field name="user_id"/>
-                <field name="commission_rate"/>
-                <field name="store_count"/>
-                <field name="is_approved"/>
+                <field name="name"/>
+                <field name="cargo_vendor_business_name"/>
+                <field name="cargo_vendor_is_approved"/>
+                <field name="cargo_vendor_commission_rate"/>
+                <field name="cargo_vendor_store_count"/>
             </list>
         </field>
     </record>
-    <record id="view_cargo_vendor_form" model="ir.ui.view">
-        <field name="name">cargo.vendor.form</field>
-        <field name="model">cargo.vendor</field>
-        <field name="arch" type="xml">
-            <form string="Vendor">
-                <header>
-                    <button name="action_approve" string="Approve" type="object"
-                            class="oe_highlight"
-                            attrs="{'invisible': [('is_approved', '=', True)]}"/>
-                </header>
-                <sheet>
-                    <group>
-                        <group>
-                            <field name="business_name"/>
-                            <field name="user_id"/>
-                            <field name="commission_rate"/>
-                        </group>
-                        <group>
-                            <field name="tax_number"/>
-                            <field name="bank_account"/>
-                            <field name="is_approved"/>
-                            <field name="approved_at"/>
-                        </group>
-                    </group>
-                    <group string="Stores">
-                        <field name="store_ids" widget="many2many_tags"/>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
+
     <record id="action_cargo_vendor" model="ir.actions.act_window">
         <field name="name">Vendors</field>
-        <field name="res_model">cargo.vendor</field>
+        <field name="res_model">res.partner</field>
         <field name="view_mode">list,form</field>
+        <field name="domain">[('cargo_role', '=', 'vendor')]</field>
+        <field name="view_id" ref="view_res_partner_vendor_list"/>
     </record>
+
 </odoo>

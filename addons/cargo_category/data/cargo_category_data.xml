@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
 
-    <!-- ── Store Categories (home-screen tabs) ───────────────────────────── -->
+    <!-- ── Store Categories (home-screen navigation tabs) ────────────────── -->
 
     <record id="cat_store_food" model="cargo.store.category">
         <field name="name">Food</field>
@@ -39,54 +39,73 @@
         <field name="sequence">6</field>
     </record>
 
-    <!-- ── Generic Product Categories (re-used across stores) ────────────── -->
+    <!-- ── Product Categories / Menu Sections (native product.category) ──── -->
+    <!-- cargo_base extends product.category with cargo_icon, cargo_slug,     -->
+    <!-- cargo_is_active, cargo_sort_order. We seed standard menu sections     -->
+    <!-- here so every fresh install has a usable catalogue structure.         -->
 
-    <record id="cat_product_burgers" model="cargo.product.category">
+    <record id="cat_product_burgers" model="product.category">
         <field name="name">Burgers</field>
-        <field name="icon">🍔</field>
-        <field name="sequence">1</field>
+        <field name="cargo_icon">🍔</field>
+        <field name="cargo_slug">burgers</field>
+        <field name="cargo_is_active">True</field>
+        <field name="cargo_sort_order">1</field>
     </record>
 
-    <record id="cat_product_pizza" model="cargo.product.category">
+    <record id="cat_product_pizza" model="product.category">
         <field name="name">Pizza</field>
-        <field name="icon">🍕</field>
-        <field name="sequence">2</field>
+        <field name="cargo_icon">🍕</field>
+        <field name="cargo_slug">pizza</field>
+        <field name="cargo_is_active">True</field>
+        <field name="cargo_sort_order">2</field>
     </record>
 
-    <record id="cat_product_sushi" model="cargo.product.category">
+    <record id="cat_product_sushi" model="product.category">
         <field name="name">Sushi</field>
-        <field name="icon">🍱</field>
-        <field name="sequence">3</field>
+        <field name="cargo_icon">🍱</field>
+        <field name="cargo_slug">sushi</field>
+        <field name="cargo_is_active">True</field>
+        <field name="cargo_sort_order">3</field>
     </record>
 
-    <record id="cat_product_drinks" model="cargo.product.category">
+    <record id="cat_product_drinks" model="product.category">
         <field name="name">Drinks</field>
-        <field name="icon">🥤</field>
-        <field name="sequence">4</field>
+        <field name="cargo_icon">🥤</field>
+        <field name="cargo_slug">drinks</field>
+        <field name="cargo_is_active">True</field>
+        <field name="cargo_sort_order">4</field>
     </record>
 
-    <record id="cat_product_desserts" model="cargo.product.category">
+    <record id="cat_product_desserts" model="product.category">
         <field name="name">Desserts</field>
-        <field name="icon">🍩</field>
-        <field name="sequence">5</field>
+        <field name="cargo_icon">🍩</field>
+        <field name="cargo_slug">desserts</field>
+        <field name="cargo_is_active">True</field>
+        <field name="cargo_sort_order">5</field>
     </record>
 
-    <record id="cat_product_sides" model="cargo.product.category">
+    <record id="cat_product_sides" model="product.category">
         <field name="name">Sides</field>
-        <field name="icon">🍟</field>
-        <field name="sequence">6</field>
+        <field name="cargo_icon">🍟</field>
+        <field name="cargo_slug">sides</field>
+        <field name="cargo_is_active">True</field>
+        <field name="cargo_sort_order">6</field>
     </record>
 
-    <record id="cat_product_coffee" model="cargo.product.category">
-        <field name="name">Coffee</field>
-        <field name="icon">☕</field>
-        <field name="sequence">7</field>
+    <record id="cat_product_coffee_menu" model="product.category">
+        <field name="name">Coffee &amp; Hot Drinks</field>
+        <field name="cargo_icon">☕</field>
+        <field name="cargo_slug">coffee-hot-drinks</field>
+        <field name="cargo_is_active">True</field>
+        <field name="cargo_sort_order">7</field>
     </record>
 
-    <record id="cat_product_salads" model="cargo.product.category">
+    <record id="cat_product_salads" model="product.category">
         <field name="name">Salads</field>
-        <field name="icon">🥗</field>
-        <field name="sequence">8</field>
+        <field name="cargo_icon">🥗</field>
+        <field name="cargo_slug">salads</field>
+        <field name="cargo_is_active">True</field>
+        <field name="cargo_sort_order">8</field>
     </record>
 
 </odoo>

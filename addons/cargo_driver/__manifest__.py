@@ -2,13 +2,20 @@
 {
     'name': 'Cargo Driver',
     'version': '18.0.1.0.0',
-    'summary': 'Delivery driver profiles, location tracking, and status for Cargo',
+    'summary': 'Delivery driver profile — extends res.users with vehicle and GPS fields',
     'description': """
-Driver-specific domain module. Owns the cargo.driver profile and all
-driver-facing REST endpoints.
+Driver-specific domain module.  Extends the native res.users model with
+driver profile fields: vehicle information, live GPS position, online/offline
+status, and aggregate performance metrics.
 
-Models:
-  * cargo.driver — driver profile (vehicle, location, online status, rating)
+No custom cargo.driver model — res.users with cargo_role='driver' IS the driver.
+All driver fields are prefixed with cargo_driver_ for clarity.
+
+Filter drivers via:
+  self.env['res.users'].search([('cargo_role', '=', 'driver')])
+
+Native model extended:
+  * res.users — vehicle info, GPS location, online status, performance metrics
 
 REST endpoints:
   GET   /api/driver/profile

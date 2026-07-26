@@ -13,7 +13,7 @@
               sequence="10"/>
 
     <menuitem id="menu_cargo_product_category"
-              name="Product Categories"
+              name="Menu Sections"
               parent="menu_cargo_category_root"
               action="action_cargo_product_category"
               sequence="20"/>

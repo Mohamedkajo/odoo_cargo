@@ -1,3 +1,1 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_cargo_driver_driver,cargo.driver driver,model_cargo_driver,cargo_base.cargo_group_driver,1,1,1,0
-access_cargo_driver_admin,cargo.driver admin,model_cargo_driver,cargo_base.cargo_group_admin,1,1,1,1

@@ -1,7 +1,1 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_cargo_order_customer,cargo.order customer,model_cargo_order,cargo_base.cargo_group_customer,1,0,1,0
-access_cargo_order_vendor,cargo.order vendor,model_cargo_order,cargo_base.cargo_group_vendor,1,1,0,0
-access_cargo_order_driver,cargo.order driver,model_cargo_order,cargo_base.cargo_group_driver,1,1,0,0
-access_cargo_order_admin,cargo.order admin,model_cargo_order,cargo_base.cargo_group_admin,1,1,1,1
-access_cargo_order_line_customer,cargo.order.line customer,model_cargo_order_line,cargo_base.cargo_group_customer,1,0,1,0
-access_cargo_order_line_admin,cargo.order.line admin,model_cargo_order_line,cargo_base.cargo_group_admin,1,1,1,1

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Cargo Marketplace. See LICENSE file for full copyright and licensing details.
 """
-cargo.store — Vendor store model.
+cargo.store — Vendor store / restaurant profile.
 
-This module owns cargo.store and cargo.store.tag.
-Category models (cargo.store.category, cargo.product.category)
-are owned by cargo_category and referenced here via Many2one FKs.
+This module also owns cargo.store.tag.
+Product categories are owned by cargo_category (cargo.store.category for
+home-screen tabs, product.category for per-store menu sections).
 
 Flutter Store.fromJson contract:
   id, name, slug, image, logo, categoryName, categoryIcon, rating, reviewCount,
@@ -83,15 +83,19 @@ class CargoStore(models.Model):
     latitude  = fields.Float('Latitude',  digits=(10, 7))
     longitude = fields.Float('Longitude', digits=(10, 7))
 
-    # ── Vendor ────────────────────────────────────────────────────────────────
+    # ── Vendor link (res.users with cargo_role='vendor') ─────────────────────
     vendor_id = fields.Many2one(
         'res.users', 'Vendor User',
         domain=[('cargo_role', '=', 'vendor')],
         ondelete='set null', index=True,
     )
 
-    # ── Reverse relations (populated by other modules) ────────────────────────
-    product_ids = fields.One2many('cargo.product', 'store_id', string='Products')
+    # ── Products (native product.template with cargo_store_id FK) ────────────
+    product_ids = fields.One2many(
+        'product.template', 'cargo_store_id',
+        string='Products',
+        help='All product.template records that belong to this store.',
+    )
 
     # ── Slug compute ──────────────────────────────────────────────────────────
 

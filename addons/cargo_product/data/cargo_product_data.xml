@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
-    <!-- Product seed data is added by cargo_store after stores are created -->
-    <!-- Run the cargo_product_seed wizard from Settings > Technical to load demo products -->
+    <!--
+        Demo products are created via Python fixture tests or by vendors through
+        the admin UI / API.  No hard-coded product.template records here to keep
+        the seed data environment-agnostic (product prices, names, and availability
+        vary per deployment).
+
+        Use 'cargo_store_data.xml' in cargo_store for demo stores, then create
+        products via the Odoo backend form or the REST API.
+    -->
 </odoo>

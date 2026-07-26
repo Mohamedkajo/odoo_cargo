@@ -7,9 +7,16 @@
 Single-responsibility module that owns the vendor store model and all
 store-browsing REST endpoints.
 
-Models:
-  * cargo.store     — vendor store profile
+Also extends product.template with cargo_store_id so marketplace products
+can be associated with a store (cargo_base could not do this because cargo.store
+was not yet defined).
+
+Models (owned):
+  * cargo.store     — vendor store / restaurant profile
   * cargo.store.tag — descriptive tags (Halal, Free Delivery, Trending …)
+
+Native model extended:
+  * product.template — adds cargo_store_id Many2one FK
 
 REST endpoints:
   GET /api/stores
@@ -17,14 +24,14 @@ REST endpoints:
   GET /api/stores/nearby
   GET /api/stores/online
   GET /api/stores/:id
-  GET /api/stores/:id/products      (delegates product query to cargo_product)
-  GET /api/stores/:id/categories    (derives categories via cargo.product FKs)
+  GET /api/stores/:id/products    (queries product.template)
+  GET /api/stores/:id/categories  (derives product.category via product.template)
 
 Note: GET /api/categories is owned by cargo_category.
 """,
     'author': 'Cargo Marketplace',
     'category': 'Cargo/Store',
-    'depends': ['cargo_api', 'cargo_auth', 'cargo_category', 'cargo_product'],
+    'depends': ['cargo_api', 'cargo_auth', 'cargo_category'],
     'data': [
         'security/ir.model.access.csv',
         'security/record_rules.xml',

@@ -14,6 +14,10 @@ Routes owned by this module:
 
 Route NOT owned here:
   GET /api/categories   → cargo_category.controllers.categories
+
+Product queries use product.template (the native model) filtered by
+cargo_store_id.  Product categories are product.category records, accessed
+via product.template.categ_id.
 """
 import json
 import logging
@@ -140,46 +144,51 @@ class CargoStoreController(CargoBaseController):
     @http.route('/api/stores/<int:store_id>/products', auth='none', methods=['GET'],
                 type='http', csrf=False, save_session=False)
     def cargo_store_products(self, store_id, **kw):
-        """GET /api/stores/:storeId/products[?categoryId=N&limit=20&offset=0]"""
+        """GET /api/stores/:storeId/products[?categoryId=N&limit=20&offset=0]
+
+        Queries product.template filtered by cargo_store_id.  The cargo_is_available
+        flag (added by cargo_base) is used to exclude out-of-stock items.
+        """
         store = request.env['cargo.store'].sudo().browse(store_id)
         if not store.exists():
             return _not_found('Store not found.')
 
         limit, offset = _page()
-        domain = [('store_id', '=', store_id), ('is_available', '=', True)]
+        domain = [
+            ('cargo_store_id', '=', store_id),
+            ('active', '=', True),
+            ('cargo_is_available', '=', True),
+        ]
         if (cid := request.httprequest.args.get('categoryId')):
             try:
-                domain.append(('category_id', '=', int(cid)))
+                domain.append(('categ_id', '=', int(cid)))
             except (ValueError, TypeError):
                 pass
 
-        products = request.env['cargo.product'].sudo().search(domain, limit=limit, offset=offset)
-        total    = request.env['cargo.product'].sudo().search_count(domain)
-        return _ok({'data': [p.to_product_dict() for p in products], 'total': total})
+        products = request.env['product.template'].sudo().search(domain, limit=limit, offset=offset)
+        total    = request.env['product.template'].sudo().search_count(domain)
+        return _ok({'data': [p.cargo_to_api_dict() for p in products], 'total': total})
 
     @http.route('/api/stores/<int:store_id>/categories', auth='none', methods=['GET'],
                 type='http', csrf=False, save_session=False)
     def cargo_store_categories(self, store_id, **kw):
-        """
-        GET /api/stores/:storeId/categories
+        """GET /api/stores/:storeId/categories
 
-        Returns distinct product categories used by this store.
-        Category models live in cargo_category; the store link is via
-        cargo.product.store_id — no direct FK needed.
+        Returns distinct product.category records used by products in this store.
+        Category is read from product.template.categ_id (native Odoo field).
         """
         store = request.env['cargo.store'].sudo().browse(store_id)
         if not store.exists():
             return _not_found('Store not found.')
 
-        # Derive categories from products belonging to this store
-        products = request.env['cargo.product'].sudo().search(
-            [('store_id', '=', store_id), ('category_id', '!=', False)]
+        products = request.env['product.template'].sudo().search(
+            [('cargo_store_id', '=', store_id), ('categ_id', '!=', False)]
         )
         seen = {}
         for p in products:
-            if p.category_id.id not in seen:
-                seen[p.category_id.id] = p.category_id
+            cid = p.categ_id.id
+            if cid not in seen:
+                seen[cid] = p.categ_id
 
-        cats = list(seen.values())
-        cats.sort(key=lambda c: (c.sequence, c.name))
-        return _ok([c.to_category_dict() for c in cats])
+        cats = sorted(seen.values(), key=lambda c: (c.cargo_sort_order, c.name))
+        return _ok([c.cargo_to_api_dict() for c in cats])

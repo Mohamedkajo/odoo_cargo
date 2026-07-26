@@ -1,14 +1,20 @@
 # -*- coding: utf-8 -*-
 # Part of Cargo Marketplace. See LICENSE file for full copyright and licensing details.
 """
-CargoCartController — Shopping cart endpoints for the Flutter Customer App.
+CargoCartController — Shopping cart REST endpoints.
+
+Cart lines reference product.template (native Odoo model) via cargo.cart.line.product_id.
+When a product from a different store is added, the cart is cleared first to
+enforce single-store ordering (common in food delivery apps).
 
 Routes:
-  GET    /api/cart                  — get current cart
-  DELETE /api/cart                  — clear entire cart
-  POST   /api/cart/items            — add item to cart
-  PATCH  /api/cart/items/:itemId    — update item quantity
-  DELETE /api/cart/items/:itemId    — remove item from cart
+  GET    /api/cart              — get current user's cart
+  POST   /api/cart/items        — add item to cart
+  PATCH  /api/cart/items/:id    — update quantity
+  DELETE /api/cart/items/:id    — remove item
+  DELETE /api/cart              — clear entire cart
+  POST   /api/cart/coupon       — apply coupon
+  DELETE /api/cart/coupon       — remove coupon
 """
 import json
 import logging
@@ -23,200 +29,162 @@ from cargo_api.utils.decorators import require_cargo_auth
 _logger = logging.getLogger(__name__)
 
 
+def _ok(data, status=HTTP_200):
+    return request.make_response(
+        json.dumps(data), status=status,
+        headers=[('Content-Type', 'application/json')],
+    )
+
+
+def _err(code, msg, status=HTTP_400):
+    return _ok({'error': code, 'message': msg}, status)
+
+
 def _json_body():
     try:
-        raw = request.httprequest.get_data(as_text=True)
-        return json.loads(raw) if raw else {}
+        return json.loads(request.httprequest.get_data(as_text=True) or '{}')
     except Exception:
         return {}
 
 
 class CargoCartController(CargoBaseController):
 
-    @http.route(
-        '/api/cart',
-        auth='none',
-        methods=['GET'],
-        type='http',
-        csrf=False,
-        save_session=False,
-    )
+    @http.route('/api/cart', auth='none', methods=['GET'],
+                type='http', csrf=False, save_session=False)
     @require_cargo_auth()
     def cargo_get_cart(self, **kwargs):
-        """GET /api/cart — get the current user's cart."""
+        """GET /api/cart — return the current user's cart."""
         user = request.cargo_user
         cart = request.env['cargo.cart'].sudo().get_or_create_for_user(user.id)
-        return request.make_response(
-            json.dumps(cart.to_cart_dict()),
-            status=HTTP_200,
-            headers=[('Content-Type', 'application/json')],
-        )
+        return _ok(cart.to_cart_dict())
 
-    @http.route(
-        '/api/cart',
-        auth='none',
-        methods=['DELETE'],
-        type='http',
-        csrf=False,
-        save_session=False,
-    )
-    @require_cargo_auth()
-    def cargo_clear_cart(self, **kwargs):
-        """DELETE /api/cart — clear all items from the cart."""
-        user = request.cargo_user
-        cart = request.env['cargo.cart'].sudo().get_or_create_for_user(user.id)
-        cart.clear()
-        return request.make_response(
-            json.dumps(cart.to_cart_dict()),
-            status=HTTP_200,
-            headers=[('Content-Type', 'application/json')],
-        )
-
-    @http.route(
-        '/api/cart/items',
-        auth='none',
-        methods=['POST'],
-        type='http',
-        csrf=False,
-        save_session=False,
-    )
+    @http.route('/api/cart/items', auth='none', methods=['POST'],
+                type='http', csrf=False, save_session=False)
     @require_cargo_auth()
     def cargo_add_to_cart(self, **kwargs):
-        """
-        POST /api/cart/items
+        """POST /api/cart/items — add a product.template item to the cart."""
+        user    = request.cargo_user
+        body    = _json_body()
+        prod_id = body.get('productId')
+        qty     = int(body.get('quantity', 1))
+        if not prod_id or qty < 1:
+            return _err(ERR_VALIDATION, 'productId and quantity >= 1 are required.')
 
-        Body: { productId, quantity, specialInstructions? }
-        """
-        user = request.cargo_user
-        body = _json_body()
-
-        product_id = body.get('productId')
-        quantity   = body.get('quantity', 1)
-
-        if not product_id:
-            return request.make_response(
-                json.dumps({'error': ERR_VALIDATION, 'message': 'productId is required.'}),
-                status=HTTP_400,
-                headers=[('Content-Type', 'application/json')],
-            )
-        try:
-            quantity = max(1, int(quantity))
-        except (ValueError, TypeError):
-            quantity = 1
-
-        # Load product
-        product = request.env['cargo.product'].sudo().browse(int(product_id))
-        if not product.exists() or not product.is_available:
-            return request.make_response(
-                json.dumps({'error': ERR_NOT_FOUND, 'message': 'Product not found or unavailable.'}),
-                status=HTTP_404,
-                headers=[('Content-Type', 'application/json')],
-            )
+        product = request.env['product.template'].sudo().browse(int(prod_id))
+        if not product.exists() or not product.cargo_store_id:
+            return _err(ERR_NOT_FOUND, 'Product not found.', HTTP_404)
 
         cart = request.env['cargo.cart'].sudo().get_or_create_for_user(user.id)
 
-        # Check if same product already in cart
-        existing_line = cart.line_ids.filtered(lambda l: l.product_id.id == product.id)
-        if existing_line:
-            existing_line[0].write({'quantity': existing_line[0].quantity + quantity})
+        # Enforce single-store cart
+        if cart.store_id and cart.store_id.id != product.cargo_store_id.id:
+            # Different store: clear cart first
+            cart.clear()
+
+        # Check for existing line with same product
+        existing = cart.line_ids.filtered(lambda l: l.product_id.id == product.id)
+        if existing:
+            existing[:1].write({'quantity': existing[:1].quantity + qty})
         else:
-            request.env['cargo.cart.line'].sudo().create({
-                'cart_id':               cart.id,
-                'product_id':            product.id,
-                'name':                  product.name,
-                'image':                 product.image,
-                'price':                 product.price,
-                'quantity':              quantity,
-                'store_id':              product.store_id.id if product.store_id else False,
-                'store_name':            product.store_name,
-                'special_instructions':  body.get('specialInstructions'),
+            cart.sudo().write({
+                'store_id':   product.cargo_store_id.id,
+                'store_name': product.cargo_store_id.name,
+                'line_ids': [(0, 0, {
+                    'product_id': product.id,
+                    'name':       product.name,
+                    'price':      product.cargo_effective_price or product.list_price,
+                    'quantity':   qty,
+                    'image':      product.cargo_image_url,
+                    'store_id':   product.cargo_store_id.id,
+                    'store_name': product.cargo_store_id.name,
+                })],
             })
-            # Update cart's store reference
-            if product.store_id:
-                cart.write({
-                    'store_id':   product.store_id.id,
-                    'store_name': product.store_name,
-                })
 
-        # Reload
-        cart.invalidate_recordset()
-        return request.make_response(
-            json.dumps(cart.to_cart_dict()),
-            status=HTTP_201,
-            headers=[('Content-Type', 'application/json')],
-        )
+        return _ok(cart.to_cart_dict(), HTTP_201)
 
-    @http.route(
-        '/api/cart/items/<int:item_id>',
-        auth='none',
-        methods=['PATCH'],
-        type='http',
-        csrf=False,
-        save_session=False,
-    )
+    @http.route('/api/cart/items/<int:line_id>', auth='none', methods=['PATCH'],
+                type='http', csrf=False, save_session=False)
     @require_cargo_auth()
-    def cargo_update_cart_item(self, item_id, **kwargs):
-        """
-        PATCH /api/cart/items/:itemId
-
-        Body: { quantity }  — if quantity <= 0 item is removed
-        """
+    def cargo_update_cart_item(self, line_id, **kwargs):
+        """PATCH /api/cart/items/:id — update item quantity."""
         user = request.cargo_user
         body = _json_body()
+        qty  = body.get('quantity')
+        if qty is None or int(qty) < 1:
+            return _err(ERR_VALIDATION, 'quantity must be >= 1.')
+
+        cart = request.env['cargo.cart'].sudo().search([('user_id', '=', user.id)], limit=1)
+        if not cart:
+            return _err(ERR_NOT_FOUND, 'Cart not found.', HTTP_404)
+
+        line = cart.line_ids.filtered(lambda l: l.id == line_id)
+        if not line:
+            return _err(ERR_NOT_FOUND, 'Cart item not found.', HTTP_404)
+
+        line[:1].write({'quantity': int(qty)})
+        return _ok(cart.to_cart_dict())
+
+    @http.route('/api/cart/items/<int:line_id>', auth='none', methods=['DELETE'],
+                type='http', csrf=False, save_session=False)
+    @require_cargo_auth()
+    def cargo_remove_cart_item(self, line_id, **kwargs):
+        """DELETE /api/cart/items/:id — remove an item from the cart."""
+        user = request.cargo_user
+        cart = request.env['cargo.cart'].sudo().search([('user_id', '=', user.id)], limit=1)
+        if not cart:
+            return _err(ERR_NOT_FOUND, 'Cart not found.', HTTP_404)
+
+        line = cart.line_ids.filtered(lambda l: l.id == line_id)
+        if line:
+            line.unlink()
+        return _ok(cart.to_cart_dict())
+
+    @http.route('/api/cart', auth='none', methods=['DELETE'],
+                type='http', csrf=False, save_session=False)
+    @require_cargo_auth()
+    def cargo_clear_cart(self, **kwargs):
+        """DELETE /api/cart — clear the entire cart."""
+        user = request.cargo_user
+        cart = request.env['cargo.cart'].sudo().search([('user_id', '=', user.id)], limit=1)
+        if cart:
+            cart.clear()
+        return _ok({'message': 'Cart cleared.'})
+
+    @http.route('/api/cart/coupon', auth='none', methods=['POST'],
+                type='http', csrf=False, save_session=False)
+    @require_cargo_auth()
+    def cargo_apply_coupon(self, **kwargs):
+        """POST /api/cart/coupon — { "code": "SUMMER10" }"""
+        user = request.cargo_user
+        body = _json_body()
+        code = (body.get('code') or '').strip().upper()
+        if not code:
+            return _err(ERR_VALIDATION, 'Coupon code is required.')
+
+        cart = request.env['cargo.cart'].sudo().get_or_create_for_user(user.id)
+        subtotal = sum(l.price * l.quantity for l in cart.line_ids)
 
         try:
-            quantity = int(body.get('quantity', 1))
-        except (ValueError, TypeError):
-            quantity = 1
-
-        cart = request.env['cargo.cart'].sudo().get_or_create_for_user(user.id)
-        line = request.env['cargo.cart.line'].sudo().browse(item_id)
-
-        if not line.exists() or line.cart_id.id != cart.id:
-            return request.make_response(
-                json.dumps({'error': ERR_NOT_FOUND, 'message': 'Cart item not found.'}),
-                status=HTTP_404,
-                headers=[('Content-Type', 'application/json')],
+            result = request.env['cargo.coupon'].sudo().validate_and_apply(
+                code, subtotal, user.id, cart.store_id.id if cart.store_id else None,
             )
+        except Exception as exc:
+            return _err('ERR_COUPON', str(exc))
 
-        if quantity <= 0:
-            line.unlink()
-        else:
-            line.write({'quantity': quantity})
+        cart.write({
+            'coupon_code':   code,
+            'discount':      result['discount'],
+            'delivery_fee':  0.0 if result['deliveryWaived'] else cart.delivery_fee,
+        })
+        return _ok(cart.to_cart_dict())
 
-        cart.invalidate_recordset()
-        return request.make_response(
-            json.dumps(cart.to_cart_dict()),
-            status=HTTP_200,
-            headers=[('Content-Type', 'application/json')],
-        )
-
-    @http.route(
-        '/api/cart/items/<int:item_id>',
-        auth='none',
-        methods=['DELETE'],
-        type='http',
-        csrf=False,
-        save_session=False,
-    )
+    @http.route('/api/cart/coupon', auth='none', methods=['DELETE'],
+                type='http', csrf=False, save_session=False)
     @require_cargo_auth()
-    def cargo_remove_cart_item(self, item_id, **kwargs):
-        """DELETE /api/cart/items/:itemId"""
+    def cargo_remove_coupon(self, **kwargs):
+        """DELETE /api/cart/coupon — remove applied coupon."""
         user = request.cargo_user
-        cart = request.env['cargo.cart'].sudo().get_or_create_for_user(user.id)
-        line = request.env['cargo.cart.line'].sudo().browse(item_id)
-
-        if not line.exists() or line.cart_id.id != cart.id:
-            return request.make_response(
-                json.dumps({'error': ERR_NOT_FOUND, 'message': 'Cart item not found.'}),
-                status=HTTP_404,
-                headers=[('Content-Type', 'application/json')],
-            )
-
-        line.unlink()
-        cart.invalidate_recordset()
-        return request.make_response(
-            json.dumps(cart.to_cart_dict()),
-            status=HTTP_200,
-            headers=[('Content-Type', 'application/json')],
-        )
+        cart = request.env['cargo.cart'].sudo().search([('user_id', '=', user.id)], limit=1)
+        if cart:
+            cart.write({'coupon_code': False, 'discount': 0.0})
+        return _ok(cart.to_cart_dict() if cart else {})

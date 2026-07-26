@@ -2,24 +2,22 @@
 {
     'name': 'Cargo Review',
     'version': '18.0.1.0.0',
-    'summary': 'Customer reviews and ratings for stores and products on Cargo',
-    'description': """
-Manages star ratings (1–5) and text reviews for both stores and products.
-On save, the module recomputes the aggregate rating and review count on
-the target store or product record.
+    'summary': 'Customer reviews for stores and products — auto-refreshes rating aggregates',
+    'description': '''
+Manages cargo.review records which link to native Odoo models:
+  product_id → product.template (marketplace product)
+  order_id   → sale.order       (the completed order)
+  store_id   → cargo.store
 
-Models:
-  * cargo.review — review for a store or product
+After each review, rating aggregates are refreshed on the target
+store (cargo.store.rating) or product (product.template.cargo_rating).
 
-REST endpoints:
-  GET  /api/stores/:id/reviews
-  POST /api/stores/:id/reviews
-  GET  /api/products/:id/reviews
-  POST /api/products/:id/reviews
-""",
+Also defines the cargo.rating.mixin abstract model that stores and products
+can inherit to get _refresh_cargo_rating().
+    ''',
     'author': 'Cargo Marketplace',
     'category': 'Cargo/Review',
-    'depends': ['cargo_auth', 'cargo_store', 'cargo_product'],
+    'depends': ['cargo_order'],
     'data': [
         'security/ir.model.access.csv',
         'views/cargo_review_views.xml',

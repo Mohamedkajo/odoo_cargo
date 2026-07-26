@@ -1,48 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_cargo_driver_list" model="ir.ui.view">
-        <field name="name">cargo.driver.list</field>
-        <field name="model">cargo.driver</field>
+
+    <!-- Extend native res.users form with driver profile section -->
+    <record id="view_res_users_cargo_driver_form" model="ir.ui.view">
+        <field name="name">res.users.cargo.driver.form</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Driver Profile" name="cargo_driver"
+                      attrs="{'invisible': [('cargo_role', '!=', 'driver')]}">
+                    <group string="Vehicle">
+                        <field name="cargo_driver_vehicle_type"/>
+                        <field name="cargo_driver_vehicle_plate"/>
+                        <field name="cargo_driver_vehicle_color"/>
+                        <field name="cargo_driver_vehicle_year"/>
+                    </group>
+                    <group string="Status &amp; Location">
+                        <field name="cargo_driver_is_online"/>
+                        <field name="cargo_driver_current_lat" readonly="1"/>
+                        <field name="cargo_driver_current_lng" readonly="1"/>
+                        <field name="cargo_driver_location_at" readonly="1"/>
+                    </group>
+                    <group string="Performance">
+                        <field name="cargo_driver_rating" readonly="1"/>
+                        <field name="cargo_driver_rating_count" readonly="1"/>
+                        <field name="cargo_driver_total_deliveries" readonly="1"/>
+                        <field name="cargo_driver_total_earnings" readonly="1"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Driver list (users with driver role) -->
+    <record id="view_res_users_driver_list" model="ir.ui.view">
+        <field name="name">res.users.driver.list</field>
+        <field name="model">res.users</field>
         <field name="arch" type="xml">
             <list string="Drivers">
-                <field name="display_name"/>
-                <field name="vehicle_type"/>
-                <field name="vehicle_plate"/>
-                <field name="is_online"/>
-                <field name="rating"/>
-                <field name="total_deliveries"/>
+                <field name="name"/>
+                <field name="cargo_driver_vehicle_type"/>
+                <field name="cargo_driver_vehicle_plate"/>
+                <field name="cargo_driver_is_online"/>
+                <field name="cargo_driver_rating"/>
+                <field name="cargo_driver_total_deliveries"/>
+                <field name="active"/>
             </list>
         </field>
     </record>
-    <record id="view_cargo_driver_form" model="ir.ui.view">
-        <field name="name">cargo.driver.form</field>
-        <field name="model">cargo.driver</field>
-        <field name="arch" type="xml">
-            <form string="Driver">
-                <sheet>
-                    <group>
-                        <group>
-                            <field name="user_id"/>
-                            <field name="vehicle_type"/>
-                            <field name="vehicle_plate"/>
-                            <field name="vehicle_color"/>
-                        </group>
-                        <group>
-                            <field name="is_online"/>
-                            <field name="current_lat"/>
-                            <field name="current_lng"/>
-                            <field name="rating"/>
-                            <field name="total_deliveries"/>
-                            <field name="total_earnings"/>
-                        </group>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
+
     <record id="action_cargo_driver" model="ir.actions.act_window">
         <field name="name">Drivers</field>
-        <field name="res_model">cargo.driver</field>
+        <field name="res_model">res.users</field>
         <field name="view_mode">list,form</field>
+        <field name="domain">[('cargo_role', '=', 'driver')]</field>
+        <field name="view_id" ref="view_res_users_driver_list"/>
     </record>
+
 </odoo>

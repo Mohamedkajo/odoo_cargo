@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!--
+        cargo_notification has no static seed data.
+        Notification records are created at runtime when order status changes.
+
+        The scheduled action for push notification dispatch lives in
+        cargo_notification/data/ and is defined in the manifest data list when needed.
+    -->
+</odoo>

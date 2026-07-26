@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        cargo_auth has no dedicated back-office menu items.
+        Auth token management lives in cargo_api (API Tokens menu).
+        Audit log lives in cargo_base (Cargo → Audit Log menu).
+    -->
+</odoo>

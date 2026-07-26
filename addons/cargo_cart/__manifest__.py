@@ -18,6 +18,7 @@
     'depends': ['cargo_auth', 'cargo_product', 'cargo_store'],
     'data': [
         'security/ir.model.access.csv',
+        'views/cargo_cart_views.xml',
     ],
     'installable': True,
     'auto_install': False,

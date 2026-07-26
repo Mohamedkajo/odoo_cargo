@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!--
+        cargo_wallet has no static seed data.
+        Wallet balances live on res.users.cargo_wallet_balance (default 0.0).
+        Transactions are created at runtime via cargo_wallet_credit() / cargo_wallet_debit().
+    -->
+</odoo>

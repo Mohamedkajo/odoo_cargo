@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!--
+        cargo_cart has no static seed data.
+        Carts are created at runtime when customers add items.
+    -->
+</odoo>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rule_driver_own_profile" model="ir.rule">
+        <field name="name">Cargo Driver: driver sees own profile only</field>
+        <field name="model_id" ref="model_cargo_driver"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('cargo_base.cargo_group_driver'))]"/>
+    </record>
+</odoo>

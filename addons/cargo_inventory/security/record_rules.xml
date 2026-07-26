@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rule_inventory_vendor_stores" model="ir.rule">
+        <field name="name">Cargo Inventory: vendor sees own stores only</field>
+        <field name="model_id" ref="model_cargo_inventory"/>
+        <field name="domain_force">[('store_id.vendor_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('cargo_base.cargo_group_vendor'))]"/>
+    </record>
+</odoo>

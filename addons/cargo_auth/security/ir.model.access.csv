@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_res_users_cargo_auth_customer,res.users cargo_auth customer,base.model_res_users,cargo_base.cargo_group_customer,1,0,0,0
+access_res_users_cargo_auth_admin,res.users cargo_auth admin,base.model_res_users,cargo_base.cargo_group_admin,1,1,1,0

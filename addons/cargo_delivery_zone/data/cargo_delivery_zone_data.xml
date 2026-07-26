@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="zone_cairo_maadi" model="cargo.delivery.zone">
+        <field name="name">Cairo — Maadi</field>
+        <field name="city">Cairo</field>
+        <field name="base_delivery_fee">15.0</field>
+        <field name="min_order_amount">80.0</field>
+        <field name="max_radius_km">5.0</field>
+        <field name="center_lat">30.0459</field>
+        <field name="center_lng">31.2243</field>
+    </record>
+    <record id="zone_cairo_heliopolis" model="cargo.delivery.zone">
+        <field name="name">Cairo — Heliopolis</field>
+        <field name="city">Cairo</field>
+        <field name="base_delivery_fee">12.0</field>
+        <field name="min_order_amount">70.0</field>
+        <field name="max_radius_km">6.0</field>
+        <field name="center_lat">30.0870</field>
+        <field name="center_lng">31.3277</field>
+    </record>
+    <record id="zone_cairo_zamalek" model="cargo.delivery.zone">
+        <field name="name">Cairo — Zamalek</field>
+        <field name="city">Cairo</field>
+        <field name="base_delivery_fee">10.0</field>
+        <field name="min_order_amount">50.0</field>
+        <field name="max_radius_km">3.0</field>
+        <field name="center_lat">30.0640</field>
+        <field name="center_lng">31.2194</field>
+    </record>
+    <record id="zone_new_cairo" model="cargo.delivery.zone">
+        <field name="name">New Cairo</field>
+        <field name="city">New Cairo</field>
+        <field name="base_delivery_fee">20.0</field>
+        <field name="min_order_amount">100.0</field>
+        <field name="max_radius_km">8.0</field>
+        <field name="center_lat">30.0210</field>
+        <field name="center_lng">31.4814</field>
+    </record>
+</odoo>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- ── Store Categories (home-screen tabs) ───────────────────────────── -->
+
+    <record id="cat_store_food" model="cargo.store.category">
+        <field name="name">Food</field>
+        <field name="icon">🍕</field>
+        <field name="sequence">1</field>
+    </record>
+
+    <record id="cat_store_grocery" model="cargo.store.category">
+        <field name="name">Grocery</field>
+        <field name="icon">🛒</field>
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="cat_store_pharmacy" model="cargo.store.category">
+        <field name="name">Pharmacy</field>
+        <field name="icon">💊</field>
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="cat_store_sweets" model="cargo.store.category">
+        <field name="name">Sweets</field>
+        <field name="icon">🍰</field>
+        <field name="sequence">4</field>
+    </record>
+
+    <record id="cat_store_coffee" model="cargo.store.category">
+        <field name="name">Coffee</field>
+        <field name="icon">☕</field>
+        <field name="sequence">5</field>
+    </record>
+
+    <record id="cat_store_electronics" model="cargo.store.category">
+        <field name="name">Electronics</field>
+        <field name="icon">📱</field>
+        <field name="sequence">6</field>
+    </record>
+
+    <!-- ── Generic Product Categories (re-used across stores) ────────────── -->
+
+    <record id="cat_product_burgers" model="cargo.product.category">
+        <field name="name">Burgers</field>
+        <field name="icon">🍔</field>
+        <field name="sequence">1</field>
+    </record>
+
+    <record id="cat_product_pizza" model="cargo.product.category">
+        <field name="name">Pizza</field>
+        <field name="icon">🍕</field>
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="cat_product_sushi" model="cargo.product.category">
+        <field name="name">Sushi</field>
+        <field name="icon">🍱</field>
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="cat_product_drinks" model="cargo.product.category">
+        <field name="name">Drinks</field>
+        <field name="icon">🥤</field>
+        <field name="sequence">4</field>
+    </record>
+
+    <record id="cat_product_desserts" model="cargo.product.category">
+        <field name="name">Desserts</field>
+        <field name="icon">🍩</field>
+        <field name="sequence">5</field>
+    </record>
+
+    <record id="cat_product_sides" model="cargo.product.category">
+        <field name="name">Sides</field>
+        <field name="icon">🍟</field>
+        <field name="sequence">6</field>
+    </record>
+
+    <record id="cat_product_coffee" model="cargo.product.category">
+        <field name="name">Coffee</field>
+        <field name="icon">☕</field>
+        <field name="sequence">7</field>
+    </record>
+
+    <record id="cat_product_salads" model="cargo.product.category">
+        <field name="name">Salads</field>
+        <field name="icon">🥗</field>
+        <field name="sequence">8</field>
+    </record>
+
+</odoo>

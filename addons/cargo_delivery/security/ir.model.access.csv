@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cargo_delivery_customer,cargo.delivery customer,model_cargo_delivery,cargo_base.cargo_group_customer,1,0,0,0
+access_cargo_delivery_driver,cargo.delivery driver,model_cargo_delivery,cargo_base.cargo_group_driver,1,1,0,0
+access_cargo_delivery_vendor,cargo.delivery vendor,model_cargo_delivery,cargo_base.cargo_group_vendor,1,0,0,0
+access_cargo_delivery_admin,cargo.delivery admin,model_cargo_delivery,cargo_base.cargo_group_admin,1,1,1,1

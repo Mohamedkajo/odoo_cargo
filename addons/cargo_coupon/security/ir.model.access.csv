@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cargo_coupon_customer,cargo.coupon customer,model_cargo_coupon,cargo_base.cargo_group_customer,1,0,0,0
+access_cargo_coupon_admin,cargo.coupon admin,model_cargo_coupon,cargo_base.cargo_group_admin,1,1,1,1
+access_cargo_coupon_usage_customer,cargo.coupon.usage customer,model_cargo_coupon_usage,cargo_base.cargo_group_customer,1,0,1,0
+access_cargo_coupon_usage_admin,cargo.coupon.usage admin,model_cargo_coupon_usage,cargo_base.cargo_group_admin,1,1,1,1

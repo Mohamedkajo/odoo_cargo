@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="cargo_marketplace_settings_default" model="cargo.marketplace.settings">
+        <field name="platform_name">Cargo Marketplace</field>
+        <field name="tagline">Fast delivery across Egypt</field>
+        <field name="support_email">support@cargo.app</field>
+        <field name="support_phone">+201000000000</field>
+        <field name="default_commission_rate">15.0</field>
+        <field name="default_delivery_fee">15.0</field>
+        <field name="min_order_amount">50.0</field>
+        <field name="max_wallet_topup">10000.0</field>
+        <field name="maintenance_mode">False</field>
+        <field name="allow_wallet">True</field>
+        <field name="allow_coupons">True</field>
+        <field name="allow_reviews">True</field>
+    </record>
+</odoo>

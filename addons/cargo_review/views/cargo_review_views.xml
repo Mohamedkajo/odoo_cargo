@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_cargo_review_list" model="ir.ui.view">
+        <field name="name">cargo.review.list</field>
+        <field name="model">cargo.review</field>
+        <field name="arch" type="xml">
+            <list string="Reviews">
+                <field name="reviewer_name"/>
+                <field name="review_type"/>
+                <field name="store_id"/>
+                <field name="product_id"/>
+                <field name="rating"/>
+                <field name="is_approved"/>
+                <field name="create_date"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_cargo_review" model="ir.actions.act_window">
+        <field name="name">Reviews</field>
+        <field name="res_model">cargo.review</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cargo_store_public,cargo.store public,model_cargo_store,base.group_public,1,0,0,0
+access_cargo_store_customer,cargo.store customer,model_cargo_store,cargo_base.cargo_group_customer,1,0,0,0
+access_cargo_store_vendor,cargo.store vendor,model_cargo_store,cargo_base.cargo_group_vendor,1,1,0,0
+access_cargo_store_admin,cargo.store admin,model_cargo_store,cargo_base.cargo_group_admin,1,1,1,1
+access_cargo_store_tag_public,cargo.store.tag public,model_cargo_store_tag,base.group_public,1,0,0,0
+access_cargo_store_tag_customer,cargo.store.tag customer,model_cargo_store_tag,cargo_base.cargo_group_customer,1,0,0,0
+access_cargo_store_tag_admin,cargo.store.tag admin,model_cargo_store_tag,cargo_base.cargo_group_admin,1,1,1,1

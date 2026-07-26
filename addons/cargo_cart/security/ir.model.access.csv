@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cargo_cart_customer,cargo.cart customer,model_cargo_cart,cargo_base.cargo_group_customer,1,1,1,1
+access_cargo_cart_admin,cargo.cart admin,model_cargo_cart,cargo_base.cargo_group_admin,1,1,1,1
+access_cargo_cart_line_customer,cargo.cart.line customer,model_cargo_cart_line,cargo_base.cargo_group_customer,1,1,1,1
+access_cargo_cart_line_admin,cargo.cart.line admin,model_cargo_cart_line,cargo_base.cargo_group_admin,1,1,1,1

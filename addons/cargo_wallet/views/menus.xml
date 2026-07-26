@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_cargo_wallet_root"
+              name="Wallets"
+              parent="cargo_base.menu_cargo_root"
+              sequence="50"/>
+
+    <menuitem id="menu_cargo_wallet_list"
+              name="Customer Wallets"
+              parent="menu_cargo_wallet_root"
+              action="action_cargo_wallet"
+              sequence="10"/>
+
+</odoo>

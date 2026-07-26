@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ── cargo.store ──────────────────────────────────────────────────── -->
+
+    <record id="view_cargo_store_form" model="ir.ui.view">
+        <field name="name">cargo.store.form</field>
+        <field name="model">cargo.store</field>
+        <field name="arch" type="xml">
+            <form string="Store">
+                <header>
+                    <field name="active" widget="boolean_toggle" string="Active"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="slug"/>
+                            <field name="category_id"/>
+                            <field name="vendor_id"/>
+                        </group>
+                        <group>
+                            <field name="rating"/>
+                            <field name="review_count"/>
+                            <field name="is_featured"/>
+                            <field name="is_verified"/>
+                            <field name="is_trending"/>
+                            <field name="is_open"/>
+                            <field name="is_online"/>
+                        </group>
+                    </group>
+                    <group string="Images">
+                        <field name="image"/>
+                        <field name="logo"/>
+                    </group>
+                    <group string="Delivery">
+                        <field name="delivery_time"/>
+                        <field name="delivery_fee"/>
+                        <field name="min_order"/>
+                    </group>
+                    <group string="Location">
+                        <field name="address"/>
+                        <field name="phone"/>
+                        <field name="latitude"/>
+                        <field name="longitude"/>
+                    </group>
+                    <group string="Description">
+                        <field name="description" nolabel="1"/>
+                    </group>
+                    <group string="Tags">
+                        <field name="tag_ids" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_cargo_store_list" model="ir.ui.view">
+        <field name="name">cargo.store.list</field>
+        <field name="model">cargo.store</field>
+        <field name="arch" type="xml">
+            <list string="Stores">
+                <field name="name"/>
+                <field name="category_name"/>
+                <field name="rating"/>
+                <field name="delivery_fee"/>
+                <field name="is_open"/>
+                <field name="is_featured"/>
+                <field name="is_verified"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_cargo_store" model="ir.actions.act_window">
+        <field name="name">Stores</field>
+        <field name="res_model">cargo.store</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ── cargo.store.tag ──────────────────────────────────────────────── -->
+
+    <record id="view_cargo_store_tag_list" model="ir.ui.view">
+        <field name="name">cargo.store.tag.list</field>
+        <field name="model">cargo.store.tag</field>
+        <field name="arch" type="xml">
+            <list string="Store Tags" editable="top">
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_cargo_store_tag" model="ir.actions.act_window">
+        <field name="name">Store Tags</field>
+        <field name="res_model">cargo.store.tag</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

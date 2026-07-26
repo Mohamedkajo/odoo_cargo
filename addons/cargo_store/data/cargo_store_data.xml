@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!--
+        Store tags and demo stores.
+        Store category records live in cargo_category/data/cargo_category_data.xml.
+        References use cargo_category XML IDs (cargo_category.cat_store_food, etc.).
+    -->
+
+    <!-- ── Store Tags ────────────────────────────────────────────────────── -->
+
+    <record id="tag_free_delivery" model="cargo.store.tag">
+        <field name="name">Free Delivery</field>
+    </record>
+    <record id="tag_halal" model="cargo.store.tag">
+        <field name="name">Halal</field>
+    </record>
+    <record id="tag_trending" model="cargo.store.tag">
+        <field name="name">Trending</field>
+    </record>
+    <record id="tag_new" model="cargo.store.tag">
+        <field name="name">New</field>
+    </record>
+    <record id="tag_top_rated" model="cargo.store.tag">
+        <field name="name">Top Rated</field>
+    </record>
+
+    <!-- ── Demo Stores ───────────────────────────────────────────────────── -->
+
+    <record id="store_pizza_palace" model="cargo.store">
+        <field name="name">Pizza Palace</field>
+        <field name="category_id" ref="cargo_category.cat_store_food"/>
+        <field name="description">Authentic Italian pizza with fresh ingredients.</field>
+        <field name="address">Maadi, Cairo, Egypt</field>
+        <field name="phone">+201001234567</field>
+        <field name="rating">4.8</field>
+        <field name="review_count">324</field>
+        <field name="delivery_time">30</field>
+        <field name="delivery_fee">15.0</field>
+        <field name="min_order">100.0</field>
+        <field name="is_open">True</field>
+        <field name="is_featured">True</field>
+        <field name="is_verified">True</field>
+        <field name="is_trending">True</field>
+        <field name="is_online">True</field>
+        <field name="latitude">30.0459</field>
+        <field name="longitude">31.2243</field>
+        <field name="image">https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800</field>
+        <field name="logo">https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200</field>
+        <field name="tag_ids" eval="[(4, ref('tag_halal')), (4, ref('tag_top_rated'))]"/>
+    </record>
+
+    <record id="store_burger_barn" model="cargo.store">
+        <field name="name">Burger Barn</field>
+        <field name="category_id" ref="cargo_category.cat_store_food"/>
+        <field name="description">Juicy gourmet burgers with fresh toppings.</field>
+        <field name="address">Heliopolis, Cairo, Egypt</field>
+        <field name="phone">+201009876543</field>
+        <field name="rating">4.5</field>
+        <field name="review_count">189</field>
+        <field name="delivery_time">25</field>
+        <field name="delivery_fee">10.0</field>
+        <field name="min_order">80.0</field>
+        <field name="is_open">True</field>
+        <field name="is_featured">True</field>
+        <field name="is_verified">True</field>
+        <field name="is_trending">False</field>
+        <field name="is_online">True</field>
+        <field name="latitude">30.0870</field>
+        <field name="longitude">31.3277</field>
+        <field name="image">https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800</field>
+        <field name="logo">https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200</field>
+        <field name="tag_ids" eval="[(4, ref('tag_halal')), (4, ref('tag_trending'))]"/>
+    </record>
+
+    <record id="store_sushi_stop" model="cargo.store">
+        <field name="name">Sushi Stop</field>
+        <field name="category_id" ref="cargo_category.cat_store_food"/>
+        <field name="description">Fresh Japanese sushi and rolls.</field>
+        <field name="address">Zamalek, Cairo, Egypt</field>
+        <field name="phone">+201112345678</field>
+        <field name="rating">4.7</field>
+        <field name="review_count">256</field>
+        <field name="delivery_time">40</field>
+        <field name="delivery_fee">20.0</field>
+        <field name="min_order">150.0</field>
+        <field name="is_open">True</field>
+        <field name="is_featured">False</field>
+        <field name="is_verified">True</field>
+        <field name="is_trending">True</field>
+        <field name="is_online">True</field>
+        <field name="latitude">30.0640</field>
+        <field name="longitude">31.2194</field>
+        <field name="image">https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=800</field>
+        <field name="logo">https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=200</field>
+        <field name="tag_ids" eval="[(4, ref('tag_top_rated')), (4, ref('tag_new'))]"/>
+    </record>
+
+    <record id="store_cafe_cortado" model="cargo.store">
+        <field name="name">Café Cortado</field>
+        <field name="category_id" ref="cargo_category.cat_store_coffee"/>
+        <field name="description">Specialty coffee and artisan pastries.</field>
+        <field name="address">New Cairo, Cairo, Egypt</field>
+        <field name="phone">+201234567890</field>
+        <field name="rating">4.9</field>
+        <field name="review_count">412</field>
+        <field name="delivery_time">20</field>
+        <field name="delivery_fee">0.0</field>
+        <field name="min_order">50.0</field>
+        <field name="is_open">True</field>
+        <field name="is_featured">True</field>
+        <field name="is_verified">True</field>
+        <field name="is_trending">True</field>
+        <field name="is_online">True</field>
+        <field name="latitude">30.0210</field>
+        <field name="longitude">31.4814</field>
+        <field name="image">https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800</field>
+        <field name="logo">https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=200</field>
+        <field name="tag_ids" eval="[(4, ref('tag_free_delivery')), (4, ref('tag_top_rated'))]"/>
+    </record>
+
+</odoo>

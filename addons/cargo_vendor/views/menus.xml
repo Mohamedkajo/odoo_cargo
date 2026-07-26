@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_cargo_vendor_root" name="Vendors"
+              parent="cargo_base.menu_cargo_root" sequence="25"/>
+    <menuitem id="menu_cargo_vendor_list" name="All Vendors"
+              parent="menu_cargo_vendor_root" action="action_cargo_vendor" sequence="10"/>
+</odoo>

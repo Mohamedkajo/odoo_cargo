@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_cargo_marketplace_settings_form" model="ir.ui.view">
+        <field name="name">cargo.marketplace.settings.form</field>
+        <field name="model">cargo.marketplace.settings</field>
+        <field name="arch" type="xml">
+            <form string="Marketplace Settings">
+                <sheet>
+                    <group string="Platform">
+                        <field name="platform_name"/>
+                        <field name="platform_logo"/>
+                        <field name="tagline"/>
+                        <field name="maintenance_mode"/>
+                    </group>
+                    <group string="Support">
+                        <field name="support_email"/>
+                        <field name="support_phone"/>
+                        <field name="support_url"/>
+                    </group>
+                    <group string="Fees &amp; Commission">
+                        <field name="default_commission_rate"/>
+                        <field name="default_delivery_fee"/>
+                        <field name="min_order_amount"/>
+                        <field name="max_wallet_topup"/>
+                    </group>
+                    <group string="Features">
+                        <field name="allow_wallet"/>
+                        <field name="allow_coupons"/>
+                        <field name="allow_reviews"/>
+                    </group>
+                    <group string="Legal">
+                        <field name="terms_url"/>
+                        <field name="privacy_url"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_cargo_marketplace_settings" model="ir.actions.act_window">
+        <field name="name">Marketplace Settings</field>
+        <field name="res_model">cargo.marketplace.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+    </record>
+</odoo>

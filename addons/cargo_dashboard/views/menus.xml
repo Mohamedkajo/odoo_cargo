@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Top-level Cargo menu item with dashboard as the landing action -->
+    <menuitem id="menu_cargo_dashboard_home"
+              name="Dashboard"
+              parent="cargo_base.menu_cargo_root"
+              action="action_cargo_dashboard"
+              sequence="1"/>
+
+</odoo>

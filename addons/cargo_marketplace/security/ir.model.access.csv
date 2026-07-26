@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cargo_marketplace_settings_public,cargo.marketplace.settings public,model_cargo_marketplace_settings,base.group_public,1,0,0,0
+access_cargo_marketplace_settings_admin,cargo.marketplace.settings admin,model_cargo_marketplace_settings,cargo_base.cargo_group_admin,1,1,1,0

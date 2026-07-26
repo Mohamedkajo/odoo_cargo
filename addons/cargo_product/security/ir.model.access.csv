@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cargo_product_public,cargo.product public,model_cargo_product,base.group_public,1,0,0,0
+access_cargo_product_customer,cargo.product customer,model_cargo_product,cargo_base.cargo_group_customer,1,0,0,0
+access_cargo_product_vendor,cargo.product vendor,model_cargo_product,cargo_base.cargo_group_vendor,1,1,1,1
+access_cargo_product_admin,cargo.product admin,model_cargo_product,cargo_base.cargo_group_admin,1,1,1,1
+access_cargo_product_variant_public,cargo.product.variant public,model_cargo_product_variant,base.group_public,1,0,0,0
+access_cargo_product_variant_admin,cargo.product.variant admin,model_cargo_product_variant,cargo_base.cargo_group_admin,1,1,1,1
+access_cargo_product_addon_public,cargo.product.addon public,model_cargo_product_addon,base.group_public,1,0,0,0
+access_cargo_product_addon_admin,cargo.product.addon admin,model_cargo_product_addon,cargo_base.cargo_group_admin,1,1,1,1
+access_cargo_product_tag_public,cargo.product.tag public,model_cargo_product_tag,base.group_public,1,0,0,0
+access_cargo_product_tag_admin,cargo.product.tag admin,model_cargo_product_tag,cargo_base.cargo_group_admin,1,1,1,1
+access_cargo_product_image_public,cargo.product.image public,model_cargo_product_image,base.group_public,1,0,0,0
+access_cargo_product_image_admin,cargo.product.image admin,model_cargo_product_image,cargo_base.cargo_group_admin,1,1,1,1

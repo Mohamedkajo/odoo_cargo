@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cargo_review_public,cargo.review public,model_cargo_review,base.group_public,1,0,0,0
+access_cargo_review_customer,cargo.review customer,model_cargo_review,cargo_base.cargo_group_customer,1,0,1,0
+access_cargo_review_vendor,cargo.review vendor,model_cargo_review,cargo_base.cargo_group_vendor,1,0,0,0
+access_cargo_review_admin,cargo.review admin,model_cargo_review,cargo_base.cargo_group_admin,1,1,1,1

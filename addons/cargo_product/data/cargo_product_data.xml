@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Product seed data is added by cargo_store after stores are created -->
+    <!-- Run the cargo_product_seed wizard from Settings > Technical to load demo products -->
+</odoo>

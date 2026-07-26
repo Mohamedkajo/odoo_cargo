@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cargo_inventory_vendor,cargo.inventory vendor,model_cargo_inventory,cargo_base.cargo_group_vendor,1,1,1,0
+access_cargo_inventory_admin,cargo.inventory admin,model_cargo_inventory,cargo_base.cargo_group_admin,1,1,1,1

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rule_cargo_favorite_own" model="ir.rule">
+        <field name="name">Cargo Favorite: Customer sees own favorites only</field>
+        <field name="model_id" ref="model_cargo_favorite"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('cargo_base.cargo_group_customer'))]"/>
+    </record>
+</odoo>

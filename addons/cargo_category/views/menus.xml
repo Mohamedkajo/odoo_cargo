@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_cargo_category_root"
+              name="Categories"
+              parent="cargo_base.menu_cargo_root"
+              sequence="15"/>
+
+    <menuitem id="menu_cargo_store_category"
+              name="Store Categories"
+              parent="menu_cargo_category_root"
+              action="action_cargo_store_category"
+              sequence="10"/>
+
+    <menuitem id="menu_cargo_product_category"
+              name="Product Categories"
+              parent="menu_cargo_category_root"
+              action="action_cargo_product_category"
+              sequence="20"/>
+
+</odoo>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_cargo_marketplace_settings"
+              name="Platform Settings"
+              parent="cargo_base.menu_cargo_root"
+              action="action_cargo_marketplace_settings"
+              sequence="99"/>
+</odoo>

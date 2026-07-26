@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cargo_store_category_public,cargo.store.category public,model_cargo_store_category,base.group_public,1,0,0,0
+access_cargo_store_category_customer,cargo.store.category customer,model_cargo_store_category,cargo_base.cargo_group_customer,1,0,0,0
+access_cargo_store_category_vendor,cargo.store.category vendor,model_cargo_store_category,cargo_base.cargo_group_vendor,1,0,0,0
+access_cargo_store_category_admin,cargo.store.category admin,model_cargo_store_category,cargo_base.cargo_group_admin,1,1,1,1
+access_cargo_product_category_public,cargo.product.category public,model_cargo_product_category,base.group_public,1,0,0,0
+access_cargo_product_category_customer,cargo.product.category customer,model_cargo_product_category,cargo_base.cargo_group_customer,1,0,0,0
+access_cargo_product_category_vendor,cargo.product.category vendor,model_cargo_product_category,cargo_base.cargo_group_vendor,1,1,1,1
+access_cargo_product_category_admin,cargo.product.category admin,model_cargo_product_category,cargo_base.cargo_group_admin,1,1,1,1

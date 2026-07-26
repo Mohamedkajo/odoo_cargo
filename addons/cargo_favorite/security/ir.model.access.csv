@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cargo_favorite_customer,cargo.favorite customer,model_cargo_favorite,cargo_base.cargo_group_customer,1,0,1,1
+access_cargo_favorite_admin,cargo.favorite admin,model_cargo_favorite,cargo_base.cargo_group_admin,1,1,1,1

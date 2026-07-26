@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cargo_delivery_zone_public,cargo.delivery.zone public,model_cargo_delivery_zone,base.group_public,1,0,0,0
+access_cargo_delivery_zone_customer,cargo.delivery.zone customer,model_cargo_delivery_zone,cargo_base.cargo_group_customer,1,0,0,0
+access_cargo_delivery_zone_admin,cargo.delivery.zone admin,model_cargo_delivery_zone,cargo_base.cargo_group_admin,1,1,1,1

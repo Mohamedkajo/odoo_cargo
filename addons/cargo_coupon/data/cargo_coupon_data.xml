@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="coupon_welcome10" model="cargo.coupon">
+        <field name="code">WELCOME10</field>
+        <field name="type">percentage</field>
+        <field name="discount_value">10.0</field>
+        <field name="max_discount">50.0</field>
+        <field name="min_order_amount">100.0</field>
+        <field name="usage_limit">0</field>
+        <field name="per_user_limit">1</field>
+    </record>
+    <record id="coupon_flat20" model="cargo.coupon">
+        <field name="code">FLAT20</field>
+        <field name="type">fixed</field>
+        <field name="discount_value">20.0</field>
+        <field name="min_order_amount">150.0</field>
+        <field name="usage_limit">500</field>
+        <field name="per_user_limit">2</field>
+    </record>
+</odoo>

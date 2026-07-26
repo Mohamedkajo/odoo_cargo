@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_cargo_driver_list" model="ir.ui.view">
+        <field name="name">cargo.driver.list</field>
+        <field name="model">cargo.driver</field>
+        <field name="arch" type="xml">
+            <list string="Drivers">
+                <field name="display_name"/>
+                <field name="vehicle_type"/>
+                <field name="vehicle_plate"/>
+                <field name="is_online"/>
+                <field name="rating"/>
+                <field name="total_deliveries"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_cargo_driver_form" model="ir.ui.view">
+        <field name="name">cargo.driver.form</field>
+        <field name="model">cargo.driver</field>
+        <field name="arch" type="xml">
+            <form string="Driver">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="vehicle_type"/>
+                            <field name="vehicle_plate"/>
+                            <field name="vehicle_color"/>
+                        </group>
+                        <group>
+                            <field name="is_online"/>
+                            <field name="current_lat"/>
+                            <field name="current_lng"/>
+                            <field name="rating"/>
+                            <field name="total_deliveries"/>
+                            <field name="total_earnings"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_cargo_driver" model="ir.actions.act_window">
+        <field name="name">Drivers</field>
+        <field name="res_model">cargo.driver</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

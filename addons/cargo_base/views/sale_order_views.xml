@@ -52,8 +52,7 @@
     <record id="cargo_sale_order_view_list" model="ir.ui.view">
         <field name="name">sale.order.list.cargo</field>
         <field name="model">sale.order</field>
-        <!-- Odoo 18: tree view renamed to list; external ID updated accordingly -->
-        <field name="inherit_id" ref="sale.view_quotation_list"/>
+        <field name="inherit_id" ref="sale.view_quotation_tree"/>
         <field name="arch" type="xml">
             <field name="state" position="after">
                 <field name="cargo_status" optional="show"

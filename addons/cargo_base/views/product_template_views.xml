@@ -44,8 +44,7 @@
     <record id="cargo_product_template_view_list" model="ir.ui.view">
         <field name="name">product.template.list.cargo</field>
         <field name="model">product.template</field>
-        <!-- Odoo 18: tree view renamed to list; external ID updated accordingly -->
-        <field name="inherit_id" ref="product.product_template_list_view"/>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
         <field name="arch" type="xml">
             <field name="list_price" position="after">
                 <field name="cargo_effective_price" string="Customer Price"

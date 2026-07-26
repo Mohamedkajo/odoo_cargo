@@ -80,6 +80,15 @@ class CargoConfigSettings(models.TransientModel):
         help='Customer-facing support phone number.',
     )
 
+    # ── Push Notifications (FCM) ──────────────────────────────────────────────
+    cargo_fcm_server_key = fields.Char(
+        string='FCM Server Key',
+        config_parameter='cargo.fcm.server_key',
+        help='Firebase Cloud Messaging Legacy HTTP server key. '
+             'Found in your Firebase project → Project Settings → Cloud Messaging → '
+             'Server key. Leave blank to disable push notifications.',
+    )
+
     # ── Locale ────────────────────────────────────────────────────────────────
     cargo_default_currency = fields.Char(
         string='Default Currency',

@@ -46,8 +46,7 @@
     <record id="cargo_res_partner_view_list" model="ir.ui.view">
         <field name="name">res.partner.list.cargo</field>
         <field name="model">res.partner</field>
-        <!-- Odoo 18: tree view renamed to list; external ID updated accordingly -->
-        <field name="inherit_id" ref="base.view_partner_list"/>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
         <field name="arch" type="xml">
             <field name="country_id" position="after">
                 <field name="cargo_role" optional="show"/>

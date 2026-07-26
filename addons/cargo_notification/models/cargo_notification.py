@@ -4,8 +4,8 @@
 cargo.notification — In-app push notification records.
 
 Inherits mail.thread so admins can log notes on any notification record
-and see the Odoo chatter.  Actual push delivery is handled by the
-notification controller (FCM/APNs via vendor device tokens).
+and see the Odoo chatter.  Actual push delivery is done via FCM Legacy HTTP
+using cargo_notification/utils/fcm.py.
 
 Target resolution:
   * user_id set → notification for a specific user
@@ -15,6 +15,8 @@ import json
 import logging
 
 from odoo import api, fields, models
+
+from ..utils import fcm as fcm_util
 
 _logger = logging.getLogger(__name__)
 
@@ -89,12 +91,60 @@ class CargoNotification(models.Model):
             'sentAt':  self.sent_at.isoformat() if self.sent_at else None,
         }
 
-    # ── Delivery helper ───────────────────────────────────────────────────────
+    # ── FCM push dispatch ────────────────────────────────────────────────────
+
+    def send_push(self) -> bool:
+        """
+        Dispatch this notification record via FCM to ``user_id.cargo_device_token``.
+
+        Marks ``is_sent = True`` and records ``sent_at`` regardless of whether
+        FCM accepted the message (the notification record always exists for the
+        in-app inbox; the push is best-effort).
+
+        Returns True if FCM accepted the push, False otherwise.
+        """
+        self.ensure_one()
+        device_token = self.user_id.cargo_device_token if self.user_id else None
+
+        # Always mark as sent (the in-app record IS the notification)
+        if not self.is_sent:
+            self.sudo().write({
+                'is_sent': True,
+                'sent_at': fields.Datetime.now(),
+            })
+
+        if not device_token:
+            return False
+
+        try:
+            data = json.loads(self.payload or '{}')
+        except Exception:
+            data = {}
+
+        return fcm_util.send_push(
+            self.env,
+            device_token=device_token,
+            title=self.title,
+            body=self.body,
+            data={
+                'notificationId': str(self.id),
+                'type':           self.type or 'system',
+                'orderId':        str(self.order_id.id) if self.order_id else '',
+                **data,
+            },
+        )
+
+    # ── Delivery helpers ─────────────────────────────────────────────────────
 
     @api.model
     def send_to_user(self, user, title: str, body: str,
                      notif_type='system', payload=None, order=None):
-        """Create and mark a notification as sent for a single user."""
+        """
+        Create a notification record for ``user`` and dispatch it via FCM.
+
+        This is the primary entry-point for programmatic notifications (order
+        status changes, driver assignment, etc.).
+        """
         record = self.sudo().create({
             'title':    title,
             'body':     body,
@@ -102,16 +152,9 @@ class CargoNotification(models.Model):
             'user_id':  user.id,
             'payload':  json.dumps(payload or {}),
             'order_id': order.id if order else False,
-            'is_sent':  True,
-            'sent_at':  fields.Datetime.now(),
+            'is_sent':  False,   # send_push() will set True
         })
-        device_token = getattr(user, 'cargo_device_token', None)
-        if device_token:
-            _logger.info(
-                'cargo.notification: push to user=%s token=%s title=%r',
-                user.id, device_token[:8] + '…', title,
-            )
-            # TODO: integrate FCM / APNs SDK here
+        record.send_push()
         return record
 
     @api.model
@@ -122,19 +165,46 @@ class CargoNotification(models.Model):
         if role:
             domain.append(('cargo_role', '=', role))
         users = self.env['res.users'].sudo().search(domain)
-        notifs = []
+
+        notif_vals = []
         for user in users:
-            notifs.append({
-                'title':      title,
-                'body':       body,
-                'type':       notif_type,
-                'user_id':    user.id,
-                'payload':    json.dumps(payload or {}),
-                'broadcast':  True,
+            notif_vals.append({
+                'title':       title,
+                'body':        body,
+                'type':        notif_type,
+                'user_id':     user.id,
+                'payload':     json.dumps(payload or {}),
+                'broadcast':   True,
                 'target_role': role or False,
-                'is_sent':    True,
-                'sent_at':    fields.Datetime.now(),
+                'is_sent':     False,
             })
-        if notifs:
-            self.sudo().create(notifs)
-        _logger.info('cargo.notification: broadcast to %d users (role=%s)', len(notifs), role)
+
+        if not notif_vals:
+            return
+
+        records = self.sudo().create(notif_vals)
+
+        # Dispatch FCM for each user with a registered device token
+        device_tokens = [
+            u.cargo_device_token for u in users if u.cargo_device_token
+        ]
+        if device_tokens:
+            fcm_util.send_multicast(
+                self.env,
+                device_tokens=device_tokens,
+                title=title,
+                body=body,
+                data={'type': notif_type, **(payload or {})},
+            )
+
+        # Mark all as sent
+        records.sudo().write({
+            'is_sent': True,
+            'sent_at': fields.Datetime.now(),
+        })
+
+        _logger.info(
+            'cargo.notification: broadcast to %d users (role=%s), '
+            'FCM tokens found: %d',
+            len(notif_vals), role, len(device_tokens),
+        )

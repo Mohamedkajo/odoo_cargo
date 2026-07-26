@@ -19,8 +19,9 @@ Customer App requires zero code changes.
 
 import json
 import logging
+from datetime import timedelta
 
-from odoo import http
+from odoo import fields, http
 from odoo.exceptions import AccessDenied
 from odoo.http import request
 
@@ -35,6 +36,8 @@ from cargo_base.constants import (
     ERR_AUTH,
     ERR_NOT_FOUND,
     ERR_CONFLICT,
+    CONFIG_JWT_SECRET,
+    JWT_REFRESH_EXPIRY_SECS,
 )
 from cargo_base.utils.jwt_utils import (
     generate_access_token,
@@ -67,26 +70,46 @@ def _json_body():
         return {}
 
 
+def _get_jwt_secret():
+    """Retrieve the configured JWT HMAC secret from ir.config_parameter."""
+    return request.env['ir.config_parameter'].sudo().get_param(CONFIG_JWT_SECRET, '')
+
+
 def _auth_response(user):
     """
     Build the standard auth response:
-      { "token": str, "user": UserDict }
+      { "token": str, "refreshToken": str, "user": UserDict }
 
     The access token is a short-lived (24h) stateless JWT.
     A new refresh token is created and stored (hashed) in cargo.api.token.
+
+    Bug fix: generate_access_token / generate_refresh_token require `secret`
+    as the 3rd positional argument (not an `env=` keyword). The secret is
+    read from ir.config_parameter using CONFIG_JWT_SECRET.
+
+    Bug fix: cargo.api.token.expires_at is required=True (no default).
+    Compute it from JWT_REFRESH_EXPIRY_SECS to avoid ValidationError.
     """
-    # Generate tokens
+    secret = _get_jwt_secret()
+
+    # Generate tokens — pass secret as required positional argument
     access_token  = generate_access_token(
         user.id,
-        role=user.cargo_role or 'customer',
-        env=request.env,
+        user.cargo_role or 'customer',
+        secret,
     )
-    refresh_token  = generate_refresh_token(user.id, env=request.env)
+    refresh_token = generate_refresh_token(user.id, secret)
 
-    # Persist hashed refresh token
+    # Compute expiry datetime for the refresh token record
+    expires_at = fields.Datetime.now() + timedelta(seconds=JWT_REFRESH_EXPIRY_SECS)
+
+    # Persist hashed refresh token (expires_at is required=True on the model)
     request.env['cargo.api.token'].sudo().create({
-        'user_id':   user.id,
+        'user_id':    user.id,
         'token_hash': hash_token(refresh_token),
+        'expires_at': expires_at,
+        'ip_address': request.httprequest.remote_addr,
+        'user_agent': (request.httprequest.user_agent.string or '')[:255],
     })
 
     return {

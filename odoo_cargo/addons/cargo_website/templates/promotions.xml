@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="page_promotions" name="Cargo — Promotions">
+    <t t-call="cargo_website.layout">
+
+      <!-- Hero -->
+      <section class="py-20" style="background:linear-gradient(135deg,#fefce8 0%,#fff7ed 100%)">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+          <div class="flex items-center justify-center gap-2 font-semibold mb-4" style="color:#ca8a04">
+            <i class="fas fa-bolt" style="font-size:18px;"></i> Limited Time Offers
+          </div>
+          <h1 class="text-4xl md:text-5xl font-extrabold mb-4">Promotions &amp; Deals</h1>
+          <p class="text-gray-500 text-lg">Flash sales, exclusive coupons, and special offers updated daily.</p>
+        </div>
+      </section>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+
+        <!-- Flash Sales -->
+        <h2 class="text-2xl font-extrabold flex items-center gap-2 mb-6">
+          <i class="fas fa-bolt text-yellow-500" style="font-size:22px;"></i> Flash Sales
+        </h2>
+
+        <t t-if="sales_data">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            <t t-foreach="sales_data" t-as="item">
+              <div class="border rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
+                <t t-if="item['rec'].image_url">
+                  <img t-att-src="item['rec'].image_url" class="w-full h-44 object-cover" t-att-alt="item['rec'].title"/>
+                </t>
+                <div class="p-5">
+                  <div class="flex items-center justify-between mb-3">
+                    <h3 class="font-bold text-lg" t-esc="item['rec'].title"/>
+                    <span class="bg-red-100 text-red-600 font-black px-3 py-1 rounded-xl text-lg flex items-center gap-0.5">
+                      <t t-esc="int(item['rec'].discount_percent)"/><i class="fas fa-percent" style="font-size:14px;margin-left:2px;"></i>
+                    </span>
+                  </div>
+                  <t t-if="item['rec'].subtitle">
+                    <p class="text-gray-500 text-sm mb-3" t-esc="item['rec'].subtitle"/>
+                  </t>
+                  <t t-if="item['time_left']">
+                    <div class="flex items-center gap-1.5 text-sm font-medium countdown-badge">
+                      <i class="fas fa-clock" style="font-size:14px;"></i>
+                      <span t-att-data-countdown="item['rec'].valid_until" t-esc="item['time_left']"/>
+                    </div>
+                  </t>
+                  <t t-if="item['rec'].coupon_code">
+                    <div class="mt-3 pt-3 border-t">
+                      <span class="text-xs text-gray-400 font-medium">Promo code: </span>
+                      <span class="font-bold text-sm" style="color:rgb(var(--color-primary))" t-esc="item['rec'].coupon_code"/>
+                    </div>
+                  </t>
+                </div>
+              </div>
+            </t>
+          </div>
+        </t>
+        <t t-else="">
+          <div class="text-center py-12 text-gray-400 mb-12 border rounded-2xl">
+            No active flash sales right now. Check back soon!
+          </div>
+        </t>
+
+        <!-- Coupons -->
+        <t t-if="coupons">
+          <h2 class="text-2xl font-extrabold flex items-center gap-2 mb-6">
+            <i class="fas fa-tag" style="font-size:22px;color:rgb(var(--color-primary))"></i> Available Coupons
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <t t-foreach="coupons" t-as="coupon">
+              <div class="coupon-card rounded-2xl p-5 flex items-center gap-4" style="background:rgba(124,58,237,0.03)">
+                <div class="font-black text-2xl pr-4" style="color:rgb(var(--color-primary));border-right:2px dashed rgba(124,58,237,0.3)">
+                  <t t-if="coupon.coupon_type == 'percent'">
+                    <t t-esc="int(coupon.discount_percent)"/>%
+                  </t>
+                  <t t-else="">
+                    EGP&#160;<t t-esc="int(coupon.discount_value)"/>
+                  </t>
+                </div>
+                <div>
+                  <p class="font-bold" style="color:rgb(var(--color-primary))" t-esc="coupon.code"/>
+                  <p class="text-sm text-gray-500" t-esc="coupon.description or 'Apply at checkout'"/>
+                  <t t-if="coupon.min_order_value">
+                    <p class="text-xs text-gray-400 mt-0.5">Min. order: EGP&#160;<t t-esc="int(coupon.min_order_value)"/></p>
+                  </t>
+                </div>
+              </div>
+            </t>
+          </div>
+        </t>
+
+      </div>
+    </t>
+  </template>
+</odoo>

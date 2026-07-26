@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_cargo_website_config_form" model="ir.ui.view">
+        <field name="name">cargo.website.config.form</field>
+        <field name="model">cargo.website.config</field>
+        <field name="arch" type="xml">
+            <form string="Website Configuration">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="platform_name" placeholder="Platform Name"/></h1>
+                        <h3><field name="tagline" placeholder="Your tagline…"/></h3>
+                    </div>
+                    <notebook>
+                        <page string="Branding" name="branding">
+                            <group>
+                                <field name="logo_url"/>
+                                <field name="favicon_url"/>
+                            </group>
+                            <group string="App Store Links">
+                                <field name="app_store_url"/>
+                                <field name="play_store_url"/>
+                            </group>
+                        </page>
+                        <page string="Support &amp; Contact" name="support">
+                            <group>
+                                <field name="support_email"/>
+                                <field name="support_phone"/>
+                                <field name="support_url"/>
+                                <field name="office_address"/>
+                            </group>
+                        </page>
+                        <page string="Social Media" name="social">
+                            <group>
+                                <field name="facebook_url"/>
+                                <field name="instagram_url"/>
+                                <field name="twitter_url"/>
+                                <field name="linkedin_url"/>
+                                <field name="youtube_url"/>
+                            </group>
+                        </page>
+                        <page string="SEO Defaults" name="seo">
+                            <group>
+                                <field name="meta_title"/>
+                                <field name="meta_description"/>
+                                <field name="meta_keywords"/>
+                                <field name="og_image_url"/>
+                            </group>
+                        </page>
+                        <page string="Maintenance" name="maintenance">
+                            <group>
+                                <field name="maintenance_mode"/>
+                                <field name="maintenance_message"
+                                       invisible="not maintenance_mode"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_cargo_website_config" model="ir.actions.act_window">
+        <field name="name">Website Configuration</field>
+        <field name="res_model">cargo.website.config</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+    </record>
+</odoo>

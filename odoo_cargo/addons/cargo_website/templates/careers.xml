@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="page_careers" name="Cargo — Careers">
+    <t t-call="cargo_website.layout">
+
+      <!-- Hero -->
+      <section class="py-20" style="background:linear-gradient(135deg,rgba(124,58,237,0.05) 0%,#faf5ff 100%)">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+          <i class="fas fa-briefcase mb-4" style="font-size:48px;color:rgb(var(--color-primary));display:block;"></i>
+          <h1 class="text-4xl md:text-5xl font-extrabold mb-4">Join Our Team</h1>
+          <p class="text-gray-500 text-lg">We're building the future of commerce. Come build it with us.</p>
+        </div>
+      </section>
+
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 py-16">
+
+        <!-- Department filter -->
+        <t t-if="len(departments) > 1">
+          <div class="flex gap-2 flex-wrap mb-8">
+            <a href="/careers"
+               t-attf-class="px-4 py-2 rounded-full text-sm font-medium transition-colors #{not current_department and 'text-white' or 'text-gray-500 bg-gray-100 hover:bg-gray-200'}"
+               t-attf-style="#{not current_department and 'background-color:rgb(var(--color-primary))' or ''}">
+              All Departments (<t t-esc="total_jobs"/>)
+            </a>
+            <t t-foreach="departments" t-as="dept">
+              <a t-attf-href="/careers?department=#{dept}"
+                 t-attf-class="px-4 py-2 rounded-full text-sm font-medium transition-colors #{current_department == dept and 'text-white' or 'text-gray-500 bg-gray-100 hover:bg-gray-200'}"
+                 t-attf-style="#{current_department == dept and 'background-color:rgb(var(--color-primary))' or ''}"
+                 t-esc="dept"/>
+            </t>
+          </div>
+        </t>
+
+        <!-- Job listings -->
+        <t t-if="jobs">
+          <div class="space-y-4">
+            <t t-foreach="jobs" t-as="job">
+              <div class="border rounded-2xl overflow-hidden bg-white" style="border-color:rgba(229,231,235,1)">
+                <!-- Header (clickable toggle) -->
+                <div class="p-6 flex items-start justify-between gap-4 cursor-pointer job-header"
+                     onclick="toggleJob(this)">
+                  <div class="flex-1">
+                    <div class="flex flex-wrap gap-2 mb-2">
+                      <!-- Type badge -->
+                      <t t-if="job.job_type == 'full_time'">
+                        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700">Full Time</span>
+                      </t>
+                      <t t-elif="job.job_type == 'part_time'">
+                        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-purple-100 text-purple-700">Part Time</span>
+                      </t>
+                      <t t-elif="job.job_type == 'contract'">
+                        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-orange-100 text-orange-700">Contract</span>
+                      </t>
+                      <t t-elif="job.job_type == 'remote'">
+                        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-green-100 text-green-700">Remote</span>
+                      </t>
+                      <t t-else="">
+                        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-gray-100 text-gray-600" t-esc="job.job_type"/>
+                      </t>
+                      <span class="text-xs bg-gray-100 text-gray-500 px-2.5 py-1 rounded-full" t-esc="job.department"/>
+                    </div>
+                    <h3 class="font-bold text-lg mb-1" t-esc="job.title"/>
+                    <div class="flex items-center gap-4 text-sm text-gray-400">
+                      <t t-if="job.location">
+                        <span class="flex items-center gap-1">
+                          <i class="fas fa-map-marker-alt" style="font-size:12px;"></i>
+                          <t t-esc="job.location"/>
+                        </span>
+                      </t>
+                      <t t-if="job.salary_range">
+                        <span class="flex items-center gap-1">
+                          <i class="fas fa-clock" style="font-size:12px;"></i>
+                          <t t-esc="job.salary_range"/>
+                        </span>
+                      </t>
+                    </div>
+                  </div>
+                  <i class="fas fa-chevron-down text-gray-400 flex-shrink-0 mt-1 job-chevron" style="font-size:18px;transition:transform 0.2s;"></i>
+                </div>
+
+                <!-- Expandable detail -->
+                <div class="job-detail hidden border-t px-6 pb-6 pt-4">
+                  <t t-if="job.description">
+                    <div class="text-gray-500 text-sm mb-4 leading-relaxed cargo-prose">
+                      <t t-out="job.description"/>
+                    </div>
+                  </t>
+                  <t t-if="job.requirements">
+                    <div class="mb-4 job-requirements">
+                      <h4 class="font-semibold text-sm mb-2">Requirements</h4>
+                      <t t-out="job.requirements"/>
+                    </div>
+                  </t>
+                  <t t-if="job.benefits">
+                    <div class="mb-4">
+                      <h4 class="font-semibold text-sm mb-2">Benefits</h4>
+                      <div class="text-gray-500 text-sm cargo-prose">
+                        <t t-out="job.benefits"/>
+                      </div>
+                    </div>
+                  </t>
+                  <a t-attf-href="mailto:careers@cargo.app?subject=Application: #{job.title}"
+                     class="inline-flex items-center gap-2 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors"
+                     style="background-color:rgb(var(--color-primary))">
+                    Apply for this Role
+                  </a>
+                </div>
+              </div>
+            </t>
+          </div>
+        </t>
+        <t t-else="">
+          <div class="text-center py-16 border rounded-2xl text-gray-400">
+            <i class="fas fa-briefcase mb-3" style="font-size:48px;opacity:0.2;display:block;"></i>
+            <p class="font-medium">No open positions right now.</p>
+            <p class="text-sm mt-1">Check back later or send your resume to careers@cargo.app</p>
+          </div>
+        </t>
+
+        <!-- Open application CTA -->
+        <div class="mt-12 p-6 rounded-2xl text-center" style="background:rgba(124,58,237,0.05);border:1px solid rgba(124,58,237,0.2)">
+          <h3 class="font-bold mb-2">Don't see the right role?</h3>
+          <p class="text-gray-500 text-sm mb-4">Send us your CV — we're always looking for talented people.</p>
+          <a href="mailto:careers@cargo.app" class="inline-flex items-center gap-2 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors" style="background-color:rgb(var(--color-primary))">
+            Send Open Application
+          </a>
+        </div>
+      </div>
+
+      <script>
+        function toggleJob(header) {
+          var detail  = header.nextElementSibling;
+          var chevron = header.querySelector('.job-chevron');
+          var open    = !detail.classList.contains('hidden');
+          detail.classList.toggle('hidden', open);
+          chevron.style.transform = open ? '' : 'rotate(180deg)';
+        }
+      </script>
+
+    </t>
+  </template>
+</odoo>

@@ -1,0 +1,85 @@
+/* ============================================================
+   Cargo Website — Custom CSS
+   Supplements Tailwind CDN loaded in the layout template.
+   Primary colour: #7C3AED (violet-600 ≈ hsl(262,83%,58%))
+   ============================================================ */
+
+/* ── Google Fonts fallback (Inter already loaded via link tag) ── */
+body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+
+/* ── Smooth scrolling ─────────────────────────────────────────── */
+html { scroll-behavior: smooth; }
+
+/* ── Prose-style blog content ────────────────────────────────── */
+.cargo-prose h1,
+.cargo-prose h2,
+.cargo-prose h3 { font-weight: 700; margin: 1.5rem 0 0.75rem; }
+.cargo-prose p   { margin: 0.75rem 0; line-height: 1.75; color: #6B7280; }
+.cargo-prose ul,
+.cargo-prose ol  { padding-left: 1.5rem; margin: 0.75rem 0; color: #6B7280; }
+.cargo-prose li  { margin: 0.35rem 0; }
+.cargo-prose a   { color: #7C3AED; text-decoration: underline; }
+.cargo-prose img { border-radius: 1rem; max-width: 100%; margin: 1rem 0; }
+.cargo-prose pre {
+    background: #F3F4F6;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    font-size: 0.875rem;
+}
+
+/* ── Job requirement HTML list ───────────────────────────────── */
+.job-requirements ul { list-style: none; padding: 0; margin: 0; }
+.job-requirements ul li {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: #6B7280;
+    margin: 0.35rem 0;
+}
+.job-requirements ul li::before {
+    content: "•";
+    color: #7C3AED;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+/* ── Dashed coupon border ────────────────────────────────────── */
+.coupon-card { border: 2px dashed rgba(124,58,237,0.3); }
+
+/* ── Store card image zoom ───────────────────────────────────── */
+.store-card .store-img { transition: transform 0.3s ease; }
+.store-card:hover .store-img { transform: scale(1.05); }
+
+/* ── Animate pulse (skeleton loading) ────────────────────────── */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.5; }
+}
+.animate-pulse { animation: pulse 2s cubic-bezier(0.4,0,0.6,1) infinite; }
+
+/* ── Hero radial glow ────────────────────────────────────────── */
+.hero-glow {
+    background: radial-gradient(ellipse at top right,
+        rgba(124,58,237,0.1) 0%,
+        transparent 60%);
+}
+
+/* ── Countdown badge ─────────────────────────────────────────── */
+.countdown-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #EA580C;
+}
+
+/* ── Active nav link ─────────────────────────────────────────── */
+a.nav-active {
+    background-color: rgba(124,58,237,0.1);
+    color: #7C3AED;
+}
+
+/* ── Transition helpers ───────────────────────────────────────── */
+.transition-gap { transition: gap 0.2s ease; }

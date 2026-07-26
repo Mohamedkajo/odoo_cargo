@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="page_download" name="Cargo — Download App">
+    <t t-call="cargo_website.layout">
+
+      <!-- Hero -->
+      <section class="py-24 text-white" style="background:linear-gradient(135deg,rgb(var(--color-primary)) 0%,#7e22ce 50%,#4338ca 100%)">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium mb-6" style="background:rgba(255,255,255,0.2);backdrop-filter:blur(4px)">
+                <i class="fas fa-star text-yellow-300" style="font-size:14px;"></i> Rated 4.9/5 — 50,000+ downloads
+              </div>
+              <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">Get the Cargo App</h1>
+              <p class="text-lg mb-8 leading-relaxed" style="opacity:0.85">
+                Shop smarter, track faster, and discover deals — all from the palm of your hand. Available on iOS and Android.
+              </p>
+              <div class="flex flex-col sm:flex-row gap-4">
+                <t t-set="ios_url" t-value="cfg.app_store_url if cfg and cfg.app_store_url else '#'"/>
+                <t t-set="android_url" t-value="cfg.play_store_url if cfg and cfg.play_store_url else '#'"/>
+                <a t-att-href="ios_url" class="flex items-center gap-3 bg-white text-gray-900 px-6 py-3.5 rounded-xl hover:bg-gray-50 transition-all">
+                  <i class="fab fa-apple" style="font-size:28px;"></i>
+                  <div>
+                    <p class="text-xs text-gray-500">Download on the</p>
+                    <p class="font-bold text-base">App Store</p>
+                  </div>
+                </a>
+                <a t-att-href="android_url" class="flex items-center gap-3 bg-white text-gray-900 px-6 py-3.5 rounded-xl hover:bg-gray-50 transition-all">
+                  <i class="fab fa-google-play" style="font-size:24px;"></i>
+                  <div>
+                    <p class="text-xs text-gray-500">Get it on</p>
+                    <p class="font-bold text-base">Google Play</p>
+                  </div>
+                </a>
+              </div>
+            </div>
+            <div class="flex justify-center">
+              <div class="w-64 h-64 rounded-3xl flex items-center justify-center" style="background:rgba(255,255,255,0.1);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.2)">
+                <i class="fas fa-mobile-alt" style="font-size:128px;color:rgba(255,255,255,0.6)"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features -->
+      <section class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-14">
+          <h2 class="text-3xl font-extrabold mb-3">Everything in One App</h2>
+          <p class="text-gray-500 text-lg">Designed to make shopping effortless.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div class="flex items-center gap-3 p-4 border rounded-xl bg-white">
+            <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-shield-alt text-green-600" style="font-size:14px;"></i>
+            </div>
+            <span class="font-medium text-sm">Real-time order tracking</span>
+          </div>
+          <div class="flex items-center gap-3 p-4 border rounded-xl bg-white">
+            <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-shield-alt text-green-600" style="font-size:14px;"></i>
+            </div>
+            <span class="font-medium text-sm">Flash deals &amp; exclusive offers</span>
+          </div>
+          <div class="flex items-center gap-3 p-4 border rounded-xl bg-white">
+            <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-shield-alt text-green-600" style="font-size:14px;"></i>
+            </div>
+            <span class="font-medium text-sm">Secure wallet &amp; payments</span>
+          </div>
+          <div class="flex items-center gap-3 p-4 border rounded-xl bg-white">
+            <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-shield-alt text-green-600" style="font-size:14px;"></i>
+            </div>
+            <span class="font-medium text-sm">1,200+ stores in one app</span>
+          </div>
+          <div class="flex items-center gap-3 p-4 border rounded-xl bg-white">
+            <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-shield-alt text-green-600" style="font-size:14px;"></i>
+            </div>
+            <span class="font-medium text-sm">Easy returns &amp; refunds</span>
+          </div>
+          <div class="flex items-center gap-3 p-4 border rounded-xl bg-white">
+            <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-shield-alt text-green-600" style="font-size:14px;"></i>
+            </div>
+            <span class="font-medium text-sm">24/7 customer support</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- User reviews -->
+      <section class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 class="text-3xl font-extrabold mb-14">What Our Users Say</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white border rounded-2xl p-6 text-left">
+              <div class="flex gap-0.5 mb-3">
+                <i class="fas fa-star text-yellow-400" style="font-size:14px;"></i>
+                <i class="fas fa-star text-yellow-400" style="font-size:14px;"></i>
+                <i class="fas fa-star text-yellow-400" style="font-size:14px;"></i>
+                <i class="fas fa-star text-yellow-400" style="font-size:14px;"></i>
+                <i class="fas fa-star text-yellow-400" style="font-size:14px;"></i>
+              </div>
+              <p class="text-gray-500 text-sm mb-4 leading-relaxed">"The best shopping app I've ever used. Fast, reliable, and incredible deals!"</p>
+              <p class="font-semibold text-sm">Sarah M.</p>
+            </div>
+            <div class="bg-white border rounded-2xl p-6 text-left">
+              <div class="flex gap-0.5 mb-3">
+                <i class="fas fa-star text-yellow-400" style="font-size:14px;"></i>
+                <i class="fas fa-star text-yellow-400" style="font-size:14px;"></i>
+                <i class="fas fa-star text-yellow-400" style="font-size:14px;"></i>
+                <i class="fas fa-star text-yellow-400" style="font-size:14px;"></i>
+                <i class="fas fa-star text-yellow-400" style="font-size:14px;"></i>
+              </div>
+              <p class="text-gray-500 text-sm mb-4 leading-relaxed">"As a merchant, Cargo has tripled my online sales. The dashboard is fantastic."</p>
+              <p class="font-semibold text-sm">Ahmed K.</p>
+            </div>
+            <div class="bg-white border rounded-2xl p-6 text-left">
+              <div class="flex gap-0.5 mb-3">
+                <i class="fas fa-star text-yellow-400" style="font-size:14px;"></i>
+                <i class="fas fa-star text-yellow-400" style="font-size:14px;"></i>
+                <i class="fas fa-star text-yellow-400" style="font-size:14px;"></i>
+                <i class="fas fa-star text-yellow-400" style="font-size:14px;"></i>
+                <i class="fas fa-star text-yellow-400" style="font-size:14px;"></i>
+              </div>
+              <p class="text-gray-500 text-sm mb-4 leading-relaxed">"Real-time tracking is amazing. My orders always arrive on time. Love it!"</p>
+              <p class="font-semibold text-sm">Lisa T.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </t>
+  </template>
+</odoo>

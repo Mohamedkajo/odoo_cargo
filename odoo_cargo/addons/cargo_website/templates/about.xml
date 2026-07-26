@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="page_about" name="Cargo — About">
+    <t t-call="cargo_website.layout">
+
+      <!-- Hero -->
+      <section class="py-20" style="background:linear-gradient(135deg,rgba(124,58,237,0.05) 0%,#faf5ff 100%)">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 class="text-4xl md:text-5xl font-extrabold mb-6">About Cargo</h1>
+          <p class="text-xl text-gray-500 leading-relaxed">
+            We're on a mission to make commerce faster, fairer, and more accessible for everyone — from independent store owners to everyday shoppers.
+          </p>
+        </div>
+      </section>
+
+      <!-- Our Story -->
+      <section class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div>
+            <h2 class="text-3xl font-extrabold mb-6">Our Story</h2>
+            <div class="space-y-4 text-gray-500 leading-relaxed">
+              <p>Cargo was founded with a simple idea: local stores deserve the same reach as big e-commerce giants. We built a platform that gives every merchant — large or small — the tools to connect with customers digitally.</p>
+              <p>Since our founding, we've grown into a full-featured marketplace that supports hundreds of stores and serves tens of thousands of customers every month. Our mobile-first approach means shoppers can discover, order, and track everything from the palm of their hand.</p>
+              <p>We're not just a marketplace — we're a growth partner. From inventory management to marketing tools, Cargo gives merchants everything they need to thrive in the digital age.</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="border rounded-2xl p-6 bg-white text-center">
+              <div class="text-3xl font-extrabold mb-1" style="color:rgb(var(--color-primary))">2020</div>
+              <div class="text-gray-500 text-sm">Founded</div>
+            </div>
+            <div class="border rounded-2xl p-6 bg-white text-center">
+              <div class="text-3xl font-extrabold mb-1" style="color:rgb(var(--color-primary))">1,200+</div>
+              <div class="text-gray-500 text-sm">Partner Stores</div>
+            </div>
+            <div class="border rounded-2xl p-6 bg-white text-center">
+              <div class="text-3xl font-extrabold mb-1" style="color:rgb(var(--color-primary))">50K+</div>
+              <div class="text-gray-500 text-sm">Customers</div>
+            </div>
+            <div class="border rounded-2xl p-6 bg-white text-center">
+              <div class="text-3xl font-extrabold mb-1" style="color:rgb(var(--color-primary))">99.8%</div>
+              <div class="text-gray-500 text-sm">Uptime</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Values -->
+      <section class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="text-center mb-14">
+            <h2 class="text-3xl font-extrabold mb-3">Our Values</h2>
+            <p class="text-gray-500 text-lg">The principles that guide everything we do.</p>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white rounded-2xl p-6 border text-center">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style="background:rgba(124,58,237,0.1)">
+                <i class="fas fa-bullseye" style="font-size:22px;color:rgb(var(--color-primary))"></i>
+              </div>
+              <h3 class="font-bold text-lg mb-2">Mission-Driven</h3>
+              <p class="text-gray-500 text-sm leading-relaxed">We exist to connect communities with the products they love, faster and more affordably than ever before.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-6 border text-center">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style="background:rgba(124,58,237,0.1)">
+                <i class="fas fa-heart" style="font-size:22px;color:rgb(var(--color-primary))"></i>
+              </div>
+              <h3 class="font-bold text-lg mb-2">Customer First</h3>
+              <p class="text-gray-500 text-sm leading-relaxed">Every decision we make starts with the customer. Their satisfaction is our primary measure of success.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-6 border text-center">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style="background:rgba(124,58,237,0.1)">
+                <i class="fas fa-lightbulb" style="font-size:22px;color:rgb(var(--color-primary))"></i>
+              </div>
+              <h3 class="font-bold text-lg mb-2">Always Innovating</h3>
+              <p class="text-gray-500 text-sm leading-relaxed">Technology moves fast. We stay ahead by building intuitive tools that merchants and shoppers actually want to use.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-6 border text-center">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style="background:rgba(124,58,237,0.1)">
+                <i class="fas fa-users" style="font-size:22px;color:rgb(var(--color-primary))"></i>
+              </div>
+              <h3 class="font-bold text-lg mb-2">Community</h3>
+              <p class="text-gray-500 text-sm leading-relaxed">We believe in lifting local businesses and helping them compete in the digital age without barriers.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </t>
+  </template>
+</odoo>

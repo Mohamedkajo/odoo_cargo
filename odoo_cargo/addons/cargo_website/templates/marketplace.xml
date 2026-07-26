@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="page_marketplace" name="Cargo — Marketplace">
+    <t t-call="cargo_website.layout">
+
+      <!-- Hero + Search -->
+      <section class="py-16" style="background:linear-gradient(135deg,rgba(124,58,237,0.05) 0%,#faf5ff 100%)">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 class="text-4xl md:text-5xl font-extrabold mb-4">Explore the Marketplace</h1>
+          <p class="text-gray-500 text-lg mb-8">Discover hundreds of stores and find exactly what you're looking for.</p>
+          <form action="/marketplace" method="get" data-search-form="" class="relative max-w-xl mx-auto">
+            <i class="fas fa-search absolute" style="left:1rem;top:50%;transform:translateY(-50%);color:#6B7280;font-size:18px;"></i>
+            <input type="search" name="search" t-att-value="search"
+                   placeholder="Search stores..."
+                   class="w-full pl-12 pr-4 py-3 rounded-xl border bg-white focus:outline-none text-base shadow-sm"
+                   style="focus-ring:none"/>
+          </form>
+        </div>
+      </section>
+
+      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+        <!-- Category filter -->
+        <t t-if="categories">
+          <div class="flex gap-2 flex-wrap mb-8">
+            <a t-attf-href="/marketplace#{search and '?search=' + search or ''}"
+               t-attf-class="px-4 py-2 rounded-full text-sm font-medium transition-colors #{not current_category and 'text-white' or 'text-gray-500 bg-gray-100 hover:bg-gray-200'}"
+               t-attf-style="#{not current_category and 'background-color:rgb(var(--color-primary))' or ''}">All</a>
+            <t t-foreach="categories" t-as="cat">
+              <a t-attf-href="/marketplace?category=#{cat.name}#{search and '&amp;search=' + search or ''}"
+                 t-attf-class="px-4 py-2 rounded-full text-sm font-medium transition-colors #{current_category == cat.name and 'text-white' or 'text-gray-500 bg-gray-100 hover:bg-gray-200'}"
+                 t-attf-style="#{current_category == cat.name and 'background-color:rgb(var(--color-primary))' or ''}"
+                 t-esc="cat.name"/>
+            </t>
+          </div>
+        </t>
+
+        <!-- Count -->
+        <p class="text-gray-500 text-sm mb-4"><t t-esc="len(stores)"/> stores found</p>
+
+        <!-- Store grid -->
+        <t t-if="stores">
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <t t-foreach="stores" t-as="store">
+              <div class="store-card border rounded-2xl overflow-hidden bg-white hover:shadow-md transition-all" style="border-color:rgba(229,231,235,1)">
+                <!-- Banner / placeholder -->
+                <div class="w-full h-28 overflow-hidden relative">
+                  <t t-if="store.image">
+                    <img t-att-src="store.image" class="store-img w-full h-full object-cover" t-att-alt="store.name"/>
+                  </t>
+                  <t t-else="">
+                    <div class="w-full h-full flex items-center justify-center" style="background:linear-gradient(135deg,rgba(124,58,237,0.1),#f3e8ff)">
+                      <i class="fas fa-shopping-bag" style="font-size:28px;color:rgba(124,58,237,0.4)"></i>
+                    </div>
+                  </t>
+                </div>
+                <div class="p-4">
+                  <div class="flex items-start gap-2">
+                    <t t-if="store.logo">
+                      <img t-att-src="store.logo" class="w-8 h-8 rounded-lg border object-cover flex-shrink-0" t-att-alt="store.name"/>
+                    </t>
+                    <div class="min-w-0">
+                      <h3 class="font-semibold text-sm truncate" t-esc="store.name"/>
+                      <t t-if="store.category_name">
+                        <p class="text-xs text-gray-500 truncate" t-esc="store.category_name"/>
+                      </t>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between mt-3">
+                    <div class="flex items-center gap-1 text-xs">
+                      <i class="fas fa-star text-yellow-400" style="font-size:11px;"></i>
+                      <span class="font-medium" t-esc="'%.1f' % (store.rating or 4.5)"/>
+                    </div>
+                    <t t-if="store.is_open">
+                      <span class="text-xs text-green-600 font-medium flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full inline-block"/>Open
+                      </span>
+                    </t>
+                  </div>
+                </div>
+              </div>
+            </t>
+          </div>
+        </t>
+
+        <!-- Empty state -->
+        <t t-else="">
+          <div class="text-center py-20 text-gray-400">
+            <i class="fas fa-shopping-bag" style="font-size:48px;opacity:0.2;margin-bottom:12px;display:block;"></i>
+            <p>No stores found. Try a different search.</p>
+          </div>
+        </t>
+
+      </section>
+    </t>
+  </template>
+</odoo>

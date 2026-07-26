@@ -1,0 +1,19 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cargo_website_config_admin,cargo.website.config admin,model_cargo_website_config,cargo_base.cargo_group_admin,1,1,1,1
+access_cargo_website_config_public,cargo.website.config public,model_cargo_website_config,base.group_public,1,0,0,0
+access_cargo_website_banner_admin,cargo.website.banner admin,model_cargo_website_banner,cargo_base.cargo_group_admin,1,1,1,1
+access_cargo_website_banner_public,cargo.website.banner public,model_cargo_website_banner,base.group_public,1,0,0,0
+access_cargo_website_flash_sale_admin,cargo.website.flash.sale admin,model_cargo_website_flash_sale,cargo_base.cargo_group_admin,1,1,1,1
+access_cargo_website_flash_sale_public,cargo.website.flash.sale public,model_cargo_website_flash_sale,base.group_public,1,0,0,0
+access_cargo_website_blog_category_admin,cargo.website.blog.category admin,model_cargo_website_blog_category,cargo_base.cargo_group_admin,1,1,1,1
+access_cargo_website_blog_category_public,cargo.website.blog.category public,model_cargo_website_blog_category,base.group_public,1,0,0,0
+access_cargo_website_blog_post_admin,cargo.website.blog.post admin,model_cargo_website_blog_post,cargo_base.cargo_group_admin,1,1,1,1
+access_cargo_website_blog_post_public,cargo.website.blog.post public,model_cargo_website_blog_post,base.group_public,1,0,0,0
+access_cargo_website_faq_category_admin,cargo.website.faq.category admin,model_cargo_website_faq_category,cargo_base.cargo_group_admin,1,1,1,1
+access_cargo_website_faq_category_public,cargo.website.faq.category public,model_cargo_website_faq_category,base.group_public,1,0,0,0
+access_cargo_website_faq_admin,cargo.website.faq admin,model_cargo_website_faq,cargo_base.cargo_group_admin,1,1,1,1
+access_cargo_website_faq_public,cargo.website.faq public,model_cargo_website_faq,base.group_public,1,0,0,0
+access_cargo_website_job_admin,cargo.website.job admin,model_cargo_website_job,cargo_base.cargo_group_admin,1,1,1,1
+access_cargo_website_job_public,cargo.website.job public,model_cargo_website_job,base.group_public,1,0,0,0
+access_cargo_website_contact_admin,cargo.website.contact admin,model_cargo_website_contact,cargo_base.cargo_group_admin,1,1,1,1
+access_cargo_website_contact_customer,cargo.website.contact customer,model_cargo_website_contact,base.group_public,0,0,1,0

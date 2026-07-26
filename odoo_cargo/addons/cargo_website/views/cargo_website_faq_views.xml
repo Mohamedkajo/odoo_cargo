@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- FAQ Categories -->
+    <record id="view_cargo_website_faq_category_list" model="ir.ui.view">
+        <field name="name">cargo.website.faq.category.list</field>
+        <field name="model">cargo.website.faq.category</field>
+        <field name="arch" type="xml">
+            <list string="FAQ Categories">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="icon"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_cargo_website_faq_category_form" model="ir.ui.view">
+        <field name="name">cargo.website.faq.category.form</field>
+        <field name="model">cargo.website.faq.category</field>
+        <field name="arch" type="xml">
+            <form string="FAQ Category">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="sequence"/>
+                        <field name="icon"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_cargo_website_faq_category" model="ir.actions.act_window">
+        <field name="name">FAQ Categories</field>
+        <field name="res_model">cargo.website.faq.category</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- FAQ Items -->
+    <record id="view_cargo_website_faq_list" model="ir.ui.view">
+        <field name="name">cargo.website.faq.list</field>
+        <field name="model">cargo.website.faq</field>
+        <field name="arch" type="xml">
+            <list string="FAQ Items">
+                <field name="sequence" widget="handle"/>
+                <field name="question"/>
+                <field name="category_id"/>
+                <field name="is_active" widget="toggle_button"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_cargo_website_faq_form" model="ir.ui.view">
+        <field name="name">cargo.website.faq.form</field>
+        <field name="model">cargo.website.faq</field>
+        <field name="arch" type="xml">
+            <form string="FAQ Item">
+                <sheet>
+                    <group>
+                        <field name="question"/>
+                        <field name="category_id"/>
+                        <field name="sequence"/>
+                        <field name="is_active"/>
+                    </group>
+                    <group string="Answer">
+                        <field name="answer" nolabel="1" colspan="2"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_cargo_website_faq" model="ir.actions.act_window">
+        <field name="name">FAQ Items</field>
+        <field name="res_model">cargo.website.faq</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

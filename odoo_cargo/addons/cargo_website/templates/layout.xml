@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!-- ================================================================
+       Cargo Website Base Layout
+       All page templates do: <t t-call="cargo_website.layout">…</t>
+       The <t t-out="0"/> renders the calling template's body.
+       ================================================================ -->
+  <template id="layout" name="Cargo Website Layout">
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>Cargo — Shop Smarter, Deliver Faster</title>
+
+        <!-- Inter font -->
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+
+        <!-- Font Awesome 5 Free -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW37+5zzHdHtYT6V9O3yQ1bO+Wr89i9ZS6nHJ/FmYkTfCQ+b6CNHzB0T/8p3tGl/qWuKw==" crossorigin="anonymous"/>
+
+        <!-- Tailwind CDN (v3) -->
+        <script src="https://cdn.tailwindcss.com"></script>
+
+        <!-- Cargo design tokens + primary colour helpers -->
+        <style type="text/css">
+          :root { --c-primary: 124, 58, 237; }
+          .text-primary    { color: rgb(var(--c-primary)); }
+          .bg-primary      { background-color: rgb(var(--c-primary)); }
+          .border-primary  { border-color: rgb(var(--c-primary)); }
+          .bg-primary-10   { background-color: rgba(var(--c-primary), 0.10); }
+          .bg-primary-15   { background-color: rgba(var(--c-primary), 0.15); }
+          .bg-primary-20   { background-color: rgba(var(--c-primary), 0.20); }
+          html  { scroll-behavior: smooth; }
+          body  { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+          /* mobile menu hidden by default */
+          #mobile-menu { display: none; }
+          #mobile-menu.open { display: block; }
+        </style>
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/cargo_website/static/src/css/cargo_website.css"/>
+      </head>
+
+      <body class="antialiased bg-white text-gray-900">
+
+        <!-- ── Navbar ────────────────────────────────────────────────── -->
+        <nav id="main-nav" class="sticky top-0 z-50 border-b border-gray-200 shadow-sm" style="background:rgba(255,255,255,0.97);backdrop-filter:blur(8px);">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+
+              <!-- Logo -->
+              <a href="/" class="flex items-center gap-2 font-bold text-xl text-primary">
+                <span class="w-8 h-8 rounded-lg flex items-center justify-center text-white font-black text-sm bg-primary">C</span>
+                Cargo
+              </a>
+
+              <!-- Desktop links -->
+              <div class="hidden lg:flex items-center gap-1">
+                <a href="/"            class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors">Home</a>
+                <a href="/about"       class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors">About</a>
+                <a href="/services"    class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors">Services</a>
+                <a href="/marketplace" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors">Marketplace</a>
+                <a href="/promotions"  class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors">Promotions</a>
+                <a href="/blog"        class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors">Blog</a>
+                <a href="/faq"         class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors">FAQ</a>
+                <a href="/careers"     class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors">Careers</a>
+                <a href="/contact"     class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors">Contact</a>
+              </div>
+
+              <!-- Desktop CTA -->
+              <div class="hidden lg:flex items-center">
+                <a href="/download" class="flex items-center gap-1 text-white px-4 py-2 rounded-lg text-sm font-semibold bg-primary transition-colors">
+                  <i class="fas fa-shopping-bag" style="font-size:13px;"></i>
+                  Download App
+                </a>
+              </div>
+
+              <!-- Mobile hamburger -->
+              <button id="nav-toggle" class="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors" aria-label="Toggle navigation">
+                <i id="nav-icon-open"  class="fas fa-bars"  style="font-size:20px;color:#6B7280;"></i>
+                <i id="nav-icon-close" class="fas fa-times" style="font-size:20px;color:#6B7280;display:none;"></i>
+              </button>
+
+            </div>
+          </div>
+
+          <!-- Mobile menu (toggled via JS) -->
+          <div id="mobile-menu" class="lg:hidden border-t bg-white px-4 py-3 space-y-1">
+            <a href="/"            class="block px-3 py-2 rounded-lg text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100">Home</a>
+            <a href="/about"       class="block px-3 py-2 rounded-lg text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100">About</a>
+            <a href="/services"    class="block px-3 py-2 rounded-lg text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100">Services</a>
+            <a href="/marketplace" class="block px-3 py-2 rounded-lg text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100">Marketplace</a>
+            <a href="/promotions"  class="block px-3 py-2 rounded-lg text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100">Promotions</a>
+            <a href="/blog"        class="block px-3 py-2 rounded-lg text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100">Blog</a>
+            <a href="/faq"         class="block px-3 py-2 rounded-lg text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100">FAQ</a>
+            <a href="/careers"     class="block px-3 py-2 rounded-lg text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100">Careers</a>
+            <a href="/contact"     class="block px-3 py-2 rounded-lg text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100">Contact</a>
+            <a href="/download"    class="block mt-2 text-white px-3 py-2 rounded-lg text-sm font-semibold text-center bg-primary">Download App</a>
+          </div>
+        </nav>
+
+        <!-- ── Page content ──────────────────────────────────────────── -->
+        <main>
+          <t t-out="0"/>
+        </main>
+
+        <!-- ── Footer ───────────────────────────────────────────────── -->
+        <footer class="bg-gray-950 text-gray-300 mt-20">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+
+              <!-- Brand -->
+              <div>
+                <div class="flex items-center gap-2 font-bold text-xl text-white mb-4">
+                  <span class="w-8 h-8 rounded-lg flex items-center justify-center text-white font-black text-sm bg-primary">C</span>
+                  Cargo
+                </div>
+                <p class="text-sm text-gray-400 leading-relaxed mb-4">
+                  The all-in-one marketplace connecting customers with the best local stores.
+                  Shop smarter, deliver faster.
+                </p>
+                <div class="flex gap-3">
+                  <a href="#" class="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center text-gray-400 hover:text-white transition-colors">
+                    <i class="fab fa-facebook-f" style="font-size:13px;"></i>
+                  </a>
+                  <a href="#" class="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center text-gray-400 hover:text-white transition-colors">
+                    <i class="fab fa-twitter" style="font-size:13px;"></i>
+                  </a>
+                  <a href="#" class="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center text-gray-400 hover:text-white transition-colors">
+                    <i class="fab fa-instagram" style="font-size:13px;"></i>
+                  </a>
+                  <a href="#" class="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center text-gray-400 hover:text-white transition-colors">
+                    <i class="fab fa-linkedin-in" style="font-size:13px;"></i>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Company -->
+              <div>
+                <h4 class="font-semibold text-white mb-4">Company</h4>
+                <ul class="space-y-2 text-sm">
+                  <li><a href="/about"    class="text-gray-400 hover:text-white transition-colors">About Us</a></li>
+                  <li><a href="/services" class="text-gray-400 hover:text-white transition-colors">Services</a></li>
+                  <li><a href="/careers"  class="text-gray-400 hover:text-white transition-colors">Careers</a></li>
+                  <li><a href="/blog"     class="text-gray-400 hover:text-white transition-colors">Blog</a></li>
+                  <li><a href="/contact"  class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
+                </ul>
+              </div>
+
+              <!-- Support -->
+              <div>
+                <h4 class="font-semibold text-white mb-4">Support</h4>
+                <ul class="space-y-2 text-sm">
+                  <li><a href="/faq"         class="text-gray-400 hover:text-white transition-colors">FAQ</a></li>
+                  <li><a href="/marketplace" class="text-gray-400 hover:text-white transition-colors">Marketplace</a></li>
+                  <li><a href="/promotions"  class="text-gray-400 hover:text-white transition-colors">Promotions</a></li>
+                  <li><a href="/privacy"     class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a></li>
+                  <li><a href="/terms"       class="text-gray-400 hover:text-white transition-colors">Terms &amp; Conditions</a></li>
+                </ul>
+              </div>
+
+              <!-- Contact -->
+              <div>
+                <h4 class="font-semibold text-white mb-4">Get in Touch</h4>
+                <ul class="space-y-3 text-sm">
+                  <li class="flex items-center gap-2 text-gray-400">
+                    <i class="fas fa-envelope text-primary" style="width:16px;"></i>
+                    hello@cargo.app
+                  </li>
+                  <li class="flex items-center gap-2 text-gray-400">
+                    <i class="fas fa-phone text-primary" style="width:16px;"></i>
+                    +1 (555) 000-0000
+                  </li>
+                  <li class="flex items-start gap-2 text-gray-400">
+                    <i class="fas fa-map-marker-alt text-primary" style="width:16px;margin-top:2px;"></i>
+                    123 Commerce St, Tech City, TC 00000
+                  </li>
+                </ul>
+                <div class="mt-5">
+                  <p class="text-xs text-gray-500 mb-2">Download our app</p>
+                  <a href="/download" class="inline-block bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium">
+                    Get the App
+                  </a>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+              <p class="text-xs text-gray-500">© 2025 Cargo. All rights reserved.</p>
+              <div class="flex gap-6 text-xs text-gray-500">
+                <a href="/privacy" class="hover:text-gray-300 transition-colors">Privacy Policy</a>
+                <a href="/terms"   class="hover:text-gray-300 transition-colors">Terms &amp; Conditions</a>
+              </div>
+            </div>
+          </div>
+        </footer>
+
+        <!-- Mobile nav toggle (vanilla JS — no Alpine required) -->
+        <script type="text/javascript">
+          (function() {
+            var btn   = document.getElementById('nav-toggle');
+            var menu  = document.getElementById('mobile-menu');
+            var open  = document.getElementById('nav-icon-open');
+            var close = document.getElementById('nav-icon-close');
+            if (btn) {
+              btn.addEventListener('click', function() {
+                var isOpen = menu.classList.toggle('open');
+                open.style.display  = isOpen ? 'none' : '';
+                close.style.display = isOpen ? ''     : 'none';
+              });
+            }
+          })();
+        </script>
+
+        <!-- Custom JS (countdown, active nav) -->
+        <script src="/cargo_website/static/src/js/cargo_website.js"></script>
+      </body>
+    </html>
+  </template>
+
+</odoo>

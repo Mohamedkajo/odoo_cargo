@@ -46,8 +46,8 @@
                 <field name="author_name"/>
                 <field name="read_time"/>
                 <field name="published_date"/>
-                <field name="is_featured" widget="toggle_button"/>
-                <field name="is_published" widget="toggle_button"/>
+                <field name="is_featured" widget="boolean_toggle"/>
+                <field name="is_published" widget="boolean_toggle"/>
             </list>
         </field>
     </record>

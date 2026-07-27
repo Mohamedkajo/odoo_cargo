@@ -63,6 +63,6 @@
         <field name="name">Website Configuration</field>
         <field name="res_model">cargo.website.config</field>
         <field name="view_mode">form</field>
-        <field name="target">inline</field>
+        <field name="target">current</field>
     </record>
 </odoo>
